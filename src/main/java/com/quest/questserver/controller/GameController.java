@@ -36,12 +36,12 @@ public class GameController {
         return ResponseEntity.ok(gameService.connectToRandomGame(playerName));
     }
 
-    @GetMapping("/connect/random")
+    @GetMapping("/hello")
     public ResponseEntity<String> hello() {
         return ResponseEntity.ok("Hello World.");
     }
 
-//    @PostMapping("/ws")
+//    @PostMapping("/ws/topic/quest")
 //    public ResponseEntity<Game> (@RequestBody String gameId) throws GameException {
 //        log.info("sow: {}", sow);
 //        Game game = gameService.sow(sow);

@@ -36,6 +36,6 @@ public class Game {
     }
 
     private static String generateGameId() {
-        return "game#00" + (++gameCount).toString();
+        return "game#" + String.format("%04d", ++gameCount);
     }
 }

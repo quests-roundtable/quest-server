@@ -1,7 +1,5 @@
 package com.quest.questserver.model;
 
-import java.util.Locale;
-
 public class Player {
     private static Integer playerCount = 0;
 

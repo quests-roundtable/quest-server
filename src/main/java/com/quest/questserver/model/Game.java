@@ -6,18 +6,18 @@ import java.util.List;
 public class Game {
     private static Integer gameCount = 0;
 
-    private String gameId;
+    private String id;
     private List<Player> players;
     private int numPlayers;
 
     public Game() {
-        this.gameId = generateGameId();
+        this.id = generateGameId();
         this.players = new ArrayList<Player>();
         this.numPlayers = 0;
     }
 
-    public String getGameId() {
-        return gameId;
+    public String getId() {
+        return id;
     }
 
     public int getNumPlayers() {
@@ -36,6 +36,6 @@ public class Game {
     }
 
     private static String generateGameId() {
-        return "game#" + String.format("%04d", ++gameCount);
+        return String.format("%04d", ++gameCount);
     }
 }

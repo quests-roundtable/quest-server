@@ -41,28 +41,28 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<Object> handleNoSuchElementFoundException(NotFoundException itemNotFoundException, WebRequest request) {
-        log.error("Failed to find the requested element", itemNotFoundException);
+        log.error("Not Found: {}", itemNotFoundException.getMessage());
         return buildErrorResponse(itemNotFoundException, HttpStatus.NOT_FOUND, request);
     }
 
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Object> handleBadRequestException(BadRequestException badRequestException, WebRequest request) {
-        log.error("Invalid request", badRequestException);
+        log.error("Invalid request: {}", badRequestException.getMessage());
         return buildErrorResponse(badRequestException, HttpStatus.BAD_REQUEST, request);
     }
 
     @ExceptionHandler(GameException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<Object> handleGameException(BadRequestException GameException, WebRequest request) {
-        log.error("Game Exception", GameException);
+        log.error("Game Exception: {}", GameException.getMessage());
         return buildErrorResponse(GameException, HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<Object> handleAllUncaughtException(Exception exception, WebRequest request) {
-        log.error("Unknown error occurred", exception);
+        log.error("Unknown error occurred: {}", exception.getMessage());
         return buildErrorResponse(exception, "Unknown error occurred", HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 

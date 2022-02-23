@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class ConnectRequest {
-    private String player;
+    private String playerId;
     private String gameId;
 }

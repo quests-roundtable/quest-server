@@ -1,4 +1,4 @@
 package com.quest.questserver.model;
 
-public class Ally {
+public class Ally extends Adventure{
 }

@@ -1,4 +1,4 @@
 package com.quest.questserver.model;
 
-public class Weapon {
+public class Weapon extends Adventure{
 }

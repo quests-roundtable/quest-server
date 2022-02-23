@@ -1,4 +1,4 @@
 package com.quest.questserver.model;
 
-public class Test {
+public class Test extends Adventure{
 }

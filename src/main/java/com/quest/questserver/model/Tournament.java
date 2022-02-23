@@ -1,4 +1,4 @@
 package com.quest.questserver.model;
 
-public class Tournament {
+public class Tournament extends Story{
 }

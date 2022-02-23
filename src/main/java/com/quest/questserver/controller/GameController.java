@@ -24,7 +24,7 @@ public class GameController {
     @Autowired
     private final PlayerService playerService;
 
-    private final SimpMessagingTemplate simpMessagingTemplate;
+    private final SimpMessagingTemplate webSocket;
 
     @PostMapping("/create")
     public ResponseEntity<ConnectResponse> create(@RequestBody String playerId) {
@@ -44,9 +44,10 @@ public class GameController {
         return ResponseEntity.ok(gameService.connectToRandomGame(playerId));
     }
 
-    @GetMapping("/health")
-    @SendTo("/topic/messages")
-    public ResponseEntity<String> serverStatus() {
+    @PostMapping("/message")
+    public ResponseEntity<String> socketTest(@RequestBody String message) {
+        log.info("Message recieved");
+        webSocket.convertAndSend("/topic/message", message);
         return ResponseEntity.ok("Up and running.");
     }
 

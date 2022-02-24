@@ -2,6 +2,7 @@ package com.quest.questserver.controller;
 
 import com.quest.questserver.dto.ConnectRequest;
 import com.quest.questserver.dto.ConnectResponse;
+import com.quest.questserver.dto.MessageDto;
 import com.quest.questserver.service.GameService;
 import com.quest.questserver.service.PlayerService;
 import lombok.AllArgsConstructor;
@@ -45,9 +46,9 @@ public class GameController {
     }
 
     @PostMapping("/message")
-    public ResponseEntity<String> socketTest(@RequestBody String message) {
+    public ResponseEntity<String> socketTest(@RequestBody MessageDto message) {
         log.info("Message recieved");
-        webSocket.convertAndSend("/topic/message", message);
+        webSocket.convertAndSend(String.format("/topic/game#%s", message.getLobby()), message.getState());
         return ResponseEntity.ok("Up and running.");
     }
 

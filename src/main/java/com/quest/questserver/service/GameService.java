@@ -37,9 +37,10 @@ public class GameService {
 
     public ConnectResponse connectToGame(String playerId, String gameId) {
         for(Game game: gameList) {
-            if (game.getId() == gameId) {
+            if (game.getId().equals(gameId)) {
                 Player player = playerService.getPlayer(playerId);
-                game.addPlayer(player);
+                boolean joined = game.addPlayer(player);
+                if(!joined) throw new GameException("Game-" + gameId + " is full.");
                 return new ConnectResponse(game, player);
             }
         }

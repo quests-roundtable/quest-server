@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Game {
     private static Integer gameCount = 0;
+    private static final int maxPlayers = 4;
 
     private String id;
     private List<Player> players;
@@ -24,9 +25,14 @@ public class Game {
         return numPlayers;
     }
 
-    public void addPlayer(Player player) {
-        players.add(player);
-        numPlayers++;
+    public boolean addPlayer(Player player) {
+        if (numPlayers == maxPlayers) {
+            return false;
+        } else if (!players.contains(player)) {
+            players.add(player);
+            numPlayers++;
+        }
+        return true;
     }
 
     public Boolean removePlayer(Player player) {

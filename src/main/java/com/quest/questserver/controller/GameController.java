@@ -40,24 +40,15 @@ public class GameController {
     }
 
     @PostMapping("/connect/random")
-    public ResponseEntity<ConnectResponse> connectRandom(@RequestBody String playerId) {
-        log.info("connect random {}", playerId);
-        return ResponseEntity.ok(gameService.connectToRandomGame(playerId));
+    public ResponseEntity<ConnectResponse> connectRandom(@RequestBody ConnectRequest request) {
+        log.info("connect to random game request: {}", request.getPlayerId());
+        return ResponseEntity.ok(gameService.connectToRandomGame(request.getPlayerId()));
     }
 
     @PostMapping("/message")
-    public ResponseEntity<String> socketTest(@RequestBody MessageDto message) {
-        log.info("Message recieved");
-        webSocket.convertAndSend(String.format("/topic/game#%s", message.getLobby()), message.getState());
+    public ResponseEntity<String> socketTest(@RequestBody MessageDto<String> message) {
+        log.info("Message received");
+        webSocket.convertAndSend(String.format("/topic/game#%s", message.getLobby()), message.getData());
         return ResponseEntity.ok("Up and running.");
     }
-
-//    @PostMapping("/ws/topic/quest")
-//    public ResponseEntity<Game> (@RequestBody String gameId) throws GameException {
-//        log.info("sow: {}", sow);
-//        Game game = gameService.sow(sow);
-//
-//        simpMessagingTemplate.convertAndSend("/topic/game-progress/" + game.getId(), game);
-//        return ResponseEntity.ok(game);
-//    }
 }

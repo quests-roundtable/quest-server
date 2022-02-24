@@ -2,10 +2,12 @@ package com.quest.questserver.model;
 
 public class Armor extends Adventure{
     int bids;
-    String name;
 
-    public Armor(int p, String n){
+    public Armor(int p, int n){
         point = p;
-        name = n;
+        bids = n;
     }
+
+    //only have one Armor type
+    Armor A = new Armor(10,1);
 }

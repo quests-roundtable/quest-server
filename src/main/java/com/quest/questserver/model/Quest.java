@@ -1,9 +1,8 @@
 package com.quest.questserver.model;
 
 public class Quest extends Story{
+
     int stage;
-    String ID;
-    String name;
 
     public Quest(String id, String name, int stage){
         ID = id;
@@ -13,35 +12,16 @@ public class Quest extends Story{
 
 
     //Quest Cards
-    Quest Quest_01 = new Quest("Quest_01", "Journey through the Enchanted Forest", 3);
-    //Foe: Evil Knight
-
+    Quest Quest_01 = new Quest("Quest_01", "Journey through the Enchanted Forest", 3);//Foe: Evil Knight
     Quest Quest_02 = new Quest("Quest_02", "Vanquish King Arthur's Enemie", 3);
-
-
-    Quest Quest_03 = new Quest("Quest_03", "Repel the Saxon Raiders", 2);
-    //Foe: All Saxons
-
-    Quest Quest_04 = new Quest("Quest_04", "Boar Hunt", 2);
-    //Foe: Boar
-
+    Quest Quest_03 = new Quest("Quest_03", "Repel the Saxon Raiders", 2);//Foe: All Saxons
+    Quest Quest_04 = new Quest("Quest_04", "Boar Hunt", 2);//Foe: Boar
     Quest Quest_05 = new Quest("Quest_05", "Search for the Questing Beast", 4);
-
-
-    Quest Quest_06 = new Quest("Quest_06", "Defend the Queen's Honor", 4);
-    //Foe: All
-
-    Quest Quest_07 = new Quest("Quest_07", "Slay the Dragon", 3);
-    //Foe: Dragon
-
-    Quest Quest_08 = new Quest("Quest_08", "Rescue the Fair Maiden", 3);
-    //Foe: Black Knight
-
-    Quest Quest_09 = new Quest("Quest_09", "Search for the Holy Grail", 5);
-    //Foe: All
-
-    Quest Quest_10 = new Quest("Quest_10", "Test of the Green Knight", 4);
-    //Foe: Green Knight
+    Quest Quest_06 = new Quest("Quest_06", "Defend the Queen's Honor", 4);//Foe: All
+    Quest Quest_07 = new Quest("Quest_07", "Slay the Dragon", 3);//Foe: Dragon
+    Quest Quest_08 = new Quest("Quest_08", "Rescue the Fair Maiden", 3);//Foe: Black Knight
+    Quest Quest_09 = new Quest("Quest_09", "Search for the Holy Grail", 5);//Foe: All
+    Quest Quest_10 = new Quest("Quest_10", "Test of the Green Knight", 4);//Foe: Green Knight
 
 
     //Getters

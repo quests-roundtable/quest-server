@@ -9,5 +9,5 @@ public class Armor extends Adventure{
     }
 
     //only have one Armor type
-    Armor A = new Armor(10,1);
+    Armor Special_11 = new Armor(10,1);
 }

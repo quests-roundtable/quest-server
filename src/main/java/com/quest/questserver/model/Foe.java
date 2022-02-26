@@ -10,34 +10,34 @@ public class Foe extends Adventure{
         equipment = null;
     }
 
-    Foe Rknight = new Foe(15,"Robber Knight");
+    Foe Foe_01 = new Foe(15,"Robber Knight");
 
-    Foe Saxons = new Foe(10,"Saxons");
+    Foe Foe_02 = new Foe(10,"Saxons");
     //10/20
 
-    Foe Boar = new Foe(5,"Boar");
+    Foe Foe_03 = new Foe(5,"Boar");
     //5/15
 
-    Foe Thieves = new Foe(5,"Thieves");
+    Foe Foe_04 = new Foe(5,"Thieves");
 
-    Foe GKnight = new Foe(25, "Green Knight");
+    Foe Foe_05 = new Foe(25, "Green Knight");
     //25/40
 
-    Foe BKnight = new Foe(25,"Black Knight");
+    Foe Foe_06 = new Foe(25,"Black Knight");
     //25/35
 
-    Foe EKnight = new Foe(20,"Evil Knight");
+    Foe Foe_07 = new Foe(20,"Evil Knight");
     //20/30
 
-    Foe SKnight = new Foe(15,"Saxon Knight");
+    Foe Foe_08 = new Foe(15,"Saxon Knight");
     //15/25
 
-    Foe Dragon = new Foe(50,"Dragon");
+    Foe Foe_09 = new Foe(50,"Dragon");
     //50/70
 
-    Foe Giant = new Foe(40,"Giant");
+    Foe Foe_10 = new Foe(40,"Giant");
 
-    Foe Mordred = new Foe(30,"Mordred");
+    Foe Foe_11 = new Foe(30,"Mordred");
     //Use as a Foe or sacrifice at any time to remove any player's Ally from play
 
 

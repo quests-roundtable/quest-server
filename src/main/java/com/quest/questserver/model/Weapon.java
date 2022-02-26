@@ -8,10 +8,10 @@ public class Weapon extends Adventure{
         name = n;
     }
 
-    Weapon Dagger = new Weapon(5,"Dagger");
-    Weapon Sword = new Weapon(10,"Sword");
-    Weapon Horse = new Weapon(10,"Horse");
-    Weapon ax = new Weapon(15,"Battle-ax");
-    Weapon Lance = new Weapon(20,"Lance");
-    Weapon Excalibur = new Weapon(30,"Excalibur");
+    Weapon Weapon_03 = new Weapon(5,"Dagger");
+    Weapon Weapon_02 = new Weapon(10,"Sword");
+    Weapon Weapon_01 = new Weapon(10,"Horse");
+    Weapon Weapon_06 = new Weapon(15,"Battle-ax");
+    Weapon Weapon_05 = new Weapon(20,"Lance");
+    Weapon Weapon_04 = new Weapon(30,"Excalibur");
 }

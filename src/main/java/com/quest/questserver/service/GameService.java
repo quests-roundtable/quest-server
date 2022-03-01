@@ -28,7 +28,7 @@ public class GameService {
 
     public Game getGame(String gameId) {
         for(Game game: gameList) {
-            if (game.getId() == gameId) {
+            if (game.getGameId() == gameId) {
                 return game;
             }
         }
@@ -37,7 +37,7 @@ public class GameService {
 
     public ConnectResponse connectToGame(String playerId, String gameId) {
         for(Game game: gameList) {
-            if (game.getId() == gameId) {
+            if (game.getGameId() == gameId) {
                 Player player = playerService.getPlayer(playerId);
                 game.addPlayer(player);
                 return new ConnectResponse(game, player);

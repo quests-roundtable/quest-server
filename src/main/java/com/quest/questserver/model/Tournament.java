@@ -2,14 +2,13 @@ package com.quest.questserver.model;
 
 public class Tournament extends Story{
 
-    String shields;
-    int numShields;
+    int shields;
 
-    public Tournament(String id, String name, String shield, int numShields){
-        ID = id;
+    public Tournament(String type, String name, String description, int shields){
+        this.type = type;
         this.name = name;
-        shields = shield;
-        this.numShields = numShields;
+        this.description = description;
+        this.shields = shields;
     }
 
     Tournament Tournament_01 = new Tournament("Tournament_01", "At Camelot", "3 bonus Shields", 3);
@@ -18,16 +17,8 @@ public class Tournament extends Story{
     Tournament Tournament_04 = new Tournament("Tournament_04", "At York", "0 bonus Shields", 0);
 
     //Getter
-    public String getTournamentName() {
-        return name;
-    }
-
-    public String getTournamentShields() {
+    public int getTournamentShields() {
         return shields;
-    }
-
-    public int getTournamentNumShields() {
-        return numShields;
     }
 
     public Tournament getTournament(String tournament) {

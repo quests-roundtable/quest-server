@@ -3,28 +3,36 @@ package com.quest.questserver.model;
 public class Rank extends Card{
 
     int battlePoint;
-    int shield;
 
-    public Rank(String id, String name, int battlePoint, int shield){
-        ID = id;
+
+    public Rank(String type, String name, int battlePoint){
+        this.type= type;
         this.name = name;
         this.battlePoint = battlePoint;
-        this.shield = shield;
     }
 
-    Rank Rank_01 = new Rank("Rank_01", "Squire",5,0);
-    Rank Rank_02 = new Rank("Rank_02", "Knight", 10,0);
-    Rank Rank_03 = new Rank("Rank_03", "Champion Knight", 20,0);
+//    Rank Rank_01 = new Rank("Rank_01", "Squire",5);
+//    Rank Rank_02 = new Rank("Rank_02", "Knight", 10);
+//    Rank Rank_03 = new Rank("Rank_03", "Champion Knight", 20);
 
 
-    public int addShield(int n){
-        shield = shield + n;
-        return shield;
+
+    public void setSquireRank(){
+        this.type= "Rank_01";
+        this.name = "Squire";
+        this.battlePoint = 5;
     }
 
-    public int removeShield(int n){
-        shield = shield - n;
-        return shield;
+    public void setKnightRank(){
+        this.type= "Rank_02";
+        this.name = "Knight";
+        this.battlePoint = 10;
+    }
+
+    public void setChampionKnightRank(){
+        this.type= "Rank_03";
+        this.name = "Champion Knight";
+        this.battlePoint = 20;
     }
 
     //Getter
@@ -32,22 +40,19 @@ public class Rank extends Card{
         return battlePoint;
     }
 
-    public int getShield() {
-        return shield;
-    }
 
-    public Rank getRank(String rank){
-        if (rank.equalsIgnoreCase("Rank_01")|| rank.equalsIgnoreCase("Squire")){
-            return Rank_01;
-        }
-        if (rank.equalsIgnoreCase("Rank_02")|| rank.equalsIgnoreCase("Knight")){
-            return Rank_02;
-        }
-        if (rank.equalsIgnoreCase("Rank_03")|| rank.equalsIgnoreCase("Champion Knight")){
-            return Rank_03;
-        }
-        return null;
-    }
+//    public Rank getRank(String rank){
+//        if (rank.equalsIgnoreCase("Rank_01")|| rank.equalsIgnoreCase("Squire")){
+//            return Rank_01;
+//        }
+//        if (rank.equalsIgnoreCase("Rank_02")|| rank.equalsIgnoreCase("Knight")){
+//            return Rank_02;
+//        }
+//        if (rank.equalsIgnoreCase("Rank_03")|| rank.equalsIgnoreCase("Champion Knight")){
+//            return Rank_03;
+//        }
+//        return null;
+//    }
 
 
 }

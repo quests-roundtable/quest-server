@@ -1,13 +1,19 @@
 package com.quest.questserver.model;
 
+import com.quest.questserver.dto.GameStateDto;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
     private static Integer gameCount = 0;
     private static final int maxPlayers = 4;
+    final int WAITING_LOBBY = 0;
+    final int IN_PROGRESS = 1;
+    final int GAME_OVER = 2;
 
     private String id;
+    int gameStatus;
     private List<Player> players;
     private int numPlayers;
 
@@ -15,6 +21,7 @@ public class Game {
         this.id = generateGameId();
         this.players = new ArrayList<Player>();
         this.numPlayers = 0;
+        this.gameStatus = WAITING_LOBBY;
     }
 
     public String getId() {
@@ -43,5 +50,18 @@ public class Game {
 
     private static String generateGameId() {
         return String.format("%04d", ++gameCount);
+    }
+
+    public void start() {
+        this.gameStatus = IN_PROGRESS;
+        //Create decks, shuffle, and deal cards
+    }
+
+    public GameStateDto getGameState() {
+        GameStateDto state = new GameStateDto();
+        state.setId(id);
+        state.setPlayers(players);
+        state.setGameStatus(gameStatus);
+        return state;
     }
 }

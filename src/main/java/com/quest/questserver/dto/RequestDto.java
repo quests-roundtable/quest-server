@@ -3,7 +3,7 @@ package com.quest.questserver.dto;
 import lombok.Data;
 
 @Data
-public class MessageDto<T> {
+public class RequestDto<T> {
     T data;
     String lobby;
 }

@@ -1,6 +1,7 @@
 package com.quest.questserver.service;
 
 import com.quest.questserver.dto.ConnectResponse;
+import com.quest.questserver.dto.GameStateDto;
 import com.quest.questserver.exception.GameException;
 import com.quest.questserver.exception.NotFoundException;
 import com.quest.questserver.model.Game;
@@ -23,12 +24,12 @@ public class GameService {
         Game game = new Game();
         game.addPlayer(player);
         gameList.add(game);
-        return new ConnectResponse(game, player);
+        return new ConnectResponse(game.getGameState(), player);
     }
 
     public Game getGame(String gameId) {
         for(Game game: gameList) {
-            if (game.getId() == gameId) {
+            if (game.getId().equals(gameId)) {
                 return game;
             }
         }
@@ -41,7 +42,7 @@ public class GameService {
                 Player player = playerService.getPlayer(playerId);
                 boolean joined = game.addPlayer(player);
                 if(!joined) throw new GameException("Game-" + gameId + " is full.");
-                return new ConnectResponse(game, player);
+                return new ConnectResponse(game.getGameState(), player);
             }
         }
         throw new NotFoundException("Game with provided id does not exist.");
@@ -52,10 +53,18 @@ public class GameService {
             if (game.getNumPlayers() < 4) {
                 Player player = playerService.getPlayer(playerId);
                 game.addPlayer(player);
-                return new ConnectResponse(game, player);
+                return new ConnectResponse(game.getGameState(), player);
             }
         }
         throw new GameException("No available games.");
     }
 
+    public GameStateDto startGame(String gameId) {
+        Game game = getGame(gameId);
+        if (game.getNumPlayers() < 2) {
+            throw new GameException("Not enough players to start game.");
+        }
+        game.start(); // Start game
+        return game.getGameState();
+    }
 }

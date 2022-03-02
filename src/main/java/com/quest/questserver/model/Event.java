@@ -2,7 +2,7 @@ package com.quest.questserver.model;
 
 public class Event extends Story{
 
-    public  Event(String type, String name, String description){
+    public Event(String type, String name, String description){
         this.type = type;
         this.name = name;
         this.description = description;
@@ -18,7 +18,12 @@ public class Event extends Story{
     Event Event_08 = new Event("Event_08", "Queen's Favor", "The lowest ranked player(s) immediately receives 2 Adventure Cards.");
 
 
+    public void eventStrategy(Event eventStrategy){
 
+    }
+
+
+    //Getter
     public Event getEvent(String event) {
         if (event.equalsIgnoreCase("Event_01")||event.equalsIgnoreCase("Chivalrous Deed")){
             return Event_01;

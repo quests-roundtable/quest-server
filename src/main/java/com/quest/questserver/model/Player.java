@@ -1,6 +1,7 @@
 package com.quest.questserver.model;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class Player{
 
@@ -15,6 +16,7 @@ public class Player{
         this.name = uuid;
         this.id = uuid;
         this.shields = 0;
+    }
 
     public int addShields(int n){
         shields = shields + n;
@@ -26,17 +28,15 @@ public class Player{
         return shields;
     }
 
-    public void draw(){
-
+    public void draw(Card card){
+        hand.add(card);
     }
 
-    public void discard(){
-        if (hand.size() >= 12){
-            // ask the player to discard cards
-        }
+    public void discard(Card card){
+        hand.remove(card);
     }
 
-    public void updateRank(String rankName){
+    public void updateRank(String rankName) {
         if (rankName.equalsIgnoreCase("Squire")){
             rank.setSquireRank();
         }
@@ -46,6 +46,10 @@ public class Player{
         if (rankName.equalsIgnoreCase("Champion Knight")){
             rank.setChampionKnightRank();
         }
+    }
+
+    private static String generatePlayerId() {
+        return UUID.randomUUID().toString();
     }
 
     //Getter
@@ -66,18 +70,6 @@ public class Player{
     }
 
     //Setter
-    public void setRank(Rank rank) {
-        this.rank = rank;
-    }
-
-    public void setShields(int shields) {
-        this.shields = shields;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public void setName(String name) {
         this.name = name;
     }

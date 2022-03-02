@@ -21,22 +21,15 @@ public class Game {
 
 
     public Game() {
-        this.gameId = generateGameId();
+        this.id = generateGameId();
         this.players = new ArrayList<Player>();
         this.numPlayers = 0;
         this.gameStatus = WAITING_LOBBY;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public int getGameStatus() {
-        return gameStatus;
-    }
-
-    public int getNumPlayers() {
-        return numPlayers;
+    public void start() {
+        this.gameStatus = IN_PROGRESS;
+        //Create decks, shuffle, and deal cards
     }
 
     public boolean addPlayer(Player player) {
@@ -59,10 +52,18 @@ public class Game {
     private static String generateGameId() {
         return "game#00" + (++gameCount).toString();
     }
-  
-    public void start() {
-        this.gameStatus = IN_PROGRESS;
-        //Create decks, shuffle, and deal cards
+
+    // Getters
+    public String getId() {
+        return id;
+    }
+
+    public int getGameStatus() {
+        return gameStatus;
+    }
+
+    public int getNumPlayers() {
+        return numPlayers;
     }
 
     public GameStateDto getGameState() {

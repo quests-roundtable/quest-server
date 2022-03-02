@@ -53,10 +53,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(GameException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<Object> handleGameException(BadRequestException GameException, WebRequest request) {
-        log.error("Game Exception: {}", GameException.getMessage());
-        return buildErrorResponse(GameException, HttpStatus.INTERNAL_SERVER_ERROR, request);
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<Object> handleGameException(GameException gameException, WebRequest request) {
+        log.error("Game Exception: {}", gameException.getMessage());
+        return buildErrorResponse(gameException, HttpStatus.CONFLICT, request);
     }
 
     @ExceptionHandler(Exception.class)

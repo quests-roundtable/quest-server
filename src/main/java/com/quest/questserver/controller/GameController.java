@@ -27,12 +27,6 @@ public class GameController {
 
     private final SimpMessagingTemplate webSocket;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<GameStateDto> getGame(@PathVariable(value = "id") String gameId) {
-        log.info("get game request: {}", gameId);
-        return ResponseEntity.ok(gameService.getGame(gameId).getGameState());
-    }
-
     @PostMapping("/create")
     public ResponseEntity<ConnectResponse> create(@RequestBody String playerId) {
         log.info("create game request: {}", playerId);

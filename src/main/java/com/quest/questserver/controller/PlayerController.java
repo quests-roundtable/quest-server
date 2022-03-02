@@ -26,9 +26,11 @@ public class PlayerController {
 
     @PostMapping("/setName")
     public ResponseEntity<Player> setPlayerName(@RequestBody Map<String, String> request) {
-        log.info("update user request: {}", request.get("id"));
+        log.info("post setname user request");
+        log.info("id: ", request.get("id"), " name: ", request.get("name"));
         return ResponseEntity.ok(playerService.setPlayerName(request.get("id"), request.get("name")));
     }
+
 
     @GetMapping("/player/{id}")
     public ResponseEntity<Player> getPlayer(@PathVariable(value = "id") String playerId) {

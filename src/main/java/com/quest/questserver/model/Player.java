@@ -6,13 +6,11 @@ public class Player {
 
     private String id;
     private String name;
-    private int shields;
 
     public Player() {
         String uuid = generatePlayerId();
         this.name = uuid;
         this.id = uuid;
-        this.shields = 0;
     }
 
     public String getName() {

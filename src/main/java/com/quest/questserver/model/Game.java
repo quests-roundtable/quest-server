@@ -1,19 +1,13 @@
 package com.quest.questserver.model;
 
-import com.quest.questserver.dto.GameStateDto;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
     private static Integer gameCount = 0;
-    private static final int maxPlayers = 4;
-    public static final int WAITING_LOBBY = 0;
-    public static final int IN_PROGRESS = 1;
-    public static final int GAME_OVER = 2;
 
-    private String id;
-    int gameStatus;
+
+    private String gameId;
     private List<Player> players;
     private int numPlayers;
     ADeck a;
@@ -24,30 +18,19 @@ public class Game {
         this.gameId = generateGameId();
         this.players = new ArrayList<Player>();
         this.numPlayers = 0;
-        this.gameStatus = WAITING_LOBBY;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public int getGameStatus() {
-        return gameStatus;
+    public String getGameId() {
+        return gameId;
     }
 
     public int getNumPlayers() {
         return numPlayers;
     }
 
-    public boolean addPlayer(Player player) {
-        if (numPlayers == maxPlayers) {
-            return false;
-        } else if (!players.contains(player)) {
-            if (gameStatus != WAITING_LOBBY) return false;
-            players.add(player);
-            numPlayers++;
-        }
-        return true;
+    public void addPlayer(Player player) {
+        players.add(player);
+        numPlayers++;
     }
 
     public Boolean removePlayer(Player player) {
@@ -59,17 +42,11 @@ public class Game {
     private static String generateGameId() {
         return "game#00" + (++gameCount).toString();
     }
-  
-    public void start() {
-        this.gameStatus = IN_PROGRESS;
-        //Create decks, shuffle, and deal cards
-    }
 
-    public GameStateDto getGameState() {
-        GameStateDto state = new GameStateDto();
-        state.setId(id);
-        state.setPlayers(players);
-        state.setGameStatus(gameStatus);
-        return state;
-    }
+        /*reshuffle
+    if (getsize() == 0){
+        cards.addall(graveyard);
+        graveyard.clear();
+    }*/
+
 }

@@ -16,9 +16,12 @@ public class Game {
     int gameStatus;
     private List<Player> players;
     private int numPlayers;
+    ADeck a;
+    SDeck s;
+
 
     public Game() {
-        this.id = generateGameId();
+        this.gameId = generateGameId();
         this.players = new ArrayList<Player>();
         this.numPlayers = 0;
         this.gameStatus = WAITING_LOBBY;
@@ -54,9 +57,9 @@ public class Game {
     }
 
     private static String generateGameId() {
-        return String.format("%04d", ++gameCount);
+        return "game#00" + (++gameCount).toString();
     }
-
+  
     public void start() {
         this.gameStatus = IN_PROGRESS;
         //Create decks, shuffle, and deal cards

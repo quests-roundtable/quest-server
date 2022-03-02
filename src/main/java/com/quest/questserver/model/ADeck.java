@@ -3,25 +3,20 @@ package com.quest.questserver.model;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class ADeck {
-    public ArrayList<Adventure> cards;
-    public ArrayList<Adventure> graveyard;
+public class ADeck extends Deck{
 
-    public ADeck(ArrayList<Adventure> l){
+
+    public ADeck(ArrayList<Card> l){
         cards = l;
     }
 
-    public Adventure draw(){
-        return cards.get(0);
+    public void generateCards(){
+
     }
 
-    public void shuffle(){
-        Collections.shuffle(cards);
-    }
-
-    public void discard(Adventure a){
-        cards.remove(a);
-        graveyard.add(a);
-    }
-
+    /*reshuffle
+    if (getsize() == 0){
+        cards.addall(graveyard);
+        graveyard.clear();
+    }*/
 }

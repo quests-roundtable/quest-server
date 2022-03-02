@@ -43,4 +43,10 @@ public class Game {
         return "game#00" + (++gameCount).toString();
     }
 
+        /*reshuffle
+    if (getsize() == 0){
+        cards.addall(graveyard);
+        graveyard.clear();
+    }*/
+
 }

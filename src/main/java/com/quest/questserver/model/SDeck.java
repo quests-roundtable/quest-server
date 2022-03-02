@@ -3,26 +3,14 @@ package com.quest.questserver.model;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class SDeck {
-    public ArrayList<Story> cards;
-    public ArrayList<Story> graveyard;
+public class SDeck extends Deck{
 
-    public SDeck(ArrayList<Story> l){
+    public SDeck(ArrayList<Card> l){
         cards = l;
     }
 
-    public Story draw(){
-        return cards.get(0);
-    }
+    public void generateCards(){
 
-    public void shuffle(){
-        Collections.shuffle(cards);
     }
-
-    public void discard(Story a){
-        cards.remove(a);
-        graveyard.add(a);
-    }
-
 }
 

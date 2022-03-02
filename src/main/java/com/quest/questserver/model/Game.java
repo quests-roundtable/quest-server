@@ -8,9 +8,9 @@ import java.util.List;
 public class Game {
     private static Integer gameCount = 0;
     private static final int maxPlayers = 4;
-    final int WAITING_LOBBY = 0;
-    final int IN_PROGRESS = 1;
-    final int GAME_OVER = 2;
+    public static final int WAITING_LOBBY = 0;
+    public static final int IN_PROGRESS = 1;
+    public static final int GAME_OVER = 2;
 
     private String id;
     int gameStatus;
@@ -28,6 +28,10 @@ public class Game {
         return id;
     }
 
+    public int getGameStatus() {
+        return gameStatus;
+    }
+
     public int getNumPlayers() {
         return numPlayers;
     }
@@ -36,6 +40,7 @@ public class Game {
         if (numPlayers == maxPlayers) {
             return false;
         } else if (!players.contains(player)) {
+            if (gameStatus != WAITING_LOBBY) return false;
             players.add(player);
             numPlayers++;
         }

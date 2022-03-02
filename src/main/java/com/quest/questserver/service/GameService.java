@@ -52,7 +52,8 @@ public class GameService {
         for(Game game: gameList) {
             if (game.getNumPlayers() < 4) {
                 Player player = playerService.getPlayer(playerId);
-                game.addPlayer(player);
+                boolean joined = game.addPlayer(player);
+                if(!joined) throw new GameException("No available games.");
                 return new ConnectResponse(game.getGameState(), player);
             }
         }
@@ -63,6 +64,9 @@ public class GameService {
         Game game = getGame(gameId);
         if (game.getNumPlayers() < 2) {
             throw new GameException("Not enough players to start game.");
+        }
+        if (game.getGameStatus() != Game.WAITING_LOBBY) {
+            return game.getGameState(); // Change to throw error after debugging
         }
         game.start(); // Start game
         return game.getGameState();

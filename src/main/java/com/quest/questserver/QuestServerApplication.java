@@ -20,7 +20,7 @@ public class QuestServerApplication {
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/actuator").allowedOrigins("http://localhost:3000");
 				registry.addMapping("/game").allowedOrigins("http://localhost:3000");
-				registry.addMapping("/players").allowedOrigins("http://localhost:3000");
+				registry.addMapping("/player").allowedOrigins("http://localhost:3000");
 				registry.addMapping("/ws").allowedOrigins("http://localhost:3000");
 			}
 		};

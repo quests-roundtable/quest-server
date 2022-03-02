@@ -4,17 +4,11 @@ import java.util.ArrayList;
 
 public class Player{
 
-    private String id;
-    private String name;
-    private int shields;
     private ArrayList<Card> hand;
-    private Rank rank;
-
-    public Player() {
-        String uuid = generatePlayerId();
-        this.name = uuid;
-        this.id = uuid;
-        this.shields = 0;
+    Rank rank;
+    int shields;
+    String id;
+    String name;
 
     public int addShields(int n){
         shields = shields + n;

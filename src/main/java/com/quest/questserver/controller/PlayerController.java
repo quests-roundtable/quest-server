@@ -24,15 +24,14 @@ public class PlayerController {
         return ResponseEntity.ok(playerService.createPlayer());
     }
 
-    @PostMapping("/setName")
-    public ResponseEntity<Player> setPlayerName(@RequestBody Map<String, String> request) {
-        log.info("update user request: {}", request.get("id"));
+    @PutMapping("/setName")
+    public ResponseEntity<Player> setPlayerName(Map<String, String> request) {
+        log.info("fetch user request");
         return ResponseEntity.ok(playerService.setPlayerName(request.get("id"), request.get("name")));
     }
 
-    @GetMapping("/player/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Player> getPlayer(@PathVariable(value = "id") String playerId) {
-        log.info("get user request");
         return ResponseEntity.ok(playerService.getPlayer(playerId));
     }
 

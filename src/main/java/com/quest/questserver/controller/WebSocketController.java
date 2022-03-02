@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Slf4j(topic = "SOCKET_CONTROLLER")
+@MessageMapping("/receive")
 public class WebSocketController {
 
-    @SendTo("/topic/message")
-    @MessageMapping("/receive")
+    @SendTo("/topic/messages")
     public String send(String message) throws Exception {
         log.info(message);
         return "message...";

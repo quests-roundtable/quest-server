@@ -8,6 +8,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class ConnectResponse {
-    GameStateDto game;
+    Game game;
     Player player;
 }

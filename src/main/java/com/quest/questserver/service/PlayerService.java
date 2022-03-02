@@ -19,8 +19,6 @@ public class PlayerService {
 
     public Player getPlayer(String playerId) {
         for(Player player: playerList) {
-            // here
-            System.out.println(player.getId());
             if (player.getId().equals(playerId)) {
                 return player;
             }

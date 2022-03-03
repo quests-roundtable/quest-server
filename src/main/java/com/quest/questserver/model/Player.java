@@ -3,6 +3,7 @@ package com.quest.questserver.model;
 import com.quest.questserver.model.Card.Card;
 import com.quest.questserver.model.Card.RankCard;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,18 +13,20 @@ public class Player {
     private String id;
     private String name;
     private int shields;
-    private List<Card> hand;
+    private List<Card> playerHand;
     private RankCard rankCard;
 
-    public Player() {
-        String uuid = generatePlayerId();
-        this.name = uuid;
-        this.id = uuid;
+    public Player(String id, String name) {
+        this.name = name;
+        this.id = id;
         this.shields = 0;
+        this.playerHand = new ArrayList<>();
     }
 
     public void dealCards(List<Card> hand) {
-        this.hand = hand;
+        for(Card card: hand) {
+            playerHand.add(card);
+        }
         rankCard = RankCard.getRankCard("Squire");
     }
 
@@ -33,11 +36,11 @@ public class Player {
     }
 
     public void draw(Card card){
-        hand.add(card);
+        playerHand.add(card);
     }
 
     public void discard(Card card){
-        hand.remove(card);
+        playerHand.remove(card);
     }
 
     public void updateRank() {
@@ -55,10 +58,6 @@ public class Player {
         }
     }
 
-    private static String generatePlayerId() {
-        return UUID.randomUUID().toString();
-    }
-
     //Getter
     public RankCard getRankCard() {
         return rankCard;
@@ -74,6 +73,10 @@ public class Player {
 
     public String getName(){
         return name;
+    }
+
+    public List<Card> getPlayerHand() {
+        return playerHand;
     }
 
     //Setter

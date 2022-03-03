@@ -65,13 +65,13 @@ public class AdventureDeck extends Deck {
         for(int i = 0; i < 6; i++ ) {
             cards.add(new FoeCard("Foe_07", "Evil Knight", 20, 30));
         }
-        for(int i = 0; i < 7; i++ ) {
+        for(int i = 0; i < 8; i++ ) {
             cards.add(new FoeCard("Foe_08", "Saxon Knight", 15, 25));
         }
         cards.add(new FoeCard("Foe_09", "Dragon", 50, 70));
         cards.add(new FoeCard("Foe_10","Giant", 40));
         cards.add(new FoeCard("Foe_10","Giant", 40));
-        for(int i = 0; i < 7; i++ ) {
+        for(int i = 0; i < 4; i++ ) {
             cards.add(new FoeCard("Foe_11","Mordred", 30)); //Use as a Foe or sacrifice at any time to remove any player's Ally from play
         }
 

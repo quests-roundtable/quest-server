@@ -13,7 +13,7 @@ import java.util.Map;
 @RestController
 @Slf4j(topic = "USER_CONTROLLER")
 @AllArgsConstructor
-@RequestMapping("/users")
+@RequestMapping("/user")
 public class UserController {
     @Autowired
     private final UserService userService;
@@ -32,7 +32,7 @@ public class UserController {
 
     @GetMapping("/user/{id}")
     public ResponseEntity<User> getUser(@PathVariable(value = "id") String userId) {
-        log.info("get user request");
+        log.info("get user request: {}", userId);
         return ResponseEntity.ok(userService.getUser(userId));
     }
 

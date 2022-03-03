@@ -1,7 +1,6 @@
 package com.quest.questserver.dto;
 
-import com.quest.questserver.model.Game;
-import com.quest.questserver.model.Player;
+import com.quest.questserver.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -9,5 +8,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class ConnectResponse {
     GameStateDto game;
-    Player player;
+    User user;
 }

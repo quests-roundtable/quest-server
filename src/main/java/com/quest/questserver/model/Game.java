@@ -39,6 +39,10 @@ public class Game {
         }
     }
 
+    public void terminate() {
+        this.gameStatus = GAME_OVER;
+    }
+
     public boolean addPlayer(Player player) {
         if (numPlayers == maxPlayers) {
             return false;
@@ -50,6 +54,15 @@ public class Game {
         return true;
     }
 
+    public Player getPlayer(String playerId) {
+        for(Player player: players) {
+            if(player.getId().equals(playerId)) {
+                return player;
+            }
+        }
+        return null;
+    }
+
     public Boolean removePlayer(Player player) {
         boolean removed = players.remove(player);
         if (removed) numPlayers--;
@@ -57,7 +70,7 @@ public class Game {
     }
 
     private static String generateGameId() {
-        return "game#00" + (++gameCount).toString();
+        return String.format("%04d", ++gameCount);
     }
 
     // Getters

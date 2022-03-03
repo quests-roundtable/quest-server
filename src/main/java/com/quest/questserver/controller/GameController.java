@@ -5,7 +5,7 @@ import com.quest.questserver.dto.ConnectResponse;
 import com.quest.questserver.dto.GameStateDto;
 import com.quest.questserver.dto.RequestDto;
 import com.quest.questserver.service.GameService;
-import com.quest.questserver.service.PlayerService;
+import com.quest.questserver.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +22,6 @@ public class GameController {
     @Autowired
     private final GameService gameService;
 
-    @Autowired
-    private final PlayerService playerService;
-
     private final SimpMessagingTemplate webSocket;
 
     @GetMapping("/{id}")
@@ -34,9 +31,9 @@ public class GameController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<ConnectResponse> create(@RequestBody String playerId) {
-        log.info("create game request: {}", playerId);
-        ConnectResponse response = gameService.createGame(playerId);
+    public ResponseEntity<ConnectResponse> create(@RequestBody String userId) {
+        log.info("create game request: {}", userId);
+        ConnectResponse response = gameService.createGame(userId);
         webSocket.convertAndSend(String.format("/topic/game#%s", response.getGame().getId()), response.getGame());
         return ResponseEntity.ok(response);
     }
@@ -44,15 +41,15 @@ public class GameController {
     @PostMapping("/connect")
     public ResponseEntity<ConnectResponse> connect(@RequestBody ConnectRequest request) {
         log.info("connect request: {}", request);
-        ConnectResponse response = gameService.connectToGame(request.getPlayerId(), request.getGameId());
+        ConnectResponse response = gameService.connectToGame(request.getUserId(), request.getGameId());
         webSocket.convertAndSend(String.format("/topic/game#%s", response.getGame().getId()), response.getGame());
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/connect/random")
     public ResponseEntity<ConnectResponse> connectRandom(@RequestBody ConnectRequest request) {
-        log.info("connect to random game request: {}", request.getPlayerId());
-        ConnectResponse response = gameService.connectToRandomGame(request.getPlayerId());
+        log.info("connect to random game request: {}", request.getUserId());
+        ConnectResponse response = gameService.connectToRandomGame(request.getUserId());
         webSocket.convertAndSend(String.format("/topic/game#%s", response.getGame().getId()), response.getGame());
         return ResponseEntity.ok(response);
     }

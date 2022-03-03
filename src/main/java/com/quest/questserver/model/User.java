@@ -2,6 +2,8 @@ package com.quest.questserver.model;
 
 import com.quest.questserver.model.Card.RankCard;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class User {
@@ -9,16 +11,34 @@ public class User {
 
     private String id;
     private String name;
+    private List<Game> playerGames;
 
     public User() {
         String uuid = generateUserId();
-        this.name = "player#" + userCount.toString();
+        this.name = "player#" + (++userCount).toString();
         this.id = uuid;
-        userCount++;
+        this.playerGames = new ArrayList<>();
     }
 
     private static String generateUserId() {
         return UUID.randomUUID().toString();
+    }
+
+    public void addGame(Game game) {
+        if(!playerGames.contains(game)) {
+            playerGames.add(game);
+        }
+    }
+
+    public void removeGame(Game game) {
+        playerGames.remove(game);
+    }
+
+    public void updateName(String name) {
+        this.name = name;
+        for(Game game: playerGames) {
+            game.getPlayer(id).setName(name);
+        }
     }
 
     //Getter
@@ -30,8 +50,4 @@ public class User {
         return name;
     }
 
-    //Setter
-    public void setName(String name) {
-        this.name = name;
-    }
 }

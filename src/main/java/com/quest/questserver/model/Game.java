@@ -1,6 +1,8 @@
 package com.quest.questserver.model;
 
 import com.quest.questserver.dto.GameStateDto;
+import com.quest.questserver.model.Deck.AdventureDeck;
+import com.quest.questserver.model.Deck.StoryDeck;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,20 +18,25 @@ public class Game {
     int gameStatus;
     private List<Player> players;
     private int numPlayers;
-    ADeck a;
-    SDeck s;
-
+    private AdventureDeck adventureDeck;
+    private StoryDeck storyDeck;
 
     public Game() {
         this.id = generateGameId();
         this.players = new ArrayList<Player>();
         this.numPlayers = 0;
         this.gameStatus = WAITING_LOBBY;
+        this.adventureDeck = new AdventureDeck();
+        this.storyDeck = new StoryDeck();
     }
 
     public void start() {
         this.gameStatus = IN_PROGRESS;
-        //Create decks, shuffle, and deal cards
+        this.adventureDeck.shuffle();
+        this.storyDeck.shuffle();
+        for(Player player: players) {
+            player.dealCards(adventureDeck.dealHand());
+        }
     }
 
     public boolean addPlayer(Player player) {
@@ -71,6 +78,7 @@ public class Game {
         state.setId(id);
         state.setPlayers(players);
         state.setGameStatus(gameStatus);
+        state.setDiscardDeck(adventureDeck.getGraveyard());
         return state;
     }
 }

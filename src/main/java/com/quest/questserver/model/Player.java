@@ -1,15 +1,19 @@
 package com.quest.questserver.model;
 
-import java.util.ArrayList;
+import com.quest.questserver.model.Card.Card;
+import com.quest.questserver.model.Card.RankCard;
+
+import java.util.List;
 import java.util.UUID;
 
-public class Player{
+public class Player {
+    private static Integer playerCount = 0;
 
     private String id;
     private String name;
     private int shields;
-    private ArrayList<Card> hand;
-    private Rank rank;
+    private List<Card> hand;
+    private RankCard rankCard;
 
     public Player() {
         String uuid = generatePlayerId();
@@ -18,14 +22,14 @@ public class Player{
         this.shields = 0;
     }
 
-    public int addShields(int n){
-        shields = shields + n;
-        return shields;
+    public void dealCards(List<Card> hand) {
+        this.hand = hand;
+        rankCard = RankCard.getRankCard("Squire");
     }
 
-    public int removeShield(int n){
-        shields = shields - n;
-        return shields;
+    public void addShields(int n) {
+        this.shields += n;
+        updateRank();
     }
 
     public void draw(Card card){
@@ -36,15 +40,18 @@ public class Player{
         hand.remove(card);
     }
 
-    public void updateRank(String rankName) {
-        if (rankName.equalsIgnoreCase("Squire")){
-            rank.setSquireRank();
+    public void updateRank() {
+        if (rankCard.getName().equalsIgnoreCase("Squire") && shields == 5) {
+            shields -= 5;
+            this.rankCard = RankCard.getRankCard("Knight");
         }
-        if (rankName.equalsIgnoreCase("Knight")){
-            rank.setKnightRank();
+        if (rankCard.getName().equalsIgnoreCase("Knight") && shields == 7){
+            shields -= 7;
+            this.rankCard = RankCard.getRankCard("Champion Knight");
         }
-        if (rankName.equalsIgnoreCase("Champion Knight")){
-            rank.setChampionKnightRank();
+        if (rankCard.getName().equalsIgnoreCase("Champion Knight") && shields == 10){
+            shields -= 10;
+            this.rankCard = RankCard.getRankCard("Knight");
         }
     }
 
@@ -53,8 +60,8 @@ public class Player{
     }
 
     //Getter
-    public Rank getRank() {
-        return rank;
+    public RankCard getRankCard() {
+        return rankCard;
     }
 
     public int getShields() {

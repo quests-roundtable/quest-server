@@ -1,5 +1,6 @@
 package com.quest.questserver.dto;
 
+import com.quest.questserver.model.Card.Card;
 import com.quest.questserver.model.Player;
 import lombok.Data;
 
@@ -12,4 +13,5 @@ public class GameStateDto {
     List<Player> players;
     String message = "No server message here.";
     int test = 0;
+    List<Card> discardDeck;
 }

@@ -10,8 +10,10 @@ import java.util.List;
 public class GameStateDto {
     String id;
     int gameStatus;
-    List<Player> players;
+    int currentPlayer;
+
     String message = "No server message here.";
     int test = 0;
+    List<Player> players;
     List<Card> discardDeck;
 }

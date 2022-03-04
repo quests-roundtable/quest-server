@@ -21,6 +21,9 @@ public class Game {
     private AdventureDeck adventureDeck;
     private StoryDeck storyDeck;
 
+    // Move to round maybe
+    private int currentPlayer;
+
     public Game() {
         this.id = generateGameId();
         this.players = new ArrayList<Player>();
@@ -37,6 +40,11 @@ public class Game {
         for(Player player: players) {
             player.dealCards(adventureDeck.dealHand());
         }
+        this.currentPlayer = 0;
+    }
+
+    public void nextTurn() {
+        this.currentPlayer = (currentPlayer + 1) % numPlayers;
     }
 
     public void terminate() {
@@ -84,6 +92,14 @@ public class Game {
 
     public int getNumPlayers() {
         return numPlayers;
+    }
+
+    public AdventureDeck getAdventureDeck() {
+        return this.adventureDeck;
+    }
+
+    public StoryDeck getStoryDeck() {
+        return this.storyDeck;
     }
 
     public GameStateDto getGameState() {

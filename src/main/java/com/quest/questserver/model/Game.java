@@ -44,7 +44,10 @@ public class Game {
     }
 
     public void nextTurn() {
-        this.currentPlayer = (currentPlayer + 1) % numPlayers;
+        this.currentPlayer += 1;
+        if (currentPlayer >= numPlayers) {
+            currentPlayer = 0;
+        }
     }
 
     public void terminate() {
@@ -109,6 +112,7 @@ public class Game {
     public GameStateDto getGameState() {
         GameStateDto state = new GameStateDto();
         state.setId(id);
+        state.setCurrentPlayer(currentPlayer);
         state.setPlayers(players);
         state.setGameStatus(gameStatus);
         state.setDiscardDeck(adventureDeck.getGraveyard());

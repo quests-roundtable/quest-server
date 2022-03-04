@@ -1,36 +1,77 @@
 package com.quest.questserver.model;
 
+import com.quest.questserver.dto.GameStateDto;
+import com.quest.questserver.model.Deck.AdventureDeck;
+import com.quest.questserver.model.Deck.StoryDeck;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
     private static Integer gameCount = 0;
+    private static final int maxPlayers = 4;
+    public static final int WAITING_LOBBY = 0;
+    public static final int IN_PROGRESS = 1;
+    public static final int GAME_OVER = 2;
 
-
-    private String gameId;
+    private String id;
+    int gameStatus;
     private List<Player> players;
     private int numPlayers;
-    ADeck a;
-    SDeck s;
+    private AdventureDeck adventureDeck;
+    private StoryDeck storyDeck;
 
+    // Move to round maybe
+    private int currentPlayer;
 
     public Game() {
-        this.gameId = generateGameId();
+        this.id = generateGameId();
         this.players = new ArrayList<Player>();
         this.numPlayers = 0;
+        this.gameStatus = WAITING_LOBBY;
+        this.adventureDeck = new AdventureDeck();
+        this.storyDeck = new StoryDeck();
     }
 
-    public String getGameId() {
-        return gameId;
+    public void start() {
+        this.gameStatus = IN_PROGRESS;
+        this.adventureDeck.shuffle();
+        this.storyDeck.shuffle();
+        for(Player player: players) {
+            player.dealCards(adventureDeck.dealHand());
+        }
+        this.currentPlayer = 0;
     }
 
-    public int getNumPlayers() {
-        return numPlayers;
+    public void nextTurn() {
+        this.currentPlayer += 1;
+        if (currentPlayer >= numPlayers) {
+            currentPlayer = 0;
+        }
     }
 
-    public void addPlayer(Player player) {
-        players.add(player);
-        numPlayers++;
+    public void terminate() {
+        this.gameStatus = GAME_OVER;
+    }
+
+    public boolean addPlayer(Player player) {
+        if (numPlayers == maxPlayers) {
+            return false;
+        } else if (!players.contains(player)) {
+            if (gameStatus != WAITING_LOBBY) return false;
+            players.add(player);
+            numPlayers++;
+        }
+        return true;
+    }
+
+    public Player getPlayer(String playerId) {
+        for(Player player: players) {
+            if(player.getId().equals(playerId)) {
+                return player;
+            }
+        }
+        return null;
     }
 
     public Boolean removePlayer(Player player) {
@@ -40,13 +81,41 @@ public class Game {
     }
 
     private static String generateGameId() {
-        return "game#00" + (++gameCount).toString();
+        return String.format("%04d", ++gameCount);
     }
 
-        /*reshuffle
-    if (getsize() == 0){
-        cards.addall(graveyard);
-        graveyard.clear();
-    }*/
+    // Getters
+    public String getId() {
+        return id;
+    }
 
+    public int getGameStatus() {
+        return gameStatus;
+    }
+
+    public int getNumPlayers() {
+        return numPlayers;
+    }
+
+    public int getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public AdventureDeck getAdventureDeck() {
+        return this.adventureDeck;
+    }
+
+    public StoryDeck getStoryDeck() {
+        return this.storyDeck;
+    }
+
+    public GameStateDto getGameState() {
+        GameStateDto state = new GameStateDto();
+        state.setId(id);
+        state.setCurrentPlayer(currentPlayer);
+        state.setPlayers(players);
+        state.setGameStatus(gameStatus);
+        state.setDiscardDeck(adventureDeck.getGraveyard());
+        return state;
+    }
 }

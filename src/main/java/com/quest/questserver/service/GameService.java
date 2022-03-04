@@ -1,10 +1,13 @@
 package com.quest.questserver.service;
 
 import com.quest.questserver.dto.ConnectResponse;
+import com.quest.questserver.dto.GameStateDto;
 import com.quest.questserver.exception.GameException;
 import com.quest.questserver.exception.NotFoundException;
 import com.quest.questserver.model.Game;
 import com.quest.questserver.model.Player;
+import com.quest.questserver.model.User;
+import com.quest.questserver.repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,47 +17,64 @@ import java.util.List;
 @Service
 public class GameService {
     @Autowired
-    private PlayerService playerService;
+    private UserService userService;
 
-    private static List<Game> gameList = new ArrayList<Game>();
+    @Autowired
+    private GameRepository gameRepo;
 
-    public ConnectResponse createGame(String playerId) {
-        Player player = playerService.getPlayer(playerId);
-        Game game = new Game();
+    public ConnectResponse createGame(String userId) {
+        User user = userService.getUser(userId);
+        Game game = gameRepo.createGame();
+        Player player = new Player(user.getId(), user.getName());
         game.addPlayer(player);
-        gameList.add(game);
-        return new ConnectResponse(game, player);
+        user.addGame(game);
+        return new ConnectResponse(game.getGameState(), user);
     }
 
     public Game getGame(String gameId) {
-        for(Game game: gameList) {
-            if (game.getGameId() == gameId) {
-                return game;
-            }
-        }
-        throw new NotFoundException("Game with provided id does not exist.");
+        return gameRepo.getGame(gameId);
     }
 
-    public ConnectResponse connectToGame(String playerId, String gameId) {
-        for(Game game: gameList) {
-            if (game.getGameId() == gameId) {
-                Player player = playerService.getPlayer(playerId);
-                game.addPlayer(player);
-                return new ConnectResponse(game, player);
-            }
+    public ConnectResponse connectToGame(String userId, String gameId) {
+        Game game = getGame(gameId);
+        User user = userService.getUser(userId);
+        if (game.getPlayer(userId) == null) {
+            Player player = new Player(user.getId(), user.getName());
+            boolean joined = game.addPlayer(player);
+            if(!joined) throw new GameException("No available games.");
         }
-        throw new NotFoundException("Game with provided id does not exist.");
+        user.addGame(game);
+        return new ConnectResponse(game.getGameState(), user);
     }
 
-    public ConnectResponse connectToRandomGame(String playerId) {
-        for(Game game: gameList) {
-            if (game.getNumPlayers() < 4) {
-                Player player = playerService.getPlayer(playerId);
-                game.addPlayer(player);
-                return new ConnectResponse(game, player);
-            }
+    public ConnectResponse connectToRandomGame(String userId) {
+        Game game = gameRepo.getAvailableGame();
+        User user = userService.getUser(userId);
+        if (game.getPlayer(userId) == null) {
+            Player player = new Player(user.getId(), user.getName());
+            boolean joined = game.addPlayer(player);
+            if(!joined) throw new GameException("No available games.");
         }
-        throw new GameException("No available games.");
+        user.addGame(game);
+        return new ConnectResponse(game.getGameState(), user);
     }
 
+    public GameStateDto startGame(String gameId) {
+        Game game = getGame(gameId);
+        if (game.getNumPlayers() < 2) {
+            throw new GameException("Not enough players to start game.");
+        }
+        if (game.getGameStatus() != Game.WAITING_LOBBY) {
+            return game.getGameState(); // Change to throw error after debugging
+        }
+        game.start(); // Start game
+        return game.getGameState();
+    }
+
+    public void gameOver(String gameId) {
+        Game game = getGame(gameId);
+        if (game.getGameStatus() == Game.IN_PROGRESS) {
+            game.terminate();
+        }
+    }
 }

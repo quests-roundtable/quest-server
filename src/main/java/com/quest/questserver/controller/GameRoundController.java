@@ -26,21 +26,21 @@ public class GameRoundController {
     public ResponseEntity<String> drawCard(@RequestBody RequestDto<String> request) {
         GameStateDto state = gameRoundService.drawCard(request.getLobby(), request.getData());
         webSocket.convertAndSend(String.format("/topic/game#%s", request.getLobby()), state);
-        return ResponseEntity.ok("Game started.");
+        return ResponseEntity.ok("Card drawn.");
     }
 
     @PostMapping("/discard")
-    public ResponseEntity<String> discardCard(@RequestBody PlayerRequestDto<Card> request) {
+    public ResponseEntity<String> discardCard(@RequestBody PlayerRequestDto<String> request) {
         GameStateDto state = gameRoundService.discardCard(request.getLobby(), request.getPlayerId(), request.getData());
         webSocket.convertAndSend(String.format("/topic/game#%s", request.getLobby()), state);
-        return ResponseEntity.ok("Game started.");
+        return ResponseEntity.ok("Card discarded.");
     }
 
     @PostMapping("/next")
-    public ResponseEntity<String> nextPlayerTurn(@RequestBody PlayerRequestDto<Card> request) {
-        GameStateDto state = gameRoundService.discardCard(request.getLobby(), request.getPlayerId(), request.getData());
-        state.setMessage("Player has passed.");
+    public ResponseEntity<String> nextPlayerTurn(@RequestBody RequestDto<String> request) {
+        GameStateDto state = gameRoundService.nextTurn(request.getLobby());
+        state.setMessage(state.getPlayers().get(state.getCurrentPlayer()).getName() + " has passed.");
         webSocket.convertAndSend(String.format("/topic/game#%s", request.getLobby()), state);
-        return ResponseEntity.ok("Game started.");
+        return ResponseEntity.ok("Passed.");
     }
 }

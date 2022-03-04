@@ -39,8 +39,13 @@ public class Player {
         playerHand.add(card);
     }
 
-    public void discard(Card card){
-        playerHand.remove(card);
+    public Card discard(String cardId){
+        for(int i = 0; i < playerHand.size(); i++) {
+            if (playerHand.get(i).getId().equals(cardId)) {
+                return playerHand.remove(i);
+            }
+        }
+        return null;
     }
 
     public void updateRank() {

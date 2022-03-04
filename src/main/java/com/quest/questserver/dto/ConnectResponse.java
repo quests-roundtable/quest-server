@@ -7,6 +7,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class ConnectResponse {
-    GameStateDto game;
-    User user;
+    private GameStateDto game;
+    private User user;
 }

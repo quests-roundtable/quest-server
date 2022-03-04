@@ -8,12 +8,13 @@ import java.util.List;
 
 @Data
 public class GameStateDto {
-    String id;
-    int gameStatus;
-    int currentPlayer;
+    private String id;
+    private int gameStatus;
+    private int currentPlayer;
 
-    String message = "No server message here.";
-    int test = 0;
-    List<Player> players;
-    List<Card> discardDeck;
+    private List<Player> players;
+    private List<Card> discardDeck;
+
+    private String message = "No server message here.";
+    private int test = 0;
 }

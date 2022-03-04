@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class PlayerRequestDto<T> {
-    T data;
-    String lobby;
-    String playerId;
+    private T data;
+    private String lobby;
+    private String playerId;
 }

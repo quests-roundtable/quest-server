@@ -94,6 +94,10 @@ public class Game {
         return numPlayers;
     }
 
+    public int getCurrentPlayer() {
+        return currentPlayer;
+    }
+
     public AdventureDeck getAdventureDeck() {
         return this.adventureDeck;
     }

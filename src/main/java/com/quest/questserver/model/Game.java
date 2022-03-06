@@ -1,8 +1,14 @@
 package com.quest.questserver.model;
 
 import com.quest.questserver.dto.GameStateDto;
+import com.quest.questserver.model.Card.Card;
+import com.quest.questserver.model.Card.QuestCard;
+import com.quest.questserver.model.Card.TournamentCard;
 import com.quest.questserver.model.Deck.AdventureDeck;
 import com.quest.questserver.model.Deck.StoryDeck;
+import com.quest.questserver.model.Strategy.QuestStrategy;
+import com.quest.questserver.model.Strategy.RoundStrategy;
+import com.quest.questserver.model.Strategy.TournamentStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +26,7 @@ public class Game {
     private int numPlayers;
     private AdventureDeck adventureDeck;
     private StoryDeck storyDeck;
+    private RoundStrategy roundStrategy;
 
     // Move to round maybe
     private int currentPlayer;
@@ -37,17 +44,31 @@ public class Game {
         this.gameStatus = IN_PROGRESS;
         this.adventureDeck.shuffle();
         this.storyDeck.shuffle();
-        for(Player player: players) {
+        for (Player player : players) {
             player.dealCards(adventureDeck.dealHand());
         }
         this.currentPlayer = 0;
     }
 
     public void nextTurn() {
-        this.currentPlayer += 1;
-        if (currentPlayer >= numPlayers) {
-            currentPlayer = 0;
+        if (roundStrategy != null) {
+            roundStrategy.nextTurn(this);
+            if (roundStrategy.getRoundStatus() == RoundStrategy.TERMINATED) {
+                this.roundStrategy.terminate(this);
+                this.roundStrategy = null;
+            }
+            return;
         }
+        this.currentPlayer = (currentPlayer + 1) % numPlayers;
+        Card storyCard = this.storyDeck.draw();
+        if (storyCard.getType() == "Quest") {
+            this.roundStrategy = new QuestStrategy((QuestCard) storyCard);
+        } else if (storyCard.getType() == "Tournament") {
+            this.roundStrategy = new TournamentStrategy((TournamentCard) storyCard);
+        } else {
+            // event
+        }
+
     }
 
     public void terminate() {
@@ -58,7 +79,8 @@ public class Game {
         if (numPlayers == maxPlayers) {
             return false;
         } else if (!players.contains(player)) {
-            if (gameStatus != WAITING_LOBBY) return false;
+            if (gameStatus != WAITING_LOBBY)
+                return false;
             players.add(player);
             numPlayers++;
         }
@@ -66,8 +88,8 @@ public class Game {
     }
 
     public Player getPlayer(String playerId) {
-        for(Player player: players) {
-            if(player.getId().equals(playerId)) {
+        for (Player player : players) {
+            if (player.getId().equals(playerId)) {
                 return player;
             }
         }
@@ -76,7 +98,8 @@ public class Game {
 
     public Boolean removePlayer(Player player) {
         boolean removed = players.remove(player);
-        if (removed) numPlayers--;
+        if (removed)
+            numPlayers--;
         return removed;
     }
 
@@ -107,6 +130,10 @@ public class Game {
 
     public StoryDeck getStoryDeck() {
         return this.storyDeck;
+    }
+
+    public List<Player> getPlayers() {
+        return this.players;
     }
 
     public GameStateDto getGameState() {

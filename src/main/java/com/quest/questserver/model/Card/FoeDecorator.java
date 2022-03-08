@@ -1,4 +1,8 @@
 package com.quest.questserver.model.Card;
 
-public class FoeDecorator {
+public abstract class FoeDecorator {
+    FoeCard foeCard;
+
+    public abstract void getStrength();
+
 }

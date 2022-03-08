@@ -1,4 +1,7 @@
 package com.quest.questserver.model.Card;
 
-public class RankDecorator {
+public abstract class RankDecorator {
+    RankCard rankCard;
+
+    public abstract void getStrength();
 }

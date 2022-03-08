@@ -4,12 +4,19 @@ public class PlayerWeaponDecorator extends RankDecorator{
     RankDecorator player;
     WeaponCard weapon;
 
-    @Override
-    public void getStrength() {
-
+    public PlayerWeaponDecorator(String type, String typeId, String name) {
+        super(type, typeId, name);
     }
 
-    public void getAllCards(){
+    @Override
+    public int getStrength() {
+        int playerStrength = player.getStrength();
+        int weaponStrength = weapon.getStrength();
+        int totalStrength = playerStrength + weaponStrength;
+        return totalStrength;
+    }
 
+    public Card getAllCards(){
+        return player;
     }
 }

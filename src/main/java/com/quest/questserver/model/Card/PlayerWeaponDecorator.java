@@ -12,13 +12,18 @@ public class PlayerWeaponDecorator extends RankDecorator{
 
     @Override
     public int getStrength() {
-        int playerStrength = player.getStrength();
-        int weaponStrength = weapon.getStrength();
-        int totalStrength = playerStrength + weaponStrength;
+        int totalStrength = player.getStrength() + weapon.getStrength();
         return totalStrength;
     }
 
-    public ArrayList<Card> getAllCards(ArrayList<Card> cards){
-
+    @Override
+    public ArrayList<Card> getAllCards(){
+        if(player.getType() == "Rank"){
+            return null;
+        }
+        ArrayList<Card> cardList = new ArrayList<Card>();
+        cardList.add(weapon);
+        cardList.addAll(player.getAllCards());
+        return cardList;
     }
 }

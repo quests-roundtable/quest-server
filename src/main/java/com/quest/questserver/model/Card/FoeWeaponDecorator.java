@@ -12,13 +12,18 @@ public class FoeWeaponDecorator extends FoeDecorator {
 
     @Override
     public int getStrength() {
-        int foeStrength = foe.getStrength();
-        int weaponStrength = weapon.getStrength();
-        int totalStrength = foeStrength + weaponStrength;
+        int totalStrength = foe.getStrength() + weapon.getStrength();
         return totalStrength;
     }
 
-    public ArrayList<Card> getAllCards(ArrayList<Card> cards){
-
+    @Override
+    public ArrayList<Card> getAllCards(){
+        if(foe.getType() == "Foe"){
+            return null;
+        }
+        ArrayList<Card> cardList = new ArrayList<Card>();
+        cardList.add(weapon);
+        cardList.addAll(foe.getAllCards());
+        return cardList;
     }
 }

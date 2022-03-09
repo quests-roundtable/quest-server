@@ -12,13 +12,18 @@ public class AllyDecorator extends RankDecorator{
 
     @Override
     public int getStrength() {
-        int playerStrength = player.getStrength();
-        int allyStrength = ally.getStrength();
-        int totalStrength = playerStrength + allyStrength;
+        int totalStrength = player.getStrength() + ally.getStrength();
         return totalStrength;
     }
 
-    public ArrayList<Card> getAllCards(ArrayList<Card> cards){
-
+    @Override
+    public ArrayList<Card> getAllCards(){
+        if(player.getType() == "Rank"){
+            return null;
+        }
+        ArrayList<Card> cardList = new ArrayList<Card>();
+        cardList.add(ally);
+        cardList.addAll(player.getAllCards());
+        return cardList;
     }
 }

@@ -1,5 +1,7 @@
 package com.quest.questserver.model.Card;
 
+import java.util.ArrayList;
+
 public class AllyDecorator extends RankDecorator{
     RankDecorator player;
     AllyCard ally;
@@ -16,7 +18,7 @@ public class AllyDecorator extends RankDecorator{
         return totalStrength;
     }
 
-    public Card getAllCards(){
+    public ArrayList<Card> getAllCards(ArrayList<Card> cards){
 
     }
 }

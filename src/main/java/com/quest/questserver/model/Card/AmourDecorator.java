@@ -1,5 +1,7 @@
 package com.quest.questserver.model.Card;
 
+import java.util.ArrayList;
+
 public class AmourDecorator extends RankDecorator{
     RankDecorator player;
     AmourCard amour;
@@ -17,7 +19,16 @@ public class AmourDecorator extends RankDecorator{
 
     }
 
-    public Card getAllCards(){
+    public ArrayList<Card> getAllCards(ArrayList<Card> cards) {
+        if(amour != null){
+            cards.add(amour);
+            amour = null;
+            getAllCards(cards);
+        }
 
+        if(amour == null){
+        return cards;}
+
+        return null;
+        }
     }
-}

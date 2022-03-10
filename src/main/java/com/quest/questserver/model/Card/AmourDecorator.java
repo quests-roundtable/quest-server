@@ -1,7 +1,5 @@
 package com.quest.questserver.model.Card;
 
-import org.apache.commons.lang3.ArrayUtils;
-
 import java.util.ArrayList;
 
 public class AmourDecorator extends RankDecorator{
@@ -14,19 +12,23 @@ public class AmourDecorator extends RankDecorator{
 
     @Override
     public int getStrength() {
-        int totalStrength = player.getStrength() + amour.getStrength();
+        int playerStrength = player.getStrength();
+        int amourStrength = amour.getStrength();
+        int totalStrength = playerStrength + amourStrength;
         return totalStrength;
 
     }
 
-    @Override
-    public ArrayList<Card> getAllCards() {
-        if(player.getType() == "Rank"){
-            return null;
+    public ArrayList<Card> getAllCards(ArrayList<Card> cards) {
+        if(amour != null){
+            cards.add(amour);
+            amour = null;
+            getAllCards(cards);
         }
-        ArrayList<Card> cardList = new ArrayList<Card>();
-        cardList.add(amour);
-        cardList.addAll(player.getAllCards());
-        return cardList;
+
+        if(amour == null){
+        return cards;}
+
+        return null;
         }
     }

@@ -3,29 +3,27 @@ package com.quest.questserver.model.Card;
 import java.util.ArrayList;
 
 public class FoeWeaponDecorator extends FoeDecorator {
-    private WeaponCard weapon;
+    FoeDecorator foe;
+    WeaponCard weapon;
 
-    public FoeWeaponDecorator(FoeCardDecorator foeDecorator, WeaponCard weapon) {
-        super(foeDecorator);
-        this.weapon = weapon;
+    public FoeWeaponDecorator(String type, String typeId, String name) {
+        super(type, typeId, name);
     }
 
     @Override
     public int getStrength() {
-        int totalStrength = foeDecorator.getStrength() + weapon.getStrength();
-        return totalStrength;
-    }
-
-    public int getQuestStrength() {
-        int totalStrength = foeDecorator.getQuestStrength() + weapon.getStrength();
+        int totalStrength = foe.getStrength() + weapon.getStrength();
         return totalStrength;
     }
 
     @Override
     public ArrayList<Card> getAllCards(){
+        if(foe.getType() == "Foe"){
+            return null;
+        }
         ArrayList<Card> cardList = new ArrayList<Card>();
-        cardList.addAll(foeDecorator.getAllCards());
         cardList.add(weapon);
+        cardList.addAll(foe.getAllCards());
         return cardList;
     }
 }

@@ -61,11 +61,6 @@
    mvn clean install
    ```
 
--> Tests
-  ```sh
-   ./mvnw test
-   ```
-
 -> Run the server
    ```sh
    ./mvnw spring-boot:run

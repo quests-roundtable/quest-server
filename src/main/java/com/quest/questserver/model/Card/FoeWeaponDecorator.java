@@ -1,7 +1,5 @@
 package com.quest.questserver.model.Card;
 
-import java.util.ArrayList;
-
 public class FoeWeaponDecorator extends FoeDecorator {
     FoeDecorator foe;
     WeaponCard weapon;
@@ -18,7 +16,7 @@ public class FoeWeaponDecorator extends FoeDecorator {
         return totalStrength;
     }
 
-    public ArrayList<Card> getAllCards(ArrayList<Card> cards){
+    public Card getAllCards() {
 
     }
 }

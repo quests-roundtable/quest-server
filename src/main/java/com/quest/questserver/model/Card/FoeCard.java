@@ -1,6 +1,8 @@
 package com.quest.questserver.model.Card;
 
-public class FoeCard extends AdventureCard {
+import java.util.ArrayList;
+
+public class FoeCard extends AdventureCard implements FoeCardDecorator {
     private int questStrength;
 
     public FoeCard(String typeId, String name, int strength){
@@ -15,5 +17,9 @@ public class FoeCard extends AdventureCard {
 
     public int getQuestStrength() {
         return questStrength;
+    }
+
+    public ArrayList<Card> getAllCards() {
+        return new ArrayList<Card>();
     }
 }

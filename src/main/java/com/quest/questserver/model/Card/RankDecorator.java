@@ -2,11 +2,12 @@ package com.quest.questserver.model.Card;
 
 import java.util.ArrayList;
 
-public abstract class RankDecorator extends Card {
-    RankCard rankCard;
+public abstract class RankDecorator extends Card implements RankCardDecorator {
+    protected RankCardDecorator rankDecorator;
 
-    public RankDecorator(String type, String typeId, String name) {
-        super(type, typeId, name);
+    public RankDecorator(RankCardDecorator rankDecorator) {
+        super("RankDecorator", null, rankDecorator.getName());
+        this.rankDecorator = rankDecorator;
     }
 
     public abstract int getStrength();

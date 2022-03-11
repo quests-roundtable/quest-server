@@ -32,7 +32,7 @@ public class RankCard extends Card implements RankCardDecorator {
         return battlePoints;
     }
 
-    public ArrayList<Card> getAllCards() {
+    public ArrayList<Card> fetchAllCards() {
         return new ArrayList<Card>();
     }
 }

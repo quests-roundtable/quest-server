@@ -9,7 +9,8 @@ import com.quest.questserver.model.Card.StoryCard;
 public interface RoundStrategy {
     public static final int WAITING_PLAYERS = 1;
     public static final int IN_PROGRESS = 2;
-    public static final int TERMINATED = 3;
+    public static final int ROUND_END = 3;
+    public static final int TERMINATED = 4;
 
     public void start(Game game);
 

@@ -14,6 +14,6 @@ public abstract class FoeDecorator extends Card implements FoeCardDecorator {
 
     public abstract int getQuestStrength();
 
-    public abstract ArrayList<Card> getAllCards();
+    public abstract ArrayList<Card> fetchAllCards();
 
 }

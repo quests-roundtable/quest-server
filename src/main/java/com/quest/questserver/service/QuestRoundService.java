@@ -3,14 +3,11 @@ package com.quest.questserver.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.quest.questserver.dto.QuestStrategyDto;
 import com.quest.questserver.dto.GameStateDto;
 import com.quest.questserver.model.Card.Card;
 import com.quest.questserver.model.Card.AdventureCard;
-import com.quest.questserver.model.Card.QuestCard;
 import com.quest.questserver.model.Card.WeaponCard;
 import com.quest.questserver.model.Card.FoeCard;
-import com.quest.questserver.model.Card.RankDecorator;
 import com.quest.questserver.model.Card.RankCardDecorator;
 import com.quest.questserver.model.Card.AllyDecorator;
 import com.quest.questserver.model.Card.FoeDecorator;
@@ -141,7 +138,7 @@ public class QuestRoundService {
             QuestInfo questInfo = player.getQuestInfo();
             if (questInfo != null) {
                 // remove all decorators, put back in player hand
-                ArrayList<Card> decoratorCards = questInfo.getPlayerMove().getAllCards();
+                ArrayList<Card> decoratorCards = questInfo.getPlayerMove().fetchAllCards();
                 questInfo.setPlayerMove(null);
                 for (Card card : decoratorCards) {
                     player.draw(card);

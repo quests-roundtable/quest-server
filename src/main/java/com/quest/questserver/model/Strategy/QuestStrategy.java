@@ -121,7 +121,7 @@ public class QuestStrategy implements RoundStrategy {
 
         for (int playerIndex : playerIndexes) {
             Player player = players.get(playerIndex);
-            ArrayList<Card> decoratorCards = player.getQuestInfo().getPlayerMove().getAllCards();
+            ArrayList<Card> decoratorCards = player.getQuestInfo().getPlayerMove().fetchAllCards();
             player.setQuestInfo(null);
             for (Card card : decoratorCards) {
                 player.draw(card);
@@ -136,7 +136,7 @@ public class QuestStrategy implements RoundStrategy {
     private void getResults(Game g) {
         FoeCardDecorator stage = (FoeCardDecorator) questStages.get(0);
         this.roundResult = new RoundResult();
-        this.roundResult.setQuestStage(stage.getAllCards());
+        this.roundResult.setQuestStage(stage.fetchAllCards());
         int stageStrength = stage.getName() == quest.getQuestFoe() ? stage.getQuestStrength()
                 : stage.getStrength();
 
@@ -154,7 +154,7 @@ public class QuestStrategy implements RoundStrategy {
             }
 
             // set end of round results
-            RoundResult.PlayerResult result = new RoundResult.PlayerResult(qualified, playerMove.getAllCards());
+            RoundResult.PlayerResult result = new RoundResult.PlayerResult(qualified, playerMove.fetchAllCards());
             this.roundResult.addResults(player.getId(), result);
         }
     }
@@ -171,7 +171,7 @@ public class QuestStrategy implements RoundStrategy {
             boolean qualified = roundResult.getResults().get(player.getId()).success;
 
             // Add the cards player played to discard deck
-            ArrayList<Card> moveCards = playerMove.getAllCards();
+            ArrayList<Card> moveCards = playerMove.fetchAllCards();
             for (int j = moveCards.size() - 1; j >= 0; j--) {
                 Card card = moveCards.get(i);
                 if (card.getType() == "Ally") {
@@ -196,7 +196,7 @@ public class QuestStrategy implements RoundStrategy {
 
         // Dicard stage cards
         FoeCardDecorator stage = (FoeCardDecorator) questStages.remove(0);
-        for (Card card : stage.getAllCards()) {
+        for (Card card : stage.fetchAllCards()) {
             g.getAdventureDeck().discard(card);
         }
     }

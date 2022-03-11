@@ -162,7 +162,7 @@ public class Game {
             // Get the stage
             Card card = quest.getStages().get(0);
             List<Card> stage = card.getType() == "Test" ? new ArrayList<>(Arrays.asList(card))
-                    : ((FoeCardDecorator) card).getAllCards();
+                    : ((FoeCardDecorator) card).fetchAllCards();
             state.setQuestStage(stage);
         }
         return state;

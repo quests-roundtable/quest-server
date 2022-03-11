@@ -134,7 +134,7 @@ public class QuestRoundService {
             QuestInfo questInfo = player.getQuestInfo();
             if (questInfo != null) {
                 // remove all decorators, put back in player hand
-                ArrayList<Card> decoratorCards = questInfo.getPlayerMove().getAllCards();
+                ArrayList<Card> decoratorCards = questInfo.getPlayerMove().fetchAllCards();
                 questInfo.setPlayerMove(null);
                 for (Card card : decoratorCards) {
                     player.draw(card);

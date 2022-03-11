@@ -20,7 +20,7 @@ public class FoeCard extends AdventureCard implements FoeCardDecorator {
         return questStrength;
     }
 
-    public ArrayList<Card> getAllCards() {
+    public ArrayList<Card> fetchAllCards() {
         return new ArrayList<Card>(Arrays.asList(this));
     }
 }

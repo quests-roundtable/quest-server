@@ -1,16 +1,17 @@
 package com.quest.questserver.model.Card;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class FoeCard extends AdventureCard implements FoeCardDecorator {
     private int questStrength;
 
-    public FoeCard(String typeId, String name, int strength){
+    public FoeCard(String typeId, String name, int strength) {
         super("Foe", typeId, name, strength);
         this.questStrength = 0;
     }
 
-    public FoeCard(String typeId, String name, int strength, int questStrength){
+    public FoeCard(String typeId, String name, int strength, int questStrength) {
         super("Foe", typeId, name, strength);
         this.questStrength = questStrength;
     }
@@ -20,6 +21,6 @@ public class FoeCard extends AdventureCard implements FoeCardDecorator {
     }
 
     public ArrayList<Card> getAllCards() {
-        return new ArrayList<Card>();
+        return new ArrayList<Card>(Arrays.asList(this));
     }
 }

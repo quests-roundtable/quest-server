@@ -22,7 +22,7 @@ public class FoeWeaponDecorator extends FoeDecorator {
     }
 
     @Override
-    public ArrayList<Card> getAllCards(){
+    public ArrayList<Card> getAllCards() {
         ArrayList<Card> cardList = new ArrayList<Card>();
         cardList.addAll(foeDecorator.getAllCards());
         cardList.add(weapon);

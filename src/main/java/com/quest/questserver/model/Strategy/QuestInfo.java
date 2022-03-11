@@ -4,28 +4,31 @@ import java.util.List;
 import java.util.ArrayList;
 import com.quest.questserver.model.Card.Card;
 
+import com.quest.questserver.model.Card.AdventureCard;
+import com.quest.questserver.model.Card.RankCardDecorator;
+
 public class QuestInfo {
-    private static final int SPONSOR = 0;
-    private static final int PLAYER = 1;
+    public static final int SPONSOR = 0;
+    public static final int PLAYER = 1;
 
     private int role;
-    private List<Card> playerMove;
-    private List<List<Card>> stages;
+    private RankCardDecorator playerMove;
+    private List<Card> stages;
 
-    public QuestInfo(int role, List<List<Card>> stages) {
+    public QuestInfo(int role, List<Card> stages) {
         this.role = role;
         this.stages = (role == SPONSOR) ? stages : null;
     }
 
-    public List<Card> getPlayerMove() {
+    public RankCardDecorator getPlayerMove() {
         return this.playerMove;
     }
 
-    public void setPlayerMove(List<Card> move) {
+    public void setPlayerMove(RankCardDecorator move) {
         this.playerMove = move;
     }
 
-    public List<List<Card>> getStages() {
+    public List<Card> getStages() {
         return this.stages;
     }
 }

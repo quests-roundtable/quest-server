@@ -1,6 +1,8 @@
 package com.quest.questserver.model;
 
 import com.quest.questserver.dto.GameStateDto;
+import com.quest.questserver.dto.QuestStrategyDto;
+import com.quest.questserver.dto.TournamentStrategyDto;
 import com.quest.questserver.model.Card.Card;
 import com.quest.questserver.model.Card.QuestCard;
 import com.quest.questserver.model.Card.TournamentCard;
@@ -61,10 +63,14 @@ public class Game {
         }
         this.currentPlayer = (currentPlayer + 1) % numPlayers;
         Card storyCard = this.storyDeck.draw();
+        Card card = this.adventureDeck.draw();
+        players.get(currentPlayer).draw(card);
         if (storyCard.getType() == "Quest") {
             this.roundStrategy = new QuestStrategy((QuestCard) storyCard);
+            this.roundStrategy.start(this);
         } else if (storyCard.getType() == "Tournament") {
             this.roundStrategy = new TournamentStrategy((TournamentCard) storyCard);
+            this.roundStrategy.start(this);
         } else {
             // event
         }
@@ -136,6 +142,36 @@ public class Game {
         return this.players;
     }
 
+    public RoundStrategy getRoundStrategy() {
+        return this.roundStrategy;
+    }
+
+    public QuestStrategyDto getQuestState() {
+        QuestStrategyDto state = new QuestStrategyDto();
+        if (roundStrategy instanceof QuestStrategy) {
+            QuestStrategy quest = (QuestStrategy) roundStrategy;
+            state.setSponsorIndex(quest.getSponsorIndex());
+            state.setRoundStatus(quest.getRoundStatus());
+            state.setCurrentPlayer(quest.getCurrentPlayer());
+            state.setCurrentStage(quest.getCurrentStage());
+            state.setQuest((QuestCard) quest.getQuest());
+            // state.setQuestStages(quest.getStages()); Fix mapping
+        }
+        return state;
+    }
+
+    public TournamentStrategyDto getTournamentState() {
+        TournamentStrategyDto state = new TournamentStrategyDto();
+        if (roundStrategy instanceof TournamentStrategy) {
+            TournamentStrategy tournament = (TournamentStrategy) roundStrategy;
+            // state.setSponsorIndex(roundStrategy.getSponsorIndex());
+            // state.setRoundStatus(roundStrategy.getRoundStatus());
+            // state.setCurrentPlayer(roundStrategy.getCurrentPlayer());
+            // state.setTournament((TournamentCard) roundStrategy.getStoryCard());
+        }
+        return state;
+    }
+
     public GameStateDto getGameState() {
         GameStateDto state = new GameStateDto();
         state.setId(id);
@@ -143,6 +179,11 @@ public class Game {
         state.setPlayers(players);
         state.setGameStatus(gameStatus);
         state.setDiscardDeck(adventureDeck.getGraveyard());
+        if (this.roundStrategy instanceof QuestStrategy) {
+            state.setQuestStrategy(this.getQuestState());
+        } else if (this.roundStrategy instanceof TournamentStrategy) {
+            state.setTournamentStrategy(this.getTournamentState());
+        }
         return state;
     }
 }

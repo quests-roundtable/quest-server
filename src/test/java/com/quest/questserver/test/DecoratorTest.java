@@ -16,7 +16,7 @@ public class DecoratorTest {
 
         WeaponCard weapon = new WeaponCard("Weapon_01", "Horse", 10);
         AllyCard ally = new AllyCard("Special_01", "Sir Gawain", 10, 0);
-        AmourCard amour = new AmourCard("Special_11", "Amour",10,1);
+        AmourCard amour = new AmourCard("Special_11", "Amour", 10, 1);
 
         // Decorate rank
         RankDecorator rankDecorator = new PlayerWeaponDecorator(rank, weapon);
@@ -47,6 +47,6 @@ public class DecoratorTest {
         assertEquals(45, foeDecorator.getStrength());
         assertEquals(60, foeDecorator.getQuestStrength());
 
-        assertEquals(new ArrayList<Card>(Arrays.asList(weapon, weapon2)), foeDecorator.getAllCards());
+        assertEquals(new ArrayList<Card>(Arrays.asList(foe, weapon, weapon2)), foeDecorator.getAllCards());
     }
 }

@@ -14,6 +14,7 @@ public class TournamentStrategy implements RoundStrategy {
     private int roundStatus;
     private int currentPlayer;
     private TournamentCard tournament;
+    private RoundResult roundResult;
 
     public TournamentStrategy(TournamentCard tournament) {
         this.tournament = tournament;

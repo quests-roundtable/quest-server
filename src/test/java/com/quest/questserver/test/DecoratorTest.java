@@ -31,6 +31,7 @@ public class DecoratorTest {
         assertEquals(new ArrayList<Card>(Arrays.asList(weapon, ally, amour)), rankDecorator.getAllCards());
     }
 
+    @Test
     void foeDecoratorTest() {
         FoeCard foe = new FoeCard("Foe_05", "Green Knight", 25, 40);
 

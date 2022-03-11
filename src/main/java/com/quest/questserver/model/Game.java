@@ -1,8 +1,8 @@
 package com.quest.questserver.model;
 
 import com.quest.questserver.dto.GameStateDto;
-import com.quest.questserver.dto.QuestStrategyDto;
-import com.quest.questserver.dto.TournamentStrategyDto;
+import com.quest.questserver.dto.QuestStateDto;
+import com.quest.questserver.dto.TournamentStateDto;
 import com.quest.questserver.model.Card.Card;
 import com.quest.questserver.model.Card.FoeCardDecorator;
 import com.quest.questserver.model.Card.QuestCard;
@@ -10,6 +10,7 @@ import com.quest.questserver.model.Card.TournamentCard;
 import com.quest.questserver.model.Deck.AdventureDeck;
 import com.quest.questserver.model.Deck.StoryDeck;
 import com.quest.questserver.model.Strategy.QuestStrategy;
+import com.quest.questserver.model.Strategy.RoundResult;
 import com.quest.questserver.model.Strategy.RoundStrategy;
 import com.quest.questserver.model.Strategy.TournamentStrategy;
 
@@ -76,7 +77,7 @@ public class Game {
         } else {
             // event
         }
-
+        return;
     }
 
     public void terminate() {
@@ -148,16 +149,16 @@ public class Game {
         return this.roundStrategy;
     }
 
-    public QuestStrategyDto getQuestState() {
-        QuestStrategyDto state = new QuestStrategyDto();
+    public QuestStateDto getQuestState() {
+        QuestStateDto state = new QuestStateDto();
         if (roundStrategy instanceof QuestStrategy) {
             QuestStrategy quest = (QuestStrategy) roundStrategy;
             state.setSponsorIndex(quest.getSponsorIndex());
             state.setRoundStatus(quest.getRoundStatus());
             state.setCurrentPlayer(quest.getCurrentPlayer());
             state.setCurrentStage(quest.getCurrentStage());
-            state.setQuest((QuestCard) quest.getQuest());
-
+            state.setCard((QuestCard) quest.getQuest());
+            if(quest.getRoundResult() != null) state.setRoundResult(quest.getRoundResult());
             // Get the stage
             Card card = quest.getStages().get(0);
             List<Card> stage = card.getType() == "Test" ? new ArrayList<>(Arrays.asList(card))
@@ -167,14 +168,14 @@ public class Game {
         return state;
     }
 
-    public TournamentStrategyDto getTournamentState() {
-        TournamentStrategyDto state = new TournamentStrategyDto();
+    public TournamentStateDto getTournamentState() {
+        TournamentStateDto state = new TournamentStateDto();
         if (roundStrategy instanceof TournamentStrategy) {
             TournamentStrategy tournament = (TournamentStrategy) roundStrategy;
             // state.setSponsorIndex(roundStrategy.getSponsorIndex());
             // state.setRoundStatus(roundStrategy.getRoundStatus());
             // state.setCurrentPlayer(roundStrategy.getCurrentPlayer());
-            // state.setTournament((TournamentCard) roundStrategy.getStoryCard());
+            // state.setCard((TournamentCard) roundStrategy.getStoryCard());
         }
         return state;
     }
@@ -187,9 +188,9 @@ public class Game {
         state.setGameStatus(gameStatus);
         state.setDiscardDeck(adventureDeck.getGraveyard());
         if (this.roundStrategy instanceof QuestStrategy) {
-            state.setQuestStrategy(this.getQuestState());
+            state.setQuest(this.getQuestState());
         } else if (this.roundStrategy instanceof TournamentStrategy) {
-            state.setTournamentStrategy(this.getTournamentState());
+            state.setTournament(this.getTournamentState());
         }
         return state;
     }

@@ -3,14 +3,11 @@ package com.quest.questserver.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.quest.questserver.dto.QuestStrategyDto;
 import com.quest.questserver.dto.GameStateDto;
 import com.quest.questserver.model.Card.Card;
 import com.quest.questserver.model.Card.AdventureCard;
-import com.quest.questserver.model.Card.QuestCard;
 import com.quest.questserver.model.Card.WeaponCard;
 import com.quest.questserver.model.Card.FoeCard;
-import com.quest.questserver.model.Card.RankDecorator;
 import com.quest.questserver.model.Card.RankCardDecorator;
 import com.quest.questserver.model.Card.AllyDecorator;
 import com.quest.questserver.model.Card.FoeDecorator;

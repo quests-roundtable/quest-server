@@ -13,7 +13,7 @@ import com.quest.questserver.model.Card.RankCardDecorator;
 
 public class QuestStrategy implements RoundStrategy {
     public static final int WAITING_SPONSOR = 0;
-    public static final int TEST_STAGE = 4;
+    public static final int TEST_STAGE = 5;
 
     private int sponsorIndex;
     private List<Integer> playerIndexes;
@@ -22,6 +22,7 @@ public class QuestStrategy implements RoundStrategy {
     private int currentStage;
     private QuestCard quest;
     private List<Card> questStages;
+    private RoundResult roundResult;
 
     public QuestStrategy(QuestCard quest) {
         this.quest = quest;
@@ -63,9 +64,8 @@ public class QuestStrategy implements RoundStrategy {
             }
         } else if (roundStatus == WAITING_PLAYERS) {
             QuestInfo questInfo = g.getPlayers().get(currentPlayer).getQuestInfo();
-            if (questInfo == null) {
-                playerIndexes.remove(currentPlayer);
-            }
+            if (questInfo == null) playerIndexes.remove(currentPlayer);
+
             this.currentPlayer = getNextPlayerIndex();
             if (currentPlayer == sponsorIndex) {
                 if (playerIndexes.size() > 1) {
@@ -84,65 +84,26 @@ public class QuestStrategy implements RoundStrategy {
             Card test = questStages.get(0);
             // Test logic
             // Terminate if last stage and stage is over
-        } else {
+        } else if (roundStatus == IN_PROGRESS) {
             // If currentStage > quest.getStages or disqualidfied and set to TERMINATED
             // todo: game checks if strategy state is terminated
             this.currentPlayer = getNextPlayerIndex();
 
             // End of stage
             if (currentPlayer == sponsorIndex) {
-                FoeCardDecorator stage = (FoeCardDecorator) questStages.remove(0);
-                int stageStrength = stage.getName() == quest.getQuestFoe() ? stage.getQuestStrength()
-                        : stage.getStrength();
+                getResults(g);
 
-                // Check scores, qualify players and discard cards
-                for (int i = playerIndexes.size() - 1; i >= 0; i--) {
-                    int playerIndex = playerIndexes.get(i);
-                    if (playerIndex == sponsorIndex)
-                        continue; // skip the sponsor
-                    Player player = g.getPlayers().get(playerIndex);
-                    RankCardDecorator playerMove = player.getQuestInfo().getPlayerMove();
-
-                    boolean qualified = true;
-                    if (playerMove.getStrength() < stageStrength) {
-                        qualified = false;
-                        playerIndexes.remove(i); // Eliminate player if disqualified
-                    }
-
-                    // Add the cards player played to discard deck
-                    ArrayList<Card> moveCards = playerMove.getAllCards();
-                    for (int j = moveCards.size() - 1; j >= 0; j--) {
-                        Card card = moveCards.get(i);
-                        if (card.getType() == "Ally") {
-                            if (!qualified) {
-                                player.draw(card);
-                            }
-                        } else {
-                            g.getAdventureDeck().discard(card);
-                            moveCards.remove(i);
-                        }
-                    }
-                    if (qualified) {
-                        playerMove = player.getRankCard();
-                        for (Card card : moveCards) {
-                            playerMove = new AllyDecorator(playerMove, (AllyCard) card);
-                        }
-                        player.getQuestInfo().setPlayerMove(playerMove);
-                    } else {
-                        player.setQuestInfo(null);
-                    }
-                }
-
-                // Dicard stage cards
-                for (Card card : stage.getAllCards()) {
-                    g.getAdventureDeck().discard(card);
-                }
-
-                // Update stage and status
-                this.currentStage += 1;
-                this.roundStatus = currentStage > quest.getQuestStages() ? TERMINATED : WAITING_PLAYERS;
+                // Round/Stage over update status
+                this.roundStatus = ROUND_END;
             }
 
+        } else if(roundStatus == ROUND_END) {
+            endRound(g);
+            this.roundResult = null;
+            this.currentPlayer = getNextPlayerIndex();
+            // Update stage and status
+            this.currentStage += 1;
+            this.roundStatus = currentStage > quest.getQuestStages() ? TERMINATED : WAITING_PLAYERS;
         }
 
     }
@@ -170,7 +131,74 @@ public class QuestStrategy implements RoundStrategy {
         for (int idx : playerIndexes) {
             players.get(idx).addShields(quest.getQuestStages());
         }
+    }
 
+    private void getResults(Game g) {
+        FoeCardDecorator stage = (FoeCardDecorator) questStages.get(0);
+        this.roundResult = new RoundResult();
+        this.roundResult.setQuestStage(stage.getAllCards());
+        int stageStrength = stage.getName() == quest.getQuestFoe() ? stage.getQuestStrength()
+                : stage.getStrength();
+
+        // Check scores, qualify players and discard cards
+        for (int i = playerIndexes.size() - 1; i >= 0; i--) {
+            int playerIndex = playerIndexes.get(i);
+            if (playerIndex == sponsorIndex)
+                continue; // skip the sponsor
+            Player player = g.getPlayers().get(playerIndex);
+            RankCardDecorator playerMove = player.getQuestInfo().getPlayerMove();
+
+            boolean qualified = true;
+            if (playerMove.getStrength() < stageStrength) {
+                qualified = false;
+            }
+
+            // set end of round results
+            RoundResult.PlayerResult result = new RoundResult.PlayerResult(qualified, playerMove.getAllCards());
+            this.roundResult.addResults(player.getId(), result);
+        }
+    }
+
+    private void endRound(Game g) {
+        // Check scores, qualify players and discard cards
+        for (int i = playerIndexes.size() - 1; i >= 0; i--) {
+            int playerIndex = playerIndexes.get(i);
+            if (playerIndex == sponsorIndex)
+                continue; // skip the sponsor
+            Player player = g.getPlayers().get(playerIndex);
+            RankCardDecorator playerMove = player.getQuestInfo().getPlayerMove();
+
+            boolean qualified = roundResult.getResults().get(player.getId()).success;
+
+            // Add the cards player played to discard deck
+            ArrayList<Card> moveCards = playerMove.getAllCards();
+            for (int j = moveCards.size() - 1; j >= 0; j--) {
+                Card card = moveCards.get(i);
+                if (card.getType() == "Ally") {
+                    if (!qualified) {
+                        player.draw(card);
+                    }
+                } else {
+                    g.getAdventureDeck().discard(card);
+                    moveCards.remove(i);
+                }
+            }
+            if (qualified) {
+                playerMove = player.getRankCard();
+                for (Card card : moveCards) {
+                    playerMove = new AllyDecorator(playerMove, (AllyCard) card);
+                }
+                player.getQuestInfo().setPlayerMove(playerMove);
+            } else {
+                player.setQuestInfo(null);
+            }
+        }
+
+        // Dicard stage cards
+        FoeCardDecorator stage = (FoeCardDecorator) questStages.remove(0);
+        for (Card card : stage.getAllCards()) {
+            g.getAdventureDeck().discard(card);
+        }
     }
 
     // Getters
@@ -200,6 +228,10 @@ public class QuestStrategy implements RoundStrategy {
 
     public List<Card> getStages() {
         return this.questStages;
+    }
+
+    public RoundResult getRoundResult() {
+        return this.roundResult;
     }
 
 }

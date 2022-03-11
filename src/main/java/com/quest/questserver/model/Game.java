@@ -4,6 +4,7 @@ import com.quest.questserver.dto.GameStateDto;
 import com.quest.questserver.dto.QuestStrategyDto;
 import com.quest.questserver.dto.TournamentStrategyDto;
 import com.quest.questserver.model.Card.Card;
+import com.quest.questserver.model.Card.FoeCardDecorator;
 import com.quest.questserver.model.Card.QuestCard;
 import com.quest.questserver.model.Card.TournamentCard;
 import com.quest.questserver.model.Deck.AdventureDeck;
@@ -13,6 +14,7 @@ import com.quest.questserver.model.Strategy.RoundStrategy;
 import com.quest.questserver.model.Strategy.TournamentStrategy;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Game {
@@ -155,7 +157,12 @@ public class Game {
             state.setCurrentPlayer(quest.getCurrentPlayer());
             state.setCurrentStage(quest.getCurrentStage());
             state.setQuest((QuestCard) quest.getQuest());
-            // state.setQuestStages(quest.getStages()); Fix mapping
+
+            // Get the stage
+            Card card = quest.getStages().get(0);
+            List<Card> stage = card.getType() == "Test" ? new ArrayList<>(Arrays.asList(card))
+                    : ((FoeCardDecorator) card).getAllCards();
+            state.setQuestStage(stage);
         }
         return state;
     }

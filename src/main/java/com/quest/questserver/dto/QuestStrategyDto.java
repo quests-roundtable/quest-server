@@ -15,6 +15,6 @@ public class QuestStrategyDto {
     private int currentPlayer;
     private int currentStage;
     private QuestCard quest;
-    private List<List<Card>> questStages;
+    private List<Card> questStage;
     private String message = "No server message here.";
 }

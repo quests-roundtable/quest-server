@@ -32,6 +32,7 @@ public class QuestStrategy implements RoundStrategy {
         this.currentStage = 1;
         this.roundStatus = WAITING_SPONSOR;
         this.currentPlayer = g.getCurrentPlayer();
+        this.sponsorIndex = -1;
         this.playerIndexes = new ArrayList<>();
         for (int i = 0; i < g.getNumPlayers(); i++) {
             this.playerIndexes.add(this.currentPlayer + i % g.getNumPlayers());
@@ -109,15 +110,28 @@ public class QuestStrategy implements RoundStrategy {
     }
 
     public void terminate(Game g) {
+        // Exit if no sponsor
+        if (this.sponsorIndex == -1) return;
+
         List<Player> players = g.getPlayers();
 
-        // Re draw
+        // Re draw cards for sponsor
         Player sponsor = players.get(sponsorIndex);
-        for (int i = 0; i < 12 - sponsor.getPlayerHand().size(); i++) {
+        int numCardsSponsor = 0;
+        for(Card card: sponsor.getQuestInfo().getStages()) {
+            if(card.getType() == "Test") {
+                numCardsSponsor += 1;
+            } else {
+                numCardsSponsor += ((FoeCardDecorator) card).fetchAllCards().size();
+            }
+        }
+        for (int i = 0; i < numCardsSponsor; i++) {
             sponsor.draw(g.getAdventureDeck().draw());
         }
         sponsor.setQuestInfo(null);
         playerIndexes.remove(sponsorIndex);
+
+        if(this.currentStage == 1) return;
 
         for (int playerIndex : playerIndexes) {
             Player player = players.get(playerIndex);

@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 public class QuestRoundController {
     @Autowired
     private final QuestRoundService questRoundService;
-    // private final GameRoundService gameRoundService;
 
     private final SimpMessagingTemplate webSocket;
 

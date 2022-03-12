@@ -160,10 +160,12 @@ public class Game {
             state.setCard((QuestCard) quest.getQuest());
             if(quest.getRoundResult() != null) state.setRoundResult(quest.getRoundResult());
             // Get the stage
-            Card card = quest.getStages().get(0);
-            List<Card> stage = card.getType() == "Test" ? new ArrayList<>(Arrays.asList(card))
-                    : ((FoeCardDecorator) card).fetchAllCards();
-            state.setQuestStage(stage);
+            if(quest.getStages() != null) {
+                Card card = quest.getStages().get(0);
+                List<Card> stage = card.getType() == "Test" ? new ArrayList<>(Arrays.asList(card))
+                        : ((FoeCardDecorator) card).fetchAllCards();
+                state.setQuestStage(stage);
+            }
         }
         return state;
     }

@@ -12,12 +12,21 @@ public class QuestInfo {
     public static final int PLAYER = 1;
 
     private int role;
+    private int numMoveCards;
     private RankCardDecorator playerMove;
     private List<Card> stages;
 
     public QuestInfo(int role, List<Card> stages) {
         this.role = role;
         this.stages = (role == SPONSOR) ? stages : null;
+    }
+
+    public int getNumMoveCards() {
+        return this.numMoveCards;
+    }
+
+    public void setNumMoveCards(int numMoveCards) {
+        this.numMoveCards = numMoveCards;
     }
 
     public RankCardDecorator getPlayerMove() {

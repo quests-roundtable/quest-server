@@ -111,6 +111,7 @@ public class QuestRoundService {
             }
         }
         questInfo.setPlayerMove(playerMove);
+        questInfo.setNumMoveCards(cards.size());
 
         quest.nextTurn(game);
         // game.nextTurn();

@@ -1,9 +1,11 @@
 package com.quest.questserver.controller;
 
+import java.util.List;
+
 import com.quest.questserver.dto.GameStateDto;
 import com.quest.questserver.dto.PlayerRequestDto;
 import com.quest.questserver.dto.RequestDto;
-import com.quest.questserver.dto.QuestStrategyDto;
+import com.quest.questserver.dto.QuestStateDto;
 import com.quest.questserver.model.Card.Card;
 import com.quest.questserver.service.GameRoundService;
 import com.quest.questserver.service.QuestRoundService;
@@ -26,25 +28,25 @@ public class QuestRoundController {
     private final SimpMessagingTemplate webSocket;
 
     @PostMapping("/sponsor")
-    public ResponseEntity<String> sponsor(@RequestBody RequestDto<String> request) {
+    public ResponseEntity<String> sponsor(@RequestBody PlayerRequestDto<List<List<String>>> request) {
         log.info("quest sponsor endpoint");
-        QuestStrategyDto state = questRoundService.setQuestStages(request.getData(), state);
+        GameStateDto state = questRoundService.setQuestStages(request.getLobby(), request.getPlayerId(), request.getData());
         webSocket.convertAndSend(String.format("/topic/game#%s", request.getLobby()), state);
         return ResponseEntity.ok("Quest sponsored.");
     }
 
     @PostMapping("/join")
-    public ResponseEntity<String> join(@RequestBody RequestDto<String> request) {
+    public ResponseEntity<String> join(@RequestBody PlayerRequestDto<Boolean> request) {
         log.info("quest join endpoint");
-        QuestStrategyDto state = questRoundService.joinQuest(request.getData(), state);
+        GameStateDto state = questRoundService.joinQuest(request.getLobby(), request.getPlayerId(), request.getData());
         webSocket.convertAndSend(String.format("/topic/game#%s", request.getLobby()), state);
         return ResponseEntity.ok("Player opted in quest");
     }
 
     @PostMapping("/play")
-    public ResponseEntity<String> play(@RequestBody RequestDto<String> request) {
+    public ResponseEntity<String> play(@RequestBody PlayerRequestDto<List<String>> request) {
         log.info("quest play endpoint");
-        QuestStrategyDto state = questRoundService.setPlayerMove(request.getData(), state);
+        GameStateDto state = questRoundService.setPlayerMove(request.getLobby(), request.getPlayerId(), request.getData());
         webSocket.convertAndSend(String.format("/topic/game#%s", request.getLobby()), state);
         return ResponseEntity.ok("Player submitted move.");
     }

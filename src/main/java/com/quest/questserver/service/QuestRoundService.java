@@ -16,6 +16,7 @@ import com.quest.questserver.model.Card.AllyCard;
 import com.quest.questserver.model.Card.PlayerWeaponDecorator;
 import com.quest.questserver.model.Card.AmourCard;
 import com.quest.questserver.model.Card.AmourDecorator;
+import com.quest.questserver.model.Card.QuestCard;
 
 import com.quest.questserver.model.Game;
 import com.quest.questserver.model.Player;
@@ -34,6 +35,9 @@ public class QuestRoundService {
 
     // setQuestStages: create sponsor's questInfo
     public GameStateDto setQuestStages(String gameId, String playerId, List<List<String>> cardIds) {
+
+        
+
         Game game = gameStore.getGame(gameId);
         Player player = game.getPlayer(playerId);
         QuestStrategy quest = (QuestStrategy) game.getRoundStrategy();

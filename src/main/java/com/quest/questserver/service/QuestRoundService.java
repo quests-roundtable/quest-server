@@ -30,6 +30,12 @@ public class QuestRoundService {
         
         List<List<Card>> stages = new ArrayList<>();
         List<Card> questStage = new ArrayList<>();
+        int numQuestCards = 0;
+
+        // Error check
+        boolean invalid = false;
+        String errorMessage = null;
+        int testCount = 0;
 
         int previousStrength = 0;
         for (List<String> stage : cardIds) {
@@ -37,25 +43,50 @@ public class QuestRoundService {
             int currentStrength = 0;
             for (String cardId : stage) {
                 Card card = player.discard(cardId);
+
+                // If card not found
+                if(card == null) {
+                    invalid = true;
+                    errorMessage = "Invalid Quest. Card not found. ";
+                    break;
+                } else {
+                    numQuestCards += 1;
+                }
+
                 cards.add(card);
                 if (card instanceof WeaponCard) {
                     currentStrength += ((AdventureCard) card).getStrength();
                 } else if (card instanceof FoeCard) {
                     currentStrength += card.getName().equals(((QuestCard) quest.getQuest()).getQuestFoe()) ?
                             ((FoeCard) card).getQuestStrength()
-                            : ((AdventureCard) card).getStrength();
-                }
-            }
-            if (currentStrength <= previousStrength) {
-                // send cards back to player
-                for (List<Card> stageCards : stages) {
-                    for (Card card : stageCards) {
-                        player.draw(card);
+                            : ((FoeCard) card).getStrength();
+                } else if (card instanceof TestCard) {
+                    if(testCount++ > 1 || stage.size() > 1) {
+                        invalid = true;
+                        errorMessage = stage.size() > 1 ? "Invalid Quest. Invalid Test Stage."
+                                : "Invalid Quest. Only 1 Test Card allowed per Quest. ";
+                        break;
                     }
                 }
-                throw new GameException("Invalid Quest. Foe Stages must be increasing in Strength. ");
+            }
+            if (invalid) break;
+            if (cards.get(0) instanceof FoeCard && currentStrength <= previousStrength) {
+                invalid = true;
+                errorMessage = "Invalid Quest. Foe Stages must be increasing in Strength. ";
+                break;
             }
             stages.add(cards);
+        }
+
+        // Validation error check
+        if(invalid) {
+            // send cards back to player
+            for (List<Card> stageCards : stages) {
+                for (Card card : stageCards) {
+                    player.draw(card);
+                }
+            }
+            throw new GameException(errorMessage);
         }
 
         if (stages.size() != ((QuestCard) quest.getQuest()).getQuestStages()){
@@ -75,8 +106,9 @@ public class QuestRoundService {
         }
 
         QuestInfo questInfo = new QuestInfo(QuestInfo.SPONSOR, questStage);
+        questInfo.setNumSponsorCards(numQuestCards);
         player.setQuestInfo(questInfo);
-        game.nextTurn(); // todo: check
+        game.nextTurn();
         return game.getGameState();
     }
 
@@ -90,13 +122,16 @@ public class QuestRoundService {
         List<Card> cards = new ArrayList<>();
         for (String cardId : cardIds) {
             Card card = player.discard(cardId);
-            if (card instanceof FoeCard) {
+            if (card != null) cards.add(card);
+            if (card instanceof FoeCard || card instanceof TestCard || card == null) {
+                for(Card cardDrawn: cards) {
+                    player.draw(cardDrawn);
+                }
                 throw new GameException("Invalid player move. ");
             }
-            cards.add(card);
         }
 
-        RankCardDecorator playerMove = player.getRankCard();
+        RankCardDecorator playerMove = questInfo.getPlayerMove();
         for (Card card : cards) {
             if (card instanceof WeaponCard) {
                 playerMove = new PlayerWeaponDecorator(playerMove, (WeaponCard) card);
@@ -110,11 +145,10 @@ public class QuestRoundService {
         questInfo.setNumMoveCards(cards.size());
 
         game.nextTurn();
-        // game.nextTurn();
         return game.getGameState();
     }
 
-    // joinQuest: create questinfo object
+    // joinQuest: create quest info object
     public GameStateDto joinQuest(String gameId, String playerId, boolean join) {
         Game game = gameStore.getGame(gameId);
         Player player = game.getPlayer(playerId);
@@ -142,7 +176,6 @@ public class QuestRoundService {
         }
 
         game.nextTurn();
-        // game.nextTurn();
         return game.getGameState();
     }
 

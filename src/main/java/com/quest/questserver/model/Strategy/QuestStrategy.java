@@ -88,8 +88,6 @@ public class QuestStrategy implements RoundStrategy {
             // Test logic
             // Terminate if last stage and stage is over
         } else if (roundStatus == IN_PROGRESS) {
-            // If currentStage > quest.getStages or disqualified and set to TERMINATED
-            // todo: game checks if strategy state is terminated
             this.currentPlayer = getNextPlayerIndex();
 
             // End of stage
@@ -106,7 +104,8 @@ public class QuestStrategy implements RoundStrategy {
             this.currentPlayer = getNextPlayerIndex();
             // Update stage and status
             this.currentStage += 1;
-            this.roundStatus = currentStage > quest.getQuestStages() ? TERMINATED : WAITING_PLAYERS;
+            this.roundStatus = currentStage > quest.getQuestStages() || playerIndexes.size() <= 1
+                    ? TERMINATED : WAITING_PLAYERS;
         }
 
     }
@@ -120,19 +119,25 @@ public class QuestStrategy implements RoundStrategy {
 
         // Re draw cards for sponsor
         Player sponsor = players.get(sponsorIndex);
-        int numCardsSponsor = 0;
-        for (Card card : sponsor.getQuestInfo().getStages()) {
-            if (card.getType().equals("Test")) {
-                numCardsSponsor += 1;
-            } else {
-                numCardsSponsor += ((FoeCardDecorator) card).fetchAllCards().size();
-            }
-        }
-        for (int i = 0; i < numCardsSponsor; i++) {
+        System.out.println("Draw cards sponsor");
+        System.out.println(sponsor.getQuestInfo().getNumSponsorCards());
+        for (int i = 0; i < sponsor.getQuestInfo().getNumSponsorCards(); i++) {
             sponsor.draw(g.getAdventureDeck().draw());
         }
         sponsor.setQuestInfo(null);
         playerIndexes.remove(sponsorIndex);
+
+        // Discard stages if any left
+        while(questStages.size() != 0) {
+            Card stage = questStages.remove(0);
+            if (stage.getType().equals("Test")) {
+                g.getAdventureDeck().discard(stage);
+            } else {
+                for (Card card : ((FoeCardDecorator) stage).fetchAllCards()) {
+                    g.getAdventureDeck().discard(card);
+                }
+            }
+        }
 
         if (this.currentStage == 1)
             return;

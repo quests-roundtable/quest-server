@@ -13,6 +13,7 @@ public class QuestInfo {
 
     private int role;
     private int numMoveCards;
+    private int numSponsorCards;
     private RankCardDecorator playerMove;
     private List<Card> stages;
 
@@ -23,6 +24,14 @@ public class QuestInfo {
 
     public int getRole() {
         return this.role;
+    }
+
+    public int getNumSponsorCards() {
+        return numSponsorCards;
+    }
+
+    public void setNumSponsorCards(int numSponsorCards) {
+        this.numSponsorCards = numSponsorCards;
     }
 
     public int getNumMoveCards() {

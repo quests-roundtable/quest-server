@@ -1,18 +1,15 @@
 package com.quest.questserver.model;
 
 import com.quest.questserver.dto.GameStateDto;
-import com.quest.questserver.dto.PlayerStateDto;
 import com.quest.questserver.dto.QuestStateDto;
 import com.quest.questserver.dto.TournamentStateDto;
 import com.quest.questserver.model.Card.Card;
 import com.quest.questserver.model.Card.FoeCardDecorator;
 import com.quest.questserver.model.Card.QuestCard;
-import com.quest.questserver.model.Card.RankCardDecorator;
 import com.quest.questserver.model.Card.TournamentCard;
 import com.quest.questserver.model.Deck.AdventureDeck;
 import com.quest.questserver.model.Deck.StoryDeck;
 import com.quest.questserver.model.Strategy.QuestStrategy;
-import com.quest.questserver.model.Strategy.RoundResult;
 import com.quest.questserver.model.Strategy.RoundStrategy;
 import com.quest.questserver.model.Strategy.TournamentStrategy;
 
@@ -181,24 +178,6 @@ public class Game {
             // state.setRoundStatus(roundStrategy.getRoundStatus());
             // state.setCurrentPlayer(roundStrategy.getCurrentPlayer());
             // state.setCard((TournamentCard) roundStrategy.getStoryCard());
-        }
-        return state;
-    }
-
-    public PlayerStateDto getPlayerState(Player player) {
-        PlayerStateDto state = new PlayerStateDto();
-        state.setId(player.getId());
-        state.setName(player.getName());
-        state.setPlayerHand(player.getPlayerHand());
-        state.setShields(player.getShields());
-        state.setRankCard(player.getRankCard());
-        state.setQuestInfo(player.getQuestInfo());
-        state.setTournamentInfo(player.getTournamentInfo());
-
-        if (player.getQuestInfo().getPlayerMove() != null) {
-            RankCardDecorator card = player.getQuestInfo().getPlayerMove();
-            List<Card> cards = card.fetchAllCards();
-            state.setPlayerMove(cards);
         }
         return state;
     }

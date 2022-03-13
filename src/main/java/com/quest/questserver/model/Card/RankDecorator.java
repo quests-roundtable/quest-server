@@ -12,5 +12,5 @@ public abstract class RankDecorator extends Card implements RankCardDecorator {
 
     public abstract int getStrength();
 
-    public abstract ArrayList<Card> getAllCards();
+    public abstract ArrayList<Card> fetchAllCards();
 }

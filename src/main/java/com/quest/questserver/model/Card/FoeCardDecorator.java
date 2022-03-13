@@ -7,5 +7,5 @@ public interface FoeCardDecorator {
     public int getQuestStrength();
     public String getName();
     public String getType();
-    public ArrayList<Card> getAllCards();
+    public ArrayList<Card> fetchAllCards();
 }

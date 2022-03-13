@@ -16,7 +16,7 @@ public class DecoratorTest {
 
         WeaponCard weapon = new WeaponCard("Weapon_01", "Horse", 10);
         AllyCard ally = new AllyCard("Special_01", "Sir Gawain", 10, 0);
-        AmourCard amour = new AmourCard("Special_11", "Amour",10,1);
+        AmourCard amour = new AmourCard("Special_11", "Amour", 10, 1);
 
         // Decorate rank
         RankDecorator rankDecorator = new PlayerWeaponDecorator(rank, weapon);
@@ -28,9 +28,10 @@ public class DecoratorTest {
         assertEquals("RankDecorator", rankDecorator.getType());
         assertEquals(35, rankDecorator.getStrength());
 
-        assertEquals(new ArrayList<Card>(Arrays.asList(weapon, ally, amour)), rankDecorator.getAllCards());
+        assertEquals(new ArrayList<Card>(Arrays.asList(weapon, ally, amour)), rankDecorator.fetchAllCards());
     }
 
+    @Test
     void foeDecoratorTest() {
         FoeCard foe = new FoeCard("Foe_05", "Green Knight", 25, 40);
 
@@ -38,15 +39,14 @@ public class DecoratorTest {
         WeaponCard weapon2 = new WeaponCard("Weapon_01", "Horse", 10);
 
         // Decorate foe
-        FoeDecorator foeDecorator = new FoeWeaponDecorator(foe, weapon);
-        foeDecorator = new FoeWeaponDecorator(foe, weapon2);
+        FoeDecorator foeDecorator = new FoeWeaponDecorator(new FoeWeaponDecorator(foe, weapon), weapon2);
 
         // Assert type, name and getStrength
         assertEquals(foe.getName(), foeDecorator.getName());
-        assertEquals("foeDecorator", foeDecorator.getType());
+        assertEquals("FoeDecorator", foeDecorator.getType());
         assertEquals(45, foeDecorator.getStrength());
         assertEquals(60, foeDecorator.getQuestStrength());
 
-        assertEquals(new ArrayList<Card>(Arrays.asList(weapon, weapon2)), foeDecorator.getAllCards());
+        assertEquals(new ArrayList<Card>(Arrays.asList(foe, weapon, weapon2)), foeDecorator.fetchAllCards());
     }
 }

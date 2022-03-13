@@ -2,19 +2,21 @@ package com.quest.questserver.model;
 
 import com.quest.questserver.model.Card.Card;
 import com.quest.questserver.model.Card.RankCard;
+import com.quest.questserver.model.Strategy.QuestInfo;
+import com.quest.questserver.model.Strategy.TournamentInfo;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class Player {
-    private static Integer playerCount = 0;
 
     private String id;
     private String name;
     private int shields;
     private List<Card> playerHand;
     private RankCard rankCard;
+    private QuestInfo questInfo; // if not null, player is in quest
+    private TournamentInfo tournamentInfo;
 
     public Player(String id, String name) {
         this.name = name;
@@ -24,7 +26,7 @@ public class Player {
     }
 
     public void dealCards(List<Card> hand) {
-        for(Card card: hand) {
+        for (Card card : hand) {
             playerHand.add(card);
         }
         rankCard = RankCard.getRankCard("Squire");
@@ -35,12 +37,12 @@ public class Player {
         updateRank();
     }
 
-    public void draw(Card card){
+    public void draw(Card card) {
         playerHand.add(card);
     }
 
-    public Card discard(String cardId){
-        for(int i = 0; i < playerHand.size(); i++) {
+    public Card discard(String cardId) {
+        for (int i = 0; i < playerHand.size(); i++) {
             if (playerHand.get(i).getId().equals(cardId)) {
                 return playerHand.remove(i);
             }
@@ -53,17 +55,17 @@ public class Player {
             shields -= 5;
             this.rankCard = RankCard.getRankCard("Knight");
         }
-        if (rankCard.getName().equalsIgnoreCase("Knight") && shields == 7){
+        if (rankCard.getName().equalsIgnoreCase("Knight") && shields == 7) {
             shields -= 7;
             this.rankCard = RankCard.getRankCard("Champion Knight");
         }
-        if (rankCard.getName().equalsIgnoreCase("Champion Knight") && shields == 10){
+        if (rankCard.getName().equalsIgnoreCase("Champion Knight") && shields == 10) {
             shields -= 10;
             this.rankCard = RankCard.getRankCard("Knight");
         }
     }
 
-    //Getter
+    // Getter
     public RankCard getRankCard() {
         return rankCard;
     }
@@ -76,7 +78,7 @@ public class Player {
         return id;
     }
 
-    public String getName(){
+    public String getName() {
         return name;
     }
 
@@ -84,8 +86,24 @@ public class Player {
         return playerHand;
     }
 
-    //Setter
+    public QuestInfo getQuestInfo() {
+        return questInfo;
+    }
+
+    public TournamentInfo getTournamentInfo() {
+        return tournamentInfo;
+    }
+
+    // Setter
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setQuestInfo(QuestInfo questInfo) {
+        this.questInfo = questInfo;
+    }
+
+    public void setTournamentInfo(TournamentInfo tournamentInfo) {
+        this.tournamentInfo = tournamentInfo;
     }
 }

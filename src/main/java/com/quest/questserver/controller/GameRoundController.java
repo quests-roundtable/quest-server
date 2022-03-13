@@ -38,8 +38,9 @@ public class GameRoundController {
 
     @PostMapping("/next")
     public ResponseEntity<String> nextPlayerTurn(@RequestBody RequestDto<String> request) {
+        log.info("Next turn request");
         GameStateDto state = gameRoundService.nextTurn(request.getLobby());
-        log.info("{}",state.getCurrentPlayer());
+        log.info("Next turn: {}",state.getCurrentPlayer());
         state.setMessage(state.getPlayers().get(state.getCurrentPlayer()).getName() + " has passed.");
         webSocket.convertAndSend(String.format("/topic/game#%s", request.getLobby()), state);
         return ResponseEntity.ok("Passed.");

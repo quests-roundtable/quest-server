@@ -6,5 +6,5 @@ public interface RankCardDecorator {
     public int getStrength();
     public String getName();
     public String getType();
-    public ArrayList<Card> getAllCards();
+    public ArrayList<Card> fetchAllCards();
 }

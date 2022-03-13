@@ -20,9 +20,9 @@ public class AmourDecorator extends RankDecorator{
     }
 
     @Override
-    public ArrayList<Card> getAllCards() {
+    public ArrayList<Card> fetchAllCards() {
         ArrayList<Card> cardList = new ArrayList<Card>();
-        cardList.addAll(rankDecorator.getAllCards());
+        cardList.addAll(rankDecorator.fetchAllCards());
         cardList.add(amour);
         return cardList;
         }

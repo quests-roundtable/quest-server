@@ -15,8 +15,8 @@ public class QuestCard extends StoryCard {
         }
     }
 
-    //Getters
-    public int getQuestStage() {
+    // Getters
+    public int getQuestStages() {
         return stages;
     }
 

@@ -74,8 +74,6 @@ The api runs at localhost:9090/.
 
 The websocket url: ws://localhost:9090/ws.
 
-
-
 <!-- CONTRIBUTORS -->
 ## Contributors
 

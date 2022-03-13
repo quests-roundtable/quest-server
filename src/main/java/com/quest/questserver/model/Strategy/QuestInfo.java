@@ -21,6 +21,10 @@ public class QuestInfo {
         this.stages = (role == SPONSOR) ? stages : null;
     }
 
+    public int getRole() {
+        return this.role;
+    }
+
     public int getNumMoveCards() {
         return this.numMoveCards;
     }

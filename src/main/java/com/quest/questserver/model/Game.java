@@ -1,11 +1,13 @@
 package com.quest.questserver.model;
 
 import com.quest.questserver.dto.GameStateDto;
+import com.quest.questserver.dto.PlayerStateDto;
 import com.quest.questserver.dto.QuestStateDto;
 import com.quest.questserver.dto.TournamentStateDto;
 import com.quest.questserver.model.Card.Card;
 import com.quest.questserver.model.Card.FoeCardDecorator;
 import com.quest.questserver.model.Card.QuestCard;
+import com.quest.questserver.model.Card.RankCardDecorator;
 import com.quest.questserver.model.Card.TournamentCard;
 import com.quest.questserver.model.Deck.AdventureDeck;
 import com.quest.questserver.model.Deck.StoryDeck;
@@ -158,9 +160,10 @@ public class Game {
             state.setCurrentPlayer(quest.getCurrentPlayer());
             state.setCurrentStage(quest.getCurrentStage());
             state.setCard((QuestCard) quest.getQuest());
-            if(quest.getRoundResult() != null) state.setRoundResult(quest.getRoundResult());
+            if (quest.getRoundResult() != null)
+                state.setRoundResult(quest.getRoundResult());
             // Get the stage
-            if(quest.getStages() != null) {
+            if (quest.getStages() != null) {
                 Card card = quest.getStages().get(0);
                 List<Card> stage = card.getType() == "Test" ? new ArrayList<>(Arrays.asList(card))
                         : ((FoeCardDecorator) card).fetchAllCards();
@@ -178,6 +181,24 @@ public class Game {
             // state.setRoundStatus(roundStrategy.getRoundStatus());
             // state.setCurrentPlayer(roundStrategy.getCurrentPlayer());
             // state.setCard((TournamentCard) roundStrategy.getStoryCard());
+        }
+        return state;
+    }
+
+    public PlayerStateDto getPlayerState(Player player) {
+        PlayerStateDto state = new PlayerStateDto();
+        state.setId(player.getId());
+        state.setName(player.getName());
+        state.setPlayerHand(player.getPlayerHand());
+        state.setShields(player.getShields());
+        state.setRankCard(player.getRankCard());
+        state.setQuestInfo(player.getQuestInfo());
+        state.setTournamentInfo(player.getTournamentInfo());
+
+        if (player.getQuestInfo().getPlayerMove() != null) {
+            RankCardDecorator card = player.getQuestInfo().getPlayerMove();
+            List<Card> cards = card.fetchAllCards();
+            state.setPlayerMove(cards);
         }
         return state;
     }

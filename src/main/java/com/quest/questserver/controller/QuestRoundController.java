@@ -29,7 +29,8 @@ public class QuestRoundController {
     @PostMapping("/sponsor")
     public ResponseEntity<String> sponsor(@RequestBody PlayerRequestDto<List<List<String>>> request) {
         log.info("quest sponsor endpoint");
-        GameStateDto state = questRoundService.setQuestStages(request.getLobby(), request.getPlayerId(), request.getData());
+        GameStateDto state = questRoundService.setQuestStages(request.getLobby(), request.getPlayerId(),
+                request.getData());
         webSocket.convertAndSend(String.format("/topic/game#%s", request.getLobby()), state);
         return ResponseEntity.ok("Quest sponsored.");
     }
@@ -45,7 +46,8 @@ public class QuestRoundController {
     @PostMapping("/play")
     public ResponseEntity<String> play(@RequestBody PlayerRequestDto<List<String>> request) {
         log.info("quest play endpoint");
-        GameStateDto state = questRoundService.setPlayerMove(request.getLobby(), request.getPlayerId(), request.getData());
+        GameStateDto state = questRoundService.setPlayerMove(request.getLobby(), request.getPlayerId(),
+                request.getData());
         webSocket.convertAndSend(String.format("/topic/game#%s", request.getLobby()), state);
         return ResponseEntity.ok("Player submitted move.");
     }

@@ -23,27 +23,24 @@ public class PlayerTest {
         //check if players are initialized correctly
         a.dealCards(adeck.dealHand());
         assertEquals(12,a.getPlayerHand().size());
+
         assertEquals("Squire", a.getRankCard().getName());
 
         //updateRank test
-        a.addShields(5);
-        assertEquals(5,a.getShields());
-        a.updateRank();
+        a.addShields(4);
+        assertEquals(4,a.getShields());
+        a.addShields(1);
         assertEquals(0,a.getShields());
         assertEquals("Knight", a.getRankCard().getName());
 
         a.addShields(7);
-        assertEquals(7,a.getShields());
-        a.updateRank();
         assertEquals(0,a.getShields());
         assertEquals("Champion Knight", a.getRankCard().getName());
 
+        a.addShields(5);
+        assertEquals(5,a.getShields());
         a.addShields(10);
-        assertEquals(10,a.getShields());
-        a.updateRank();
-        assertEquals(0,a.getShields());
-        assertEquals("Knight", a.getRankCard().getName());
-
+        assertEquals(5,a.getShields());
 
         //draw and discard test
         assertEquals(0,b.getPlayerHand().size());

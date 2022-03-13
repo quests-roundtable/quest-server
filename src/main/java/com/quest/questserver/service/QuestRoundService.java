@@ -27,7 +27,7 @@ public class QuestRoundService {
         Game game = gameStore.getGame(gameId);
         Player player = game.getPlayer(playerId);
         QuestStrategy quest = (QuestStrategy) game.getRoundStrategy();
-        
+
         List<List<Card>> stages = new ArrayList<>();
         List<Card> questStage = new ArrayList<>();
         int numQuestCards = 0;
@@ -54,13 +54,13 @@ public class QuestRoundService {
                 }
 
                 cards.add(card);
-                if (card instanceof WeaponCard) {
+                if (card.getType().equals("Weapon")) {
                     currentStrength += ((AdventureCard) card).getStrength();
-                } else if (card instanceof FoeCard) {
+                } else if (card.getType().equals("Foe")) {
                     currentStrength += card.getName().equals(((QuestCard) quest.getQuest()).getQuestFoe()) ?
                             ((FoeCard) card).getQuestStrength()
                             : ((FoeCard) card).getStrength();
-                } else if (card instanceof TestCard) {
+                } else if (card.getType().equals("Test")) {
                     if(testCount++ > 1 || stage.size() > 1) {
                         invalid = true;
                         errorMessage = stage.size() > 1 ? "Invalid Quest. Invalid Test Stage."
@@ -70,12 +70,15 @@ public class QuestRoundService {
                 }
             }
             if (invalid) break;
-            if (cards.get(0) instanceof FoeCard && currentStrength <= previousStrength) {
-                invalid = true;
-                errorMessage = "Invalid Quest. Foe Stages must be increasing in Strength. ";
-                break;
-            }
             stages.add(cards);
+            if (cards.get(0).getType().equals("Foe")) {
+                if (currentStrength <= previousStrength) {
+                    invalid = true;
+                    errorMessage = "Invalid Quest. Foe Stages must be increasing in Strength. ";
+                    break;
+                }
+                previousStrength = currentStrength;
+            }
         }
 
         // Validation error check
@@ -94,7 +97,7 @@ public class QuestRoundService {
         }
 
         for (List<Card> stage : stages) {
-            if (stage.get(0) instanceof FoeCard) {
+            if (stage.get(0).getType().equals("Foe")) {
                 Card foeStage = stage.remove(0);
                 for (Card weapon : stage) {
                     foeStage = new FoeWeaponDecorator((FoeCardDecorator) foeStage, (WeaponCard) weapon);

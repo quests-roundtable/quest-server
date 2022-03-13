@@ -51,15 +51,15 @@ public class Player {
     }
 
     public void updateRank() {
-        if (rankCard.getName().equalsIgnoreCase("Squire") && shields == 5) {
+        if (rankCard.getName().equalsIgnoreCase("Squire") && shields >= 5) {
             shields -= 5;
             this.rankCard = RankCard.getRankCard("Knight");
         }
-        if (rankCard.getName().equalsIgnoreCase("Knight") && shields == 7) {
+        if (rankCard.getName().equalsIgnoreCase("Knight") && shields >= 7) {
             shields -= 7;
             this.rankCard = RankCard.getRankCard("Champion Knight");
         }
-        if (rankCard.getName().equalsIgnoreCase("Champion Knight") && shields == 10) {
+        if (rankCard.getName().equalsIgnoreCase("Champion Knight") && shields >= 10) {
             shields -= 10;
             this.rankCard = RankCard.getRankCard("Knight");
         }

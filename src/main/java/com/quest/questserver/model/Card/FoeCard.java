@@ -8,7 +8,7 @@ public class FoeCard extends AdventureCard implements FoeCardDecorator {
 
     public FoeCard(String typeId, String name, int strength) {
         super("Foe", typeId, name, strength);
-        this.questStrength = 0;
+        this.questStrength = strength;
     }
 
     public FoeCard(String typeId, String name, int strength, int questStrength) {

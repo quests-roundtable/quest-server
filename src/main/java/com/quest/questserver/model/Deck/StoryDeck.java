@@ -59,8 +59,8 @@ public class StoryDeck extends Deck {
                                                                                                                // Knight
                 cards.add(new QuestCard("Quest_02", "Vanquish King Arthur's Enemies", 3, ""));
                 cards.add(new QuestCard("Quest_02", "Vanquish King Arthur's Enemies", 3, ""));
-                cards.add(new QuestCard("Quest_03", "Repel the Saxon Raiders", 2, "All Saxons"));// Foe: All Saxons
-                cards.add(new QuestCard("Quest_03", "Repel the Saxon Raiders", 2, "All Saxons"));// Foe: All Saxons
+                cards.add(new QuestCard("Quest_03", "Repel the Saxon Raiders", 2, "Saxon"));// Foe: All Saxons
+                cards.add(new QuestCard("Quest_03", "Repel the Saxon Raiders", 2, "Saxon"));// Foe: All Saxons
                 cards.add(new QuestCard("Quest_04", "Boar Hunt", 2, "Boar"));// Foe: Boar
                 cards.add(new QuestCard("Quest_04", "Boar Hunt", 2, "Boar"));// Foe: Boar
                 cards.add(new QuestCard("Quest_05", "Search for the Questing Beast", 4, ""));

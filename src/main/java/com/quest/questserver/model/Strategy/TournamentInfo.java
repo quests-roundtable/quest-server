@@ -1,24 +1,28 @@
 package com.quest.questserver.model.Strategy;
 
-import java.util.List;
-import java.util.ArrayList;
-// import decorator
+import com.quest.questserver.model.Card.RankCardDecorator;
 
 public class TournamentInfo {
 
-    // rank decorator
-    // private List<Card> playerMove;
+    private int numMoveCards;
+    private RankCardDecorator playerMove;
 
-    // public TournamentInfo() {
+     public TournamentInfo() {}
 
-    // }
+    public int getNumMoveCards() {
+        return this.numMoveCards;
+    }
 
-    // public List<Card> getPlayerMove() {
-    // return this.playerMove;
-    // }
+    public void setNumMoveCards(int numMoveCards) {
+        this.numMoveCards = numMoveCards;
+    }
 
-    // public void setPlayerMove(List<Card> move) {
-    // this.playerMove = move;
-    // }
+    public RankCardDecorator getPlayerMove() {
+        return this.playerMove;
+    }
+
+    public void setPlayerMove(RankCardDecorator move) {
+        this.playerMove = move;
+    }
 
 }

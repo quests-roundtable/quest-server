@@ -174,10 +174,9 @@ public class Game {
         TournamentStateDto state = new TournamentStateDto();
         if (roundStrategy instanceof TournamentStrategy) {
             TournamentStrategy tournament = (TournamentStrategy) roundStrategy;
-            // state.setSponsorIndex(roundStrategy.getSponsorIndex());
-            // state.setRoundStatus(roundStrategy.getRoundStatus());
-            // state.setCurrentPlayer(roundStrategy.getCurrentPlayer());
-            // state.setCard((TournamentCard) roundStrategy.getStoryCard());
+            state.setRoundStatus(tournament.getRoundStatus());
+            state.setCurrentPlayer(tournament.getCurrentPlayer());
+            state.setCard((TournamentCard) tournament.getTournament());
         }
         return state;
     }

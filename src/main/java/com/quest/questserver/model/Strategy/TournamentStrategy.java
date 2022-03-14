@@ -88,7 +88,7 @@ public class TournamentStrategy implements RoundStrategy {
         HashMap<String, RankCardDecorator> playerMoves= new HashMap<>();
         for (int i = playerIndexes.size() - 1; i >= 0; i--) {
             Player player = g.getPlayers().get(playerIndexes.get(i));
-            RankCardDecorator playerMove = player.getQuestInfo().getPlayerMove();
+            RankCardDecorator playerMove = player.getTournamentInfo().getPlayerMove();
 
             playerMoves.put(player.getId(), playerMove);
         }
@@ -113,7 +113,7 @@ public class TournamentStrategy implements RoundStrategy {
         // discard cards
         for (int i = playerIndexes.size() - 1; i >= 0; i--) {
             Player player = g.getPlayers().get(playerIndexes.get(i));
-            RankCardDecorator playerMove = player.getQuestInfo().getPlayerMove();
+            RankCardDecorator playerMove = player.getTournamentInfo().getPlayerMove();
 
             boolean qualified = roundResult.getResults().get(player.getId()).success;
             if(!tie && qualified) winnerIds.add(player.getId());

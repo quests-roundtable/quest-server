@@ -7,7 +7,6 @@ import lombok.Data;
 
 @Data
 public class TournamentStateDto {
-    private int sponsorIndex;
     private int roundStatus;
     private int currentPlayer;
     private TournamentCard card;

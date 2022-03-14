@@ -44,12 +44,14 @@ public class TournamentStrategy implements RoundStrategy {
              this.currentPlayer = (currentPlayer + 1) % g.getNumPlayers();
 
              if (currentPlayer.equals(g.getCurrentPlayer())) {
-                 if (playerIndexes.size() > 1) {
+                 this.numPlayers = playerIndexes.size();
+                 if (numPlayers > 1) {
                      this.currentPlayer = playerIndexes.get(0);
                      this.roundStatus = IN_PROGRESS;
-                     this.numPlayers = playerIndexes.size();
                  } else {
-                     if (playerIndexes.size() == 1) this.numPlayers = 1;
+                     if (numPlayers == 1) {
+                         this.winnerIds.add(g.getPlayers().get(playerIndexes.get(0)).getId());
+                     }
                      // if every player rejects tournament, strategy ends
                      this.roundStatus = TERMINATED;
                  }
@@ -73,6 +75,7 @@ public class TournamentStrategy implements RoundStrategy {
 
     public void terminate(Game g) {
         if(numPlayers == 0) return;
+
         for(String playerId: winnerIds) {
             g.getPlayer(playerId).addShields(numPlayers + tournament.getTournamentShields());
         }

@@ -9,6 +9,7 @@ import com.quest.questserver.model.Card.QuestCard;
 import com.quest.questserver.model.Card.TournamentCard;
 import com.quest.questserver.model.Deck.AdventureDeck;
 import com.quest.questserver.model.Deck.StoryDeck;
+import com.quest.questserver.model.Strategy.EventStrategy;
 import com.quest.questserver.model.Strategy.QuestStrategy;
 import com.quest.questserver.model.Strategy.RoundStrategy;
 import com.quest.questserver.model.Strategy.TournamentStrategy;
@@ -32,6 +33,7 @@ public class Game {
     private StoryDeck storyDeck;
     private RoundStrategy roundStrategy;
     private String winnerId;
+    private EventStrategy eventStrategy;
 
     // Move to round maybe
     private int currentPlayer;

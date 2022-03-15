@@ -1,25 +1,12 @@
 package com.quest.questserver.model.Strategy;
+import com.quest.questserver.model.Card.EventCard;
 
-import com.quest.questserver.model.Game;
+public class EventStrategy {
+    private EventCard event;
 
-public class EventStrategy implements RoundStrategy{
-    @Override
-    public void start(Game game) {
-        
+    public EventStrategy(EventCard event) {
+        this.event = event;
     }
 
-    @Override
-    public void nextTurn(Game game) {
 
-    }
-
-    @Override
-    public void terminate(Game game) {
-
-    }
-
-    @Override
-    public int getRoundStatus() {
-        return 0;
-    }
 }

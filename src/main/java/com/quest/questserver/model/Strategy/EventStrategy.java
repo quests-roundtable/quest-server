@@ -1,20 +1,12 @@
 package com.quest.questserver.model.Strategy;
-import com.quest.questserver.model.Card.AdventureCard;
-import com.quest.questserver.model.Card.Card;
 import com.quest.questserver.model.Card.EventCard;
-import com.quest.questserver.model.Deck.AdventureDeck;
 import com.quest.questserver.model.Game;
 import com.quest.questserver.model.Player;
 
 import java.util.List;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 public class EventStrategy {
     private EventCard event;
-    private AdventureDeck adventureDeck;
 
     public EventStrategy(EventCard event) {
         this.event = event;
@@ -58,7 +50,6 @@ public class EventStrategy {
     }
 
     public void Event_01(Game game){
-<<<<<<< Updated upstream
         List<Player> temp = game.getPlayers();
         List<Player> players = null;
         int shieldct = 100;
@@ -79,61 +70,37 @@ public class EventStrategy {
             }
             players.get(i).addShields(3);
         }
-=======
-        //Chivalrous Deed
->>>>>>> Stashed changes
     }
 
     public void Event_02(Game game){
-        //Court Called to Camelot
+
     }
 
     public void Event_03(Game game){
-        //King's Call to Arms
+
     }
 
     public void Event_04(Game game){
-        //King's Recognition
+
     }
 
     public void Event_05(Game game){
-<<<<<<< Updated upstream
         int curplayer = game.getCurrentPlayer();
         Player temp = game.getPlayers().get(curplayer);
         if(temp.getShields() >= 2) {temp.addShields(-2);}
 
-=======
-        //Plague
->>>>>>> Stashed changes
     }
 
     public void Event_06(Game game){
-        //Pox
+
     }
 
     public void Event_07(Game game){
-        //Prosperity Throughout the Realm
+
     }
 
     public void Event_08(Game game){
-        //Queen's Favor
-        List<Integer> playerList = new ArrayList<>();
-        List<Integer> list = new ArrayList<>();
-        for (int i = 0; i < game.getNumPlayers(); i++){
-            playerList.add(game.getPlayers().get(i).getRankCard().getBattlePoints());
-        }
-        int min = Collections.min(playerList);
-        for (int i = 0; i< playerList.size(); i++){
-            if (playerList.get(i) == min){
-                list.add(i);
-            }
-        }
-        for (int i = 0; i< list.size(); i++){
-            Card card = this.adventureDeck.draw();
-            game.getPlayers().get(list.get(i)).draw(card);
-            Card card2 = this.adventureDeck.draw();
-            game.getPlayers().get(list.get(i)).draw(card2);
-        }
+
     }
 
 }

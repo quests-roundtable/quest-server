@@ -3,10 +3,7 @@ package com.quest.questserver.model;
 import com.quest.questserver.dto.GameStateDto;
 import com.quest.questserver.dto.QuestStateDto;
 import com.quest.questserver.dto.TournamentStateDto;
-import com.quest.questserver.model.Card.Card;
-import com.quest.questserver.model.Card.FoeCardDecorator;
-import com.quest.questserver.model.Card.QuestCard;
-import com.quest.questserver.model.Card.TournamentCard;
+import com.quest.questserver.model.Card.*;
 import com.quest.questserver.model.Deck.AdventureDeck;
 import com.quest.questserver.model.Deck.StoryDeck;
 import com.quest.questserver.model.Strategy.EventStrategy;
@@ -85,8 +82,10 @@ public class Game {
         } else if (storyCard.getType() == "Tournament") {
             this.roundStrategy = new TournamentStrategy((TournamentCard) storyCard);
             this.roundStrategy.start(this);
-        } else {
-            // event
+        } else if (storyCard.getType() == "Event"){
+            this.eventStrategy = new EventStrategy((EventCard) storyCard);
+            this.eventStrategy.start(this);
+        // event
         }
         checkWin();
         return;

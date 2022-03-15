@@ -1,6 +1,9 @@
 package com.quest.questserver.model.Strategy;
 import com.quest.questserver.model.Card.EventCard;
 import com.quest.questserver.model.Game;
+import com.quest.questserver.model.Player;
+
+import java.util.List;
 
 public class EventStrategy {
     private EventCard event;
@@ -44,12 +47,29 @@ public class EventStrategy {
                 Event_08(game);
                 break;
         }
-
-
     }
 
     public void Event_01(Game game){
-
+        List<Player> temp = game.getPlayers();
+        List<Player> players = null;
+        int shieldct = 100;
+        int rankct = 100;
+        for(int i = 0; i < temp.size(); i++){
+            int curshield = temp.get(i).getShields();
+            int currank = temp.get(i).getRankCard().getStrength();
+            if(curshield < shieldct){
+                shieldct = curshield;
+            }
+            if(currank < rankct){
+                rankct = currank;
+            }
+        }
+        for(int i = 0; i < temp.size(); i++) {
+            if (temp.get(i).getShields() == shieldct & temp.get(i).getRankCard().getStrength() == rankct) {
+                players.add(temp.get(i));
+            }
+            players.get(i).addShields(3);
+        }
     }
 
     public void Event_02(Game game){
@@ -65,6 +85,9 @@ public class EventStrategy {
     }
 
     public void Event_05(Game game){
+        int curplayer = game.getCurrentPlayer();
+        Player temp = game.getPlayers().get(curplayer);
+        if(temp.getShields() >= 2) {temp.addShields(-2);}
 
     }
 

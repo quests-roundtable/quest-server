@@ -70,11 +70,10 @@ public class EventStrategy {
                 rankct = currank;
             }
         }
-        for(int i = 0; i < temp.size(); i++) {
-            if (temp.get(i).getShields() == shieldct & temp.get(i).getRankCard().getStrength() == rankct) {
-                players.add(temp.get(i));
+        for(int i = 0; i < game.getPlayers().size(); i++) {
+            if (game.getPlayers().get(i).getShields() == shieldct & game.getPlayers().get(i).getRankCard().getStrength() == rankct) {
+                game.getPlayers().get(i).addShields(3);
             }
-            players.get(i).addShields(3);
         }
     }
 
@@ -97,7 +96,7 @@ public class EventStrategy {
         //Plague
         int curplayer = game.getCurrentPlayer();
         Player temp = game.getPlayers().get(curplayer);
-        if(temp.getShields() >= 2) {temp.addShields(-2);}
+        if(game.getPlayers().get(curplayer).getShields() >= 2) {game.getPlayers().get(curplayer).addShields(-2);}
 
     }
 

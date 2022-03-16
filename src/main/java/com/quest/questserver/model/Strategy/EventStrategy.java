@@ -95,7 +95,7 @@ public class EventStrategy {
     public void Event_05(Game game){
         //Plague
         int curplayer = game.getCurrentPlayer();
-        Player temp = game.getPlayers().get(curplayer);
+
         if(game.getPlayers().get(curplayer).getShields() >= 2) {game.getPlayers().get(curplayer).removeShields(2);}
 
     }

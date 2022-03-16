@@ -105,7 +105,7 @@ public class EventStrategy {
         //Pox
         for (int i = 0; i < game.getPlayers().size(); i++){
             if(i != game.getCurrentPlayer()){
-                game.getPlayers().get(i).addShields(-1);
+                game.getPlayers().get(i).removeShields(1);
             }
         }
     }

@@ -103,7 +103,11 @@ public class EventStrategy {
 
     public void Event_06(Game game){
         //Pox
-
+        for (int i = 0; i < game.getPlayers().size(); i++){
+            if(i != game.getCurrentPlayer()){
+                game.getPlayers().get(i).addShields(-1);
+            }
+        }
     }
 
     public void Event_07(Game game){

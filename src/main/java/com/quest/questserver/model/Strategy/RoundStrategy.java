@@ -1,10 +1,6 @@
 package com.quest.questserver.model.Strategy;
 
-import java.util.List;
-
 import com.quest.questserver.model.Game;
-import com.quest.questserver.model.Card.Card;
-import com.quest.questserver.model.Card.StoryCard;
 
 public interface RoundStrategy {
     public static final int WAITING_PLAYERS = 1;

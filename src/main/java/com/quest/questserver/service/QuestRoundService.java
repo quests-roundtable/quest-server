@@ -159,6 +159,8 @@ public class QuestRoundService {
                     playerMove = new PlayerWeaponDecorator(playerMove, (WeaponCard) card);
                 } else if (card instanceof AllyCard) {
                     playerMove = new AllyDecorator(playerMove, (AllyCard) card);
+                    // change
+                    player.addSpecial(card);
                 } else if (card instanceof AmourCard) {
                     if(hasAmour) {
                         invalid = true;
@@ -166,6 +168,7 @@ public class QuestRoundService {
                         break;
                     } else { hasAmour = true; }
                     playerMove = new AmourDecorator(playerMove, (AmourCard) card);
+                    player.addSpecial(card);
                 }
             }
         }
@@ -193,7 +196,7 @@ public class QuestRoundService {
             // if questInfo not null create new otherwise do nothing
             if (player.getQuestInfo() == null) {
                 QuestInfo questInfo = new QuestInfo(QuestInfo.PLAYER, null);
-                questInfo.setPlayerMove(player.getRankCard());
+                questInfo.setPlayerMove(player.getDecoratedRank());
                 player.setQuestInfo(questInfo);
             }
             // Draw card if player accepts round
@@ -206,10 +209,11 @@ public class QuestRoundService {
                 questInfo.setPlayerMove(null);
                 for (Card card : decoratorCards) {
                     if(card.getType().equals("Amour")) {
+
+                        player.removeSpecial(card);
                         game.getAdventureDeck().discard(card);
                         continue;
                     }
-                    player.draw(card);
                 }
                 player.setQuestInfo(null);
             }

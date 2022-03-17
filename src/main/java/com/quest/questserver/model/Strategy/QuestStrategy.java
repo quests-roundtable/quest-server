@@ -2,14 +2,10 @@ package com.quest.questserver.model.Strategy;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.quest.questserver.model.Card.*;
 import com.quest.questserver.model.Game;
 import com.quest.questserver.model.Player;
-import com.quest.questserver.model.Card.AllyCard;
-import com.quest.questserver.model.Card.AllyDecorator;
-import com.quest.questserver.model.Card.Card;
-import com.quest.questserver.model.Card.FoeCardDecorator;
-import com.quest.questserver.model.Card.QuestCard;
-import com.quest.questserver.model.Card.RankCardDecorator;
 
 public class QuestStrategy implements RoundStrategy {
     public static final int WAITING_SPONSOR = 0;
@@ -65,8 +61,7 @@ public class QuestStrategy implements RoundStrategy {
             QuestInfo questInfo = g.getPlayers().get(currentPlayer).getQuestInfo();
 
             Integer nextPlayer = getNextPlayerIndex();
-            if (questInfo == null)
-                playerIndexes.remove(currentPlayer);
+            if (questInfo == null) playerIndexes.remove(currentPlayer);
             this.currentPlayer = nextPlayer;
 
             if (currentPlayer.equals(sponsorIndex)) {
@@ -79,7 +74,7 @@ public class QuestStrategy implements RoundStrategy {
                         this.roundStatus = IN_PROGRESS;
                     }
                 } else {
-                    // if every player rejects sponsoring Quest, strategy ends
+                    // if every player rejects Quest stage, strategy ends
                     this.roundStatus = TERMINATED;
                 }
             }
@@ -119,9 +114,8 @@ public class QuestStrategy implements RoundStrategy {
 
         // Re draw cards for sponsor
         Player sponsor = players.get(sponsorIndex);
-        System.out.println("Draw cards sponsor");
-        System.out.println(sponsor.getQuestInfo().getNumSponsorCards());
-        for (int i = 0; i < sponsor.getQuestInfo().getNumSponsorCards(); i++) {
+        int cardsDrawn = sponsor.getQuestInfo().getNumSponsorCards() + quest.getQuestStages();
+        for (int i = 0; i < cardsDrawn; i++) {
             sponsor.draw(g.getAdventureDeck().draw());
         }
         sponsor.setQuestInfo(null);
@@ -147,6 +141,10 @@ public class QuestStrategy implements RoundStrategy {
             ArrayList<Card> decoratorCards = player.getQuestInfo().getPlayerMove().fetchAllCards();
             player.setQuestInfo(null);
             for (Card card : decoratorCards) {
+                if(card.getType().equals("Amour")) {
+                    g.getAdventureDeck().discard(card);
+                    continue;
+                }
                 player.draw(card);
             }
         }
@@ -160,10 +158,13 @@ public class QuestStrategy implements RoundStrategy {
         FoeCardDecorator stage = (FoeCardDecorator) questStages.get(0);
         this.roundResult = new RoundResult();
         this.roundResult.setQuestStage(stage.fetchAllCards());
-        int stageStrength = stage.getName().equals(quest.getQuestFoe()) ? stage.getQuestStrength()
-                : stage.getStrength();
 
-        // Check scores, qualify players and discard cards
+        String questFoe = quest.getQuestFoe();
+        boolean questStrength = questFoe != null && (stage.getName().equals(questFoe) ||
+                questFoe.equals("All") || (questFoe.equals("Saxon") && stage.getName().contains("Saxon")));
+        int stageStrength = questStrength ? stage.getQuestStrength() : stage.getStrength();
+
+        // Check scores and qualify players
         for (int i = playerIndexes.size() - 1; i >= 0; i--) {
             int playerIndex = playerIndexes.get(i);
             if (playerIndex == sponsorIndex)
@@ -180,7 +181,7 @@ public class QuestStrategy implements RoundStrategy {
     }
 
     private void endRound(Game g) {
-        // Check scores, qualify players and discard cards
+        // discard cards
         for (int i = playerIndexes.size() - 1; i >= 0; i--) {
             Integer playerIndex = playerIndexes.get(i);
             if (playerIndex.equals(sponsorIndex))
@@ -194,6 +195,7 @@ public class QuestStrategy implements RoundStrategy {
             ArrayList<Card> moveCards = playerMove.fetchAllCards();
             for (int j = moveCards.size() - 1; j >= 0; j--) {
                 Card card = moveCards.get(j);
+                if (qualified && card.getType().equals("Amour")) continue;
                 if (card.getType().equals("Ally")) {
                     if (!qualified) {
                         player.draw(card);
@@ -206,7 +208,11 @@ public class QuestStrategy implements RoundStrategy {
             if (qualified) {
                 playerMove = player.getRankCard();
                 for (Card card : moveCards) {
-                    playerMove = new AllyDecorator(playerMove, (AllyCard) card);
+                    if (card.getType().equals("Amour")) {
+                        playerMove = new AmourDecorator(playerMove, (AmourCard) card);
+                    } else {
+                        playerMove = new AllyDecorator(playerMove, (AllyCard) card);
+                    }
                 }
                 player.getQuestInfo().setPlayerMove(playerMove);
                 player.getQuestInfo().setNumMoveCards(playerMove.fetchAllCards().size());

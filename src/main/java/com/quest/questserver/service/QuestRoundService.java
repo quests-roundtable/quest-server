@@ -1,6 +1,7 @@
 package com.quest.questserver.service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import com.quest.questserver.dto.GameStateDto;
@@ -39,6 +40,7 @@ public class QuestRoundService {
 
         int previousStrength = 0;
         for (List<String> stage : cardIds) {
+            HashSet<String> weapons = new HashSet<>();
             List<Card> cards = new ArrayList<>();
             int currentStrength = 0;
             for (String cardId : stage) {
@@ -55,13 +57,20 @@ public class QuestRoundService {
 
                 cards.add(card);
                 if (card.getType().equals("Weapon")) {
+                    if(weapons.contains(card.getName())) {
+                        invalid = true;
+                        errorMessage = "Invalid Quest. Can only play one weapon of the same type per foe.";
+                        break;
+                    } else { weapons.add(card.getName()); }
                     currentStrength += ((AdventureCard) card).getStrength();
                 } else if (card.getType().equals("Foe")) {
-                    currentStrength += card.getName().equals(((QuestCard) quest.getQuest()).getQuestFoe()) ?
-                            ((FoeCard) card).getQuestStrength()
+                    String questFoe = ((QuestCard) quest.getQuest()).getQuestFoe();
+                    boolean questStrength = questFoe != null && (card.getName().equals(questFoe) ||
+                            questFoe.equals("All") || (questFoe.equals("Saxon") && card.getName().contains("Saxon")));
+                    currentStrength += questStrength ? ((FoeCard) card).getQuestStrength()
                             : ((FoeCard) card).getStrength();
                 } else if (card.getType().equals("Test")) {
-                    if(testCount++ > 1 || stage.size() > 1) {
+                    if(++testCount > 1 || stage.size() > 1) {
                         invalid = true;
                         errorMessage = stage.size() > 1 ? "Invalid Quest. Invalid Test Stage."
                                 : "Invalid Quest. Only 1 Test Card allowed per Quest. ";
@@ -69,8 +78,8 @@ public class QuestRoundService {
                     }
                 }
             }
-            if (invalid) break;
             stages.add(cards);
+            if (invalid) break;
             if (cards.get(0).getType().equals("Foe")) {
                 if (currentStrength <= previousStrength) {
                     invalid = true;
@@ -123,27 +132,51 @@ public class QuestRoundService {
         QuestInfo questInfo = player.getQuestInfo();
 
         List<Card> cards = new ArrayList<>();
+
+        boolean invalid = false;
+        String errorMessage = null;
         for (String cardId : cardIds) {
             Card card = player.discard(cardId);
             if (card != null) cards.add(card);
             if (card instanceof FoeCard || card instanceof TestCard || card == null) {
-                for(Card cardDrawn: cards) {
-                    player.draw(cardDrawn);
-                }
-                throw new GameException("Invalid player move. ");
+                invalid = true;
+                errorMessage = "Invalid player move. ";
+                break;
             }
         }
 
         RankCardDecorator playerMove = questInfo.getPlayerMove();
-        for (Card card : cards) {
-            if (card instanceof WeaponCard) {
-                playerMove = new PlayerWeaponDecorator(playerMove, (WeaponCard) card);
-            } else if (card instanceof AllyCard) {
-                playerMove = new AllyDecorator(playerMove, (AllyCard) card);
-            } else if (card instanceof AmourCard) {
-                playerMove = new AmourDecorator(playerMove, (AmourCard) card);
+        if (!invalid) {
+            HashSet<String> weapons = new HashSet<>();
+            boolean hasAmour = playerMove.fetchAllCards().stream().filter(card -> card instanceof AmourCard).count() >= 1;
+            for (Card card : cards) {
+                if (card instanceof WeaponCard) {
+                    if(weapons.contains(card.getName())) {
+                        invalid = true;
+                        errorMessage = "Invalid player move. Can only play one weapon of the same type.";
+                        break;
+                    } else { weapons.add(card.getName()); }
+                    playerMove = new PlayerWeaponDecorator(playerMove, (WeaponCard) card);
+                } else if (card instanceof AllyCard) {
+                    playerMove = new AllyDecorator(playerMove, (AllyCard) card);
+                } else if (card instanceof AmourCard) {
+                    if(hasAmour) {
+                        invalid = true;
+                        errorMessage = "Invalid player move. Can only have one amour on rank.";
+                        break;
+                    } else { hasAmour = true; }
+                    playerMove = new AmourDecorator(playerMove, (AmourCard) card);
+                }
             }
         }
+
+        if (invalid) {
+            for(Card cardDrawn: cards) {
+                player.draw(cardDrawn);
+            }
+            throw new GameException(errorMessage);
+        }
+
         questInfo.setPlayerMove(playerMove);
         questInfo.setNumMoveCards(cards.size());
 
@@ -172,6 +205,10 @@ public class QuestRoundService {
                 ArrayList<Card> decoratorCards = questInfo.getPlayerMove().fetchAllCards();
                 questInfo.setPlayerMove(null);
                 for (Card card : decoratorCards) {
+                    if(card.getType().equals("Amour")) {
+                        game.getAdventureDeck().discard(card);
+                        continue;
+                    }
                     player.draw(card);
                 }
                 player.setQuestInfo(null);

@@ -31,6 +31,7 @@ public class Game {
     private AdventureDeck adventureDeck;
     private StoryDeck storyDeck;
     private RoundStrategy roundStrategy;
+    private String winnerId;
 
     // Move to round maybe
     private int currentPlayer;
@@ -53,6 +54,14 @@ public class Game {
         }
         this.currentPlayer = 0;
     }
+    public void checkWin(){
+        for (Player player: players){
+            if (player.getRankCard().getName().equalsIgnoreCase("Knight of the Round Table")){
+                winnerId = player.getId();
+                terminate();
+            }
+        }
+    }
 
     public void nextTurn() {
         if (roundStrategy != null) {
@@ -61,6 +70,7 @@ public class Game {
                 this.roundStrategy.terminate(this);
                 this.roundStrategy = null;
             }
+            checkWin();
             return;
         }
         this.currentPlayer = (currentPlayer + 1) % numPlayers;
@@ -76,6 +86,7 @@ public class Game {
         } else {
             // event
         }
+        checkWin();
         return;
     }
 
@@ -148,6 +159,10 @@ public class Game {
         return this.roundStrategy;
     }
 
+    public String getWinnerId() {
+        return this.winnerId;
+    }
+
     public QuestStateDto getQuestState() {
         QuestStateDto state = new QuestStateDto();
         if (roundStrategy instanceof QuestStrategy) {
@@ -174,10 +189,10 @@ public class Game {
         TournamentStateDto state = new TournamentStateDto();
         if (roundStrategy instanceof TournamentStrategy) {
             TournamentStrategy tournament = (TournamentStrategy) roundStrategy;
-            // state.setSponsorIndex(roundStrategy.getSponsorIndex());
-            // state.setRoundStatus(roundStrategy.getRoundStatus());
-            // state.setCurrentPlayer(roundStrategy.getCurrentPlayer());
-            // state.setCard((TournamentCard) roundStrategy.getStoryCard());
+            state.setRoundStatus(tournament.getRoundStatus());
+            state.setRoundResult(tournament.getRoundResult());
+            state.setCurrentPlayer(tournament.getCurrentPlayer());
+            state.setCard((TournamentCard) tournament.getTournament());
         }
         return state;
     }

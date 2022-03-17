@@ -61,7 +61,7 @@ public class Player {
         }
         if (rankCard.getName().equalsIgnoreCase("Champion Knight") && shields >= 10) {
             shields -= 10;
-            this.rankCard = RankCard.getRankCard("Knight");
+            this.rankCard = RankCard.getRankCard("Knight of the Round Table");
         }
     }
 

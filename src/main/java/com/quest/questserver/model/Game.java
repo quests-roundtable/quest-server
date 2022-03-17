@@ -127,6 +127,13 @@ public class Game {
         return String.format("%04d", ++gameCount);
     }
 
+    public void drawTwoAdventureCard(Player player){
+        Card card = this.adventureDeck.draw();
+        Card card2 = this.adventureDeck.draw();
+        player.draw(card);
+        player.draw(card2);
+    }
+
     // Getters
     public String getId() {
         return id;

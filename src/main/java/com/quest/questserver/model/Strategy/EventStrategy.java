@@ -112,10 +112,7 @@ public class EventStrategy {
     public void Event_07(Game game){
         //Prosperity Throughout the Realm
         for (int i = 0; i < game.getNumPlayers(); i++){
-            Card card = this.adventureDeck.draw();
-            Card card2 = this.adventureDeck.draw();
-            game.getPlayers().get(i).draw(card);
-            game.getPlayers().get(i).draw(card2);
+            game.drawTwoAdventureCard(game.getPlayers().get(i));
         }
     }
 
@@ -133,10 +130,7 @@ public class EventStrategy {
             }
         }
         for (int i = 0; i< list.size(); i++){
-            Card card = this.adventureDeck.draw();
-            game.getPlayers().get(list.get(i)).draw(card);
-            Card card2 = this.adventureDeck.draw();
-            game.getPlayers().get(list.get(i)).draw(card2);
+            game.drawTwoAdventureCard(game.getPlayers().get(list.get(i)));
         }
     }
 

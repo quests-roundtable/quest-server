@@ -45,4 +45,17 @@ public class GameRoundController {
         webSocket.convertAndSend(String.format("/topic/game#%s", request.getLobby()), state);
         return ResponseEntity.ok("Passed.");
     }
+
+    @PostMapping("/mordred")
+    public ResponseEntity<String> sacrificeMordred(@RequestBody PlayerRequestDto<String> request){
+        
+        String[] parts = request.getData().split("#");
+        String cardId = parts[0];
+        String mordredId = parts[1];
+        String opponentId = parts[2];
+        log.info("Mordred request:");
+        GameStateDto state = gameRoundService.sacrificeMordred(request.getLobby(), request.getPlayerId(), cardId, mordredId, opponentId);
+        webSocket.convertAndSend(String.format("/topic/game#%s", request.getLobby()), state);
+        return ResponseEntity.ok("Mordred used.");
+    }
 }

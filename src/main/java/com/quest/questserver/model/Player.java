@@ -59,14 +59,14 @@ public class Player {
         specialCards.remove(card);
     }
 
-    // public AdventureCard removeSpecial(String cardId){
-    //     for (int i = 0; i < specialCards.size(); i++) {
-    //         if (specialCards.get(i).getId().equals(cardId)) {
-    //             return specialCards.remove(i);
-    //         }
-    //     }
-    //     return null;
-    // }
+    public Card removeSpecial(String cardId){
+        for (int i = 0; i < specialCards.size(); i++) {
+            if (specialCards.get(i).getId().equals(cardId)) {
+                return specialCards.remove(i);
+            }
+        }
+        return null;
+    }
 
     public RankCardDecorator getDecoratedRank(){
         RankCardDecorator rankDecorator = this.getRankCard();

@@ -131,16 +131,12 @@ public class TournamentStrategy implements RoundStrategy {
                     moveCards.remove(j);
                     g.getAdventureDeck().discard(card);
                 }
-
-               
             }
 
             if (tie && qualified) {
-
-                // change
                 playerMove = player.getDecoratedRank();
                 player.getTournamentInfo().setPlayerMove(playerMove);
-                player.getTournamentInfo().setNumMoveCards(playerMove.fetchAllCards().size());
+                player.getTournamentInfo().setNumMoveCards(0);
             } else {
                 player.setTournamentInfo(null);
                 playerIndexes.remove(i);

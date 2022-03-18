@@ -172,6 +172,7 @@ public class Game {
             state.setCurrentPlayer(quest.getCurrentPlayer());
             state.setCurrentStage(quest.getCurrentStage());
             state.setCard((QuestCard) quest.getQuest());
+            state.setHighestBid(quest.getHighestBid());
             if (quest.getRoundResult() != null)
                 state.setRoundResult(quest.getRoundResult());
             // Get the stage

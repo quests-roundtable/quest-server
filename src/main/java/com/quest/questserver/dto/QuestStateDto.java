@@ -17,5 +17,7 @@ public class QuestStateDto {
     private QuestCard card;
     private List<Card> questStage;
     private RoundResult roundResult;
+    private int highestBid;
     private String message = "No server message here.";
+
 }

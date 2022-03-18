@@ -17,6 +17,11 @@ public class AllyDecorator extends RankDecorator{
     }
 
     @Override
+    public int getBids() {
+        return ally.getBids() + rankDecorator.getBids();
+    }
+
+    @Override
     public ArrayList<Card> fetchAllCards(){
         ArrayList<Card> cardList = new ArrayList<Card>();
         cardList.addAll(rankDecorator.fetchAllCards());

@@ -29,6 +29,7 @@ public class TournamentRoundService {
         TournamentInfo tournamentInfo = player.getTournamentInfo();
 
         List<Card> cards = new ArrayList<>();
+        List<Card> specialCards = new ArrayList<>();
 
         boolean invalid = false;
         String errorMessage = null;
@@ -44,8 +45,8 @@ public class TournamentRoundService {
         }
 
         RankCardDecorator playerMove = tournamentInfo.getPlayerMove();
+        HashSet<String> weapons = new HashSet<>();
         if (!invalid) {
-            HashSet<String> weapons = new HashSet<>();
             boolean hasAmour = playerMove.fetchAllCards().stream().filter(card -> card instanceof AmourCard)
                     .count() >= 1;
             for (Card card : cards) {
@@ -61,7 +62,7 @@ public class TournamentRoundService {
                 } else if (card instanceof AllyCard) {
                     playerMove = new AllyDecorator(playerMove, (AllyCard) card);
                     // change
-                    player.addSpecial(card);
+                    specialCards.add(card);
                 } else if (card instanceof AmourCard) {
                     if (hasAmour) {
                         invalid = true;
@@ -71,7 +72,7 @@ public class TournamentRoundService {
                         hasAmour = true;
                     }
                     playerMove = new AmourDecorator(playerMove, (AmourCard) card);
-                    player.addSpecial(card);
+                    specialCards.add(card);
                 }
             }
         }
@@ -84,7 +85,11 @@ public class TournamentRoundService {
         }
 
         tournamentInfo.setPlayerMove(playerMove);
-        tournamentInfo.setNumMoveCards(cards.size());
+        tournamentInfo.setNumMoveCards(weapons.size());
+
+        for(Card card: specialCards) {
+            player.addSpecial(card);
+        }
 
         game.nextTurn();
         return game.getGameState();

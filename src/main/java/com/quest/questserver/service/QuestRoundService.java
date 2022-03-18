@@ -132,6 +132,7 @@ public class QuestRoundService {
         QuestInfo questInfo = player.getQuestInfo();
 
         List<Card> cards = new ArrayList<>();
+        List<Card> specialCards = new ArrayList<>();
 
         boolean invalid = false;
         String errorMessage = null;
@@ -146,8 +147,8 @@ public class QuestRoundService {
         }
 
         RankCardDecorator playerMove = questInfo.getPlayerMove();
+        HashSet<String> weapons = new HashSet<>();
         if (!invalid) {
-            HashSet<String> weapons = new HashSet<>();
             boolean hasAmour = playerMove.fetchAllCards().stream().filter(card -> card instanceof AmourCard).count() >= 1;
             for (Card card : cards) {
                 if (card instanceof WeaponCard) {
@@ -160,7 +161,7 @@ public class QuestRoundService {
                 } else if (card instanceof AllyCard) {
                     playerMove = new AllyDecorator(playerMove, (AllyCard) card);
                     // change
-                    player.addSpecial(card);
+                    specialCards.add(card);
                 } else if (card instanceof AmourCard) {
                     if(hasAmour) {
                         invalid = true;
@@ -168,7 +169,7 @@ public class QuestRoundService {
                         break;
                     } else { hasAmour = true; }
                     playerMove = new AmourDecorator(playerMove, (AmourCard) card);
-                    player.addSpecial(card);
+                    specialCards.add(card);
                 }
             }
         }
@@ -181,7 +182,11 @@ public class QuestRoundService {
         }
 
         questInfo.setPlayerMove(playerMove);
-        questInfo.setNumMoveCards(cards.size());
+        questInfo.setNumMoveCards(weapons.size());
+
+        for(Card card: specialCards) {
+            player.addSpecial(card);
+        }
 
         game.nextTurn();
         return game.getGameState();
@@ -197,6 +202,7 @@ public class QuestRoundService {
             if (player.getQuestInfo() == null) {
                 QuestInfo questInfo = new QuestInfo(QuestInfo.PLAYER, null);
                 questInfo.setPlayerMove(player.getDecoratedRank());
+                questInfo.setNumMoveCards(0);
                 player.setQuestInfo(questInfo);
             }
             // Draw card if player accepts round
@@ -218,6 +224,58 @@ public class QuestRoundService {
                 player.setQuestInfo(null);
             }
         }
+
+        game.nextTurn();
+        return game.getGameState();
+    }
+
+    // setPlayerMove: take in list of cards, create rank decorator (update player's
+    // questInfo)
+    public GameStateDto playerTestBid(String gameId, String playerId, List<String> cardIds) {
+        Game game = gameStore.getGame(gameId);
+        Player player = game.getPlayer(playerId);
+        QuestInfo questInfo = player.getQuestInfo();
+
+        List<Card> bidCards = new ArrayList<>();
+
+        boolean invalid = false;
+        String errorMessage = null;
+        for (String cardId : cardIds) {
+            Card card = player.discard(cardId);
+            if (card == null) {
+                invalid = true;
+                errorMessage = "Invalid player move. ";
+                break;
+            } else { bidCards.add(card); }
+        }
+
+        int playerBid = questInfo.getPlayerMove().getBids() + bidCards.size();
+        int highestBid = game.getQuestState().getHighestBid();
+        if (playerBid <= highestBid) {
+            invalid = true;
+            errorMessage = "Bid " + playerBid + " too low. Bid higher than current bid of " + highestBid + ".";
+        }
+
+        if (invalid) {
+            for(Card cardBid: bidCards) {
+                player.draw(cardBid);
+            }
+            throw new GameException(errorMessage);
+        }
+
+        questInfo.setBidCards(bidCards);
+        questInfo.setNumMoveCards(bidCards.size());
+
+        game.nextTurn();
+        return game.getGameState();
+    }
+
+    // passTestBid: pass the Bid, no longer able to bid
+    public GameStateDto passTestBid(String gameId, String playerId) {
+        Game game = gameStore.getGame(gameId);
+        Player player = game.getPlayer(playerId);
+
+        player.getQuestInfo().setBidPassed(true);
 
         game.nextTurn();
         return game.getGameState();

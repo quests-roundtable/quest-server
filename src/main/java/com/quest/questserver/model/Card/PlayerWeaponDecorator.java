@@ -2,7 +2,7 @@ package com.quest.questserver.model.Card;
 
 import java.util.ArrayList;
 
-public class PlayerWeaponDecorator extends RankDecorator{
+public class PlayerWeaponDecorator extends RankDecorator {
     private WeaponCard weapon;
 
     public PlayerWeaponDecorator(RankCardDecorator rankDecorator, WeaponCard weapon) {

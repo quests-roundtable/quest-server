@@ -1,7 +1,14 @@
 package com.quest.questserver.model;
 
 import com.quest.questserver.model.Card.Card;
+import com.quest.questserver.model.Card.AdventureCard;
+import com.quest.questserver.model.Card.AllyCard;
+import com.quest.questserver.model.Card.AllyDecorator;
+import com.quest.questserver.model.Card.AmourCard;
+import com.quest.questserver.model.Card.AmourDecorator;
 import com.quest.questserver.model.Card.RankCard;
+import com.quest.questserver.model.Card.RankCardDecorator;
+import com.quest.questserver.model.Card.RankDecorator;
 import com.quest.questserver.model.Strategy.QuestInfo;
 import com.quest.questserver.model.Strategy.TournamentInfo;
 
@@ -17,12 +24,15 @@ public class Player {
     private RankCard rankCard;
     private QuestInfo questInfo; // if not null, player is in quest
     private TournamentInfo tournamentInfo;
+    private List<Card> specialCards; // Amour and Ally
+
 
     public Player(String id, String name) {
         this.name = name;
         this.id = id;
         this.shields = 0;
         this.playerHand = new ArrayList<>();
+        this.specialCards = new ArrayList<>();
     }
 
     public void dealCards(List<Card> hand) {
@@ -40,6 +50,37 @@ public class Player {
     public void draw(Card card) {
         playerHand.add(card);
     }
+
+    public void addSpecial(Card card){
+        specialCards.add(card);
+    }
+
+    public void removeSpecial(Card card){
+        specialCards.remove(card);
+    }
+
+    public Card removeSpecial(String cardId){
+        for (int i = 0; i < specialCards.size(); i++) {
+            if (specialCards.get(i).getId().equals(cardId)) {
+                return specialCards.remove(i);
+            }
+        }
+        return null;
+    }
+
+    public RankCardDecorator getDecoratedRank(){
+        RankCardDecorator rankDecorator = this.getRankCard();
+        for (Card card : specialCards){
+            if (card.getType().equals("Amour")){
+                rankDecorator = new AmourDecorator(rankDecorator, (AmourCard) card);
+            } else {
+                rankDecorator = new AllyDecorator(rankDecorator, (AllyCard) card);
+            }
+        }
+        return rankDecorator;
+    }
+
+
 
     public Card discard(String cardId) {
         for (int i = 0; i < playerHand.size(); i++) {
@@ -84,6 +125,10 @@ public class Player {
 
     public List<Card> getPlayerHand() {
         return playerHand;
+    }
+
+    public List<Card> getSpecialCards(){
+        return specialCards;
     }
 
     public QuestInfo getQuestInfo() {

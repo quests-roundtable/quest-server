@@ -140,13 +140,15 @@ public class QuestStrategy implements RoundStrategy {
             Player player = players.get(playerIndex);
             ArrayList<Card> decoratorCards = player.getQuestInfo().getPlayerMove().fetchAllCards();
             player.setQuestInfo(null);
+
             for (Card card : decoratorCards) {
                 if(card.getType().equals("Amour")) {
+                    player.removeSpecial(card);
                     g.getAdventureDeck().discard(card);
-                    continue;
                 }
-                player.draw(card);
             }
+
+            
         }
 
         for (int idx : playerIndexes) {
@@ -206,14 +208,7 @@ public class QuestStrategy implements RoundStrategy {
                 }
             }
             if (qualified) {
-                playerMove = player.getRankCard();
-                for (Card card : moveCards) {
-                    if (card.getType().equals("Amour")) {
-                        playerMove = new AmourDecorator(playerMove, (AmourCard) card);
-                    } else {
-                        playerMove = new AllyDecorator(playerMove, (AllyCard) card);
-                    }
-                }
+                playerMove = player.getDecoratedRank();
                 player.getQuestInfo().setPlayerMove(playerMove);
                 player.getQuestInfo().setNumMoveCards(playerMove.fetchAllCards().size());
             } else {

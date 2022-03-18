@@ -10,7 +10,6 @@ import com.quest.questserver.model.Card.*;
 import com.quest.questserver.model.Game;
 import com.quest.questserver.model.Player;
 import com.quest.questserver.repository.GameRepository;
-import com.quest.questserver.model.Strategy.TournamentStrategy;
 import com.quest.questserver.model.Strategy.TournamentInfo;
 import com.quest.questserver.exception.GameException;
 
@@ -61,6 +60,8 @@ public class TournamentRoundService {
                     playerMove = new PlayerWeaponDecorator(playerMove, (WeaponCard) card);
                 } else if (card instanceof AllyCard) {
                     playerMove = new AllyDecorator(playerMove, (AllyCard) card);
+                    // change
+                    player.addSpecial(card);
                 } else if (card instanceof AmourCard) {
                     if (hasAmour) {
                         invalid = true;
@@ -70,6 +71,7 @@ public class TournamentRoundService {
                         hasAmour = true;
                     }
                     playerMove = new AmourDecorator(playerMove, (AmourCard) card);
+                    player.addSpecial(card);
                 }
             }
         }
@@ -97,7 +99,7 @@ public class TournamentRoundService {
             // if tournament not null create new otherwise do nothing
             if (player.getTournamentInfo() == null) {
                 TournamentInfo tournamentInfo = new TournamentInfo();
-                tournamentInfo.setPlayerMove(player.getRankCard());
+                tournamentInfo.setPlayerMove(player.getDecoratedRank());
                 player.setTournamentInfo(tournamentInfo);
             }
             // Draw card if player accepts round

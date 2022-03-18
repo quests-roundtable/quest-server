@@ -123,25 +123,22 @@ public class TournamentStrategy implements RoundStrategy {
             for (int j = moveCards.size() - 1; j >= 0; j--) {
                 Card card = moveCards.get(j);
                 if (tie && qualified && card.getType().equals("Amour")) continue;
-                if (card.getType().equals("Ally")) {
-                    if (!tie || !qualified) {
-                        player.draw(card);
+                
+                if (!card.getType().equals("Ally")){
+                    if (card.getType().equals("Amour")){
+                        player.removeSpecial(card);
                     }
-                } else {
-                    g.getAdventureDeck().discard(card);
                     moveCards.remove(j);
+                    g.getAdventureDeck().discard(card);
                 }
+
+               
             }
 
             if (tie && qualified) {
-                playerMove = player.getRankCard();
-                for (Card card : moveCards) {
-                    if (card.getType().equals("Amour")) {
-                        playerMove = new AmourDecorator(playerMove, (AmourCard) card);
-                    } else {
-                        playerMove = new AllyDecorator(playerMove, (AllyCard) card);
-                    }
-                }
+
+                // change
+                playerMove = player.getDecoratedRank();
                 player.getTournamentInfo().setPlayerMove(playerMove);
                 player.getTournamentInfo().setNumMoveCards(playerMove.fetchAllCards().size());
             } else {

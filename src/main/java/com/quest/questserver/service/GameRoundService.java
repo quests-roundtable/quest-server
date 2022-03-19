@@ -25,7 +25,8 @@ public class GameRoundService {
     public GameStateDto discardCard(String gameId, String playerId, String cardId) {
         Game game = gameStore.getGame(gameId);
         Card card = game.getPlayer(playerId).discard(cardId);
-        if(card == null) throw new GameException("Card not in player hand");
+        if (card == null)
+            throw new GameException("Card not in player hand");
         game.getAdventureDeck().discard(card);
         return game.getGameState();
     }
@@ -36,7 +37,8 @@ public class GameRoundService {
         return game.getGameState();
     }
 
-    public GameStateDto sacrificeMordred(String gameId, String playerId, String cardId, String mordredId, String opponentId){
+    public GameStateDto sacrificeMordred(String gameId, String playerId, String cardId, String mordredId,
+            String opponentId) {
         Game game = gameStore.getGame(gameId);
         Player player = game.getPlayer(playerId);
         Player opponent = game.getPlayer(opponentId);
@@ -44,7 +46,9 @@ public class GameRoundService {
         Card mordredCard = player.discard(mordredId);
         game.getAdventureDeck().discard(allyCard);
         game.getAdventureDeck().discard(mordredCard);
-        game.nextTurn();
+
+        //Remove from quest or tournament info player move
+
         return game.getGameState();
     }
 

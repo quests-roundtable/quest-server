@@ -21,6 +21,7 @@ public class QuestStrategy implements RoundStrategy {
     private List<Card> questStages;
     private RoundResult roundResult;
     private int highestBid;
+    private String highestBidder;
 
     public QuestStrategy(QuestCard quest) {
         this.quest = quest;
@@ -64,7 +65,8 @@ public class QuestStrategy implements RoundStrategy {
             QuestInfo questInfo = g.getPlayers().get(currentPlayer).getQuestInfo();
 
             Integer nextPlayer = getNextPlayerIndex();
-            if (questInfo == null) playerIndexes.remove(currentPlayer);
+            if (questInfo == null)
+                playerIndexes.remove(currentPlayer);
             this.currentPlayer = nextPlayer;
 
             if (currentPlayer.equals(sponsorIndex)) {
@@ -75,8 +77,10 @@ public class QuestStrategy implements RoundStrategy {
                         this.roundStatus = TEST_STAGE;
                         TestCard test = ((TestCard) questStages.get(0));
                         this.highestBid = (test.getTypeId().equals("Test_01") && !quest.getTypeId().equals("Quest_05"))
-                            ? 0 : ((TestCard) questStages.get(0)).getMinimumBids() - 1;
-                        if (highestBid <= 0 && playerIndexes.size() <= 2) highestBid = 2;
+                                ? 0
+                                : ((TestCard) questStages.get(0)).getMinimumBids() - 1;
+                        if (highestBid <= 0 && playerIndexes.size() <= 2)
+                            highestBid = 2;
                     } else {
                         this.roundStatus = IN_PROGRESS;
                     }
@@ -88,16 +92,17 @@ public class QuestStrategy implements RoundStrategy {
         } else if (roundStatus == TEST_STAGE) {
             // Test logic
 
-            if(!g.getPlayers().get(currentPlayer).getQuestInfo().isBidPassed()) {
+            if (!g.getPlayers().get(currentPlayer).getQuestInfo().isBidPassed()) {
                 QuestInfo questInfo = g.getPlayers().get(currentPlayer).getQuestInfo();
                 highestBid = questInfo.getPlayerMove().getBids() + questInfo.getBidCards().size();
+                highestBidder = g.getPlayers().get(currentPlayer).getName();
             }
 
             // Check if everyone has passed
             int currentIndex = this.currentPlayer;
             do {
                 this.currentPlayer = getNextPlayerIndex();
-                if(currentIndex == currentPlayer) {
+                if (currentIndex == currentPlayer) {
                     this.currentPlayer = sponsorIndex;
                     getResults(g);
 
@@ -105,7 +110,7 @@ public class QuestStrategy implements RoundStrategy {
                     this.roundStatus = ROUND_END;
                     break;
                 }
-            } while(g.getPlayers().get(currentPlayer).getQuestInfo().isBidPassed()
+            } while (g.getPlayers().get(currentPlayer).getQuestInfo().isBidPassed()
                     || currentPlayer.equals(sponsorIndex));
         } else if (roundStatus == IN_PROGRESS) {
             this.currentPlayer = getNextPlayerIndex();
@@ -125,7 +130,8 @@ public class QuestStrategy implements RoundStrategy {
             // Update stage and status
             this.currentStage += 1;
             this.roundStatus = currentStage > quest.getQuestStages() || playerIndexes.size() <= 1
-                    ? TERMINATED : WAITING_PLAYERS;
+                    ? TERMINATED
+                    : WAITING_PLAYERS;
         }
 
     }
@@ -147,7 +153,7 @@ public class QuestStrategy implements RoundStrategy {
         playerIndexes.remove(sponsorIndex);
 
         // Discard stages if any left
-        while(questStages.size() != 0) {
+        while (questStages.size() != 0) {
             Card stage = questStages.remove(0);
             if (stage.getType().equals("Test")) {
                 g.getAdventureDeck().discard(stage);
@@ -167,7 +173,7 @@ public class QuestStrategy implements RoundStrategy {
             player.setQuestInfo(null);
 
             for (Card card : decoratorCards) {
-                if(card.getType().equals("Amour")) {
+                if (card.getType().equals("Amour")) {
                     player.removeSpecial(card);
                     g.getAdventureDeck().discard(card);
                 }
@@ -175,8 +181,12 @@ public class QuestStrategy implements RoundStrategy {
         }
 
         for (int idx : playerIndexes) {
-            players.get(idx).addShields(quest.getQuestStages());
+            players.get(idx).addShields(quest.getQuestStages() + (g.isKingsRecognition() ? 2 : 0));
         }
+
+        if (g.isKingsRecognition() && playerIndexes.size() > 0)
+            g.setKingsRecognition(false);
+
     }
 
     private void getResults(Game g) {
@@ -186,7 +196,7 @@ public class QuestStrategy implements RoundStrategy {
                 : ((FoeCardDecorator) stageCard).fetchAllCards());
 
         int stageStrength = 0;
-        if(roundStatus == IN_PROGRESS) {
+        if (roundStatus == IN_PROGRESS) {
             FoeCardDecorator stage = (FoeCardDecorator) questStages.get(0);
             String questFoe = quest.getQuestFoe();
             boolean questStrength = questFoe != null && (stage.getName().equals(questFoe) ||
@@ -207,19 +217,23 @@ public class QuestStrategy implements RoundStrategy {
                 qualified = playerMove.getStrength() >= stageStrength;
             } else {
                 int playerBid = playerMove.getBids() + player.getQuestInfo().getBidCards().size();
-                if(highestBid == 0 && playerBid == 0) qualified = false;
+                if (highestBid == 0 && playerBid == 0)
+                    qualified = false;
                 qualified = (playerIndexes.size() <= 2) ? playerBid > highestBid : playerBid == highestBid;
             }
 
             // set end of round results
             List<Card> roundCards = playerMove.fetchAllCards();
-            if (roundStatus == TEST_STAGE) roundCards.addAll(player.getQuestInfo().getBidCards());
+            if (roundStatus == TEST_STAGE)
+                roundCards.addAll(player.getQuestInfo().getBidCards());
             RoundResult.PlayerResult result = new RoundResult.PlayerResult(qualified, roundCards);
             this.roundResult.addResults(player.getId(), result);
         }
     }
 
     private void endRound(Game g) {
+        Card stage = questStages.remove(0);
+
         // discard cards
         for (int i = playerIndexes.size() - 1; i >= 0; i--) {
             Integer playerIndex = playerIndexes.get(i);
@@ -232,22 +246,23 @@ public class QuestStrategy implements RoundStrategy {
 
             // Add the cards' player played to discard deck
             ArrayList<Card> moveCards = playerMove.fetchAllCards();
-            if (roundStatus == TEST_STAGE) {
-                if(qualified) {
-                    moveCards.addAll(player.getQuestInfo().getBidCards());
-                } else {
-                    for(Card bidCard: player.getQuestInfo().getBidCards()) {
+            if (stage.getType().equals("Test")) {
+                for (Card bidCard : player.getQuestInfo().getBidCards()) {
+                    if (qualified) {
+                        g.getAdventureDeck().discard(bidCard);
+                    } else {
                         player.draw(bidCard);
                     }
                 }
+                player.getQuestInfo().setBidCards(new ArrayList<>());
             }
             for (int j = moveCards.size() - 1; j >= 0; j--) {
                 Card card = moveCards.get(j);
-                if (qualified && card.getType().equals("Amour")) continue;
-                if (!card.getType().equals("Ally")) {
-                    if(card.getType().equals("Amour")) {
-                        player.removeSpecial(card);
-                    }
+                if (card.getType().equals("Ally") || (qualified && card.getType().equals("Amour"))) {
+                    if (!player.getSpecialCards().contains(card))
+                        player.addSpecial(card);
+                } else {
+                    if (card.getType().equals("Amour")) player.removeSpecial(card);
                     g.getAdventureDeck().discard(card);
                     moveCards.remove(j);
                 }
@@ -263,7 +278,6 @@ public class QuestStrategy implements RoundStrategy {
         }
 
         // Discard stage cards
-        Card stage = questStages.remove(0);
         if (stage.getType().equals("Test")) {
             g.getAdventureDeck().discard(stage);
         } else {
@@ -304,5 +318,9 @@ public class QuestStrategy implements RoundStrategy {
 
     public int getHighestBid() {
         return highestBid;
+    }
+
+    public String getHighestBidder() {
+        return highestBidder;
     }
 }

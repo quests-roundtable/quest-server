@@ -1,6 +1,7 @@
 package com.quest.questserver.dto;
 
 import com.quest.questserver.model.Card.Card;
+import com.quest.questserver.model.Card.EventCard;
 import com.quest.questserver.model.Player;
 
 import lombok.Data;
@@ -14,6 +15,7 @@ public class GameStateDto {
     private int currentPlayer;
     private QuestStateDto quest;
     private TournamentStateDto tournament;
+    private EventCard event;
     private List<Player> players;
     private List<Card> discardDeck;
 

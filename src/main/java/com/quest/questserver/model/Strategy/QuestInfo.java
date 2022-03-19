@@ -23,6 +23,7 @@ public class QuestInfo {
         this.role = role;
         this.stages = (role == SPONSOR) ? stages : null;
         this.bidPassed = false;
+        this.bidCards = new ArrayList<>();
     }
 
     public int getRole() {

@@ -28,7 +28,7 @@ public class TournamentStrategy implements RoundStrategy {
         this.currentPlayer = g.getCurrentPlayer();
         this.playerIndexes = new ArrayList<>();
         this.numPlayers = 0;
-        this.winnerIds =  new ArrayList<>();
+        this.winnerIds = new ArrayList<>();
         this.tieBreaker = false;
     }
 
@@ -37,46 +37,49 @@ public class TournamentStrategy implements RoundStrategy {
     }
 
     public void nextTurn(Game g) {
-         if (roundStatus == WAITING_PLAYERS) {
-             TournamentInfo tournamentInfo = g.getPlayers().get(currentPlayer).getTournamentInfo();
+        if (roundStatus == WAITING_PLAYERS) {
+            TournamentInfo tournamentInfo = g.getPlayers().get(currentPlayer).getTournamentInfo();
 
-             if (tournamentInfo != null) playerIndexes.add(currentPlayer);
-             this.currentPlayer = (currentPlayer + 1) % g.getNumPlayers();
+            if (tournamentInfo != null)
+                playerIndexes.add(currentPlayer);
+            this.currentPlayer = (currentPlayer + 1) % g.getNumPlayers();
 
-             if (currentPlayer.equals(g.getCurrentPlayer())) {
-                 this.numPlayers = playerIndexes.size();
-                 if (numPlayers > 1) {
-                     this.currentPlayer = playerIndexes.get(0);
-                     this.roundStatus = IN_PROGRESS;
-                 } else {
-                     if (numPlayers == 1) {
-                         this.winnerIds.add(g.getPlayers().get(playerIndexes.get(0)).getId());
-                     }
-                     // if every player rejects tournament, strategy ends
-                     this.roundStatus = TERMINATED;
-                 }
-             }
-         } else if (roundStatus == IN_PROGRESS) {
-             this.currentPlayer = getNextPlayerIndex();
-             // End of stage
-             if (currentPlayer.equals(playerIndexes.get(0))) {
-                 getResults(g);
+            if (currentPlayer.equals(g.getCurrentPlayer())) {
+                this.numPlayers = playerIndexes.size();
+                if (numPlayers > 1) {
+                    this.currentPlayer = playerIndexes.get(0);
+                    this.roundStatus = IN_PROGRESS;
+                } else {
+                    if (numPlayers == 1) {
+                        this.winnerIds.add(g.getPlayers().get(playerIndexes.get(0)).getId());
+                    }
+                    // if every player rejects tournament, strategy ends
+                    this.roundStatus = TERMINATED;
+                }
+            }
+        } else if (roundStatus == IN_PROGRESS) {
+            this.currentPlayer = getNextPlayerIndex();
+            // End of stage
+            if (currentPlayer.equals(playerIndexes.get(0))) {
+                getResults(g);
 
-                 // Round over update status
-                 this.roundStatus = ROUND_END;
-             }
+                // Round over update status
+                this.roundStatus = ROUND_END;
+            }
 
-         } else if (roundStatus == ROUND_END) {
+        } else if (roundStatus == ROUND_END) {
             boolean tie = endRound(g);
             this.roundStatus = tie ? IN_PROGRESS : TERMINATED;
-            if (tie) this.currentPlayer = playerIndexes.get(0);
+            if (tie)
+                this.currentPlayer = playerIndexes.get(0);
         }
     }
 
     public void terminate(Game g) {
-        if(numPlayers == 0) return;
+        if (numPlayers == 0)
+            return;
 
-        for(String playerId: winnerIds) {
+        for (String playerId : winnerIds) {
             g.getPlayer(playerId).addShields(numPlayers + tournament.getTournamentShields());
         }
     }
@@ -85,7 +88,7 @@ public class TournamentStrategy implements RoundStrategy {
         this.roundResult = new RoundResult();
 
         // Check scores and qualify players
-        HashMap<String, RankCardDecorator> playerMoves= new HashMap<>();
+        HashMap<String, RankCardDecorator> playerMoves = new HashMap<>();
         for (int i = playerIndexes.size() - 1; i >= 0; i--) {
             Player player = g.getPlayers().get(playerIndexes.get(i));
             RankCardDecorator playerMove = player.getTournamentInfo().getPlayerMove();
@@ -96,7 +99,7 @@ public class TournamentStrategy implements RoundStrategy {
         int maxScore = playerMoves.values().stream().map(playerMove -> playerMove.getStrength())
                 .max(Integer::compare).get();
 
-        for(String playerId: playerMoves.keySet()) {
+        for (String playerId : playerMoves.keySet()) {
             boolean qualified = playerMoves.get(playerId).getStrength() == maxScore ? true : false;
             RoundResult.PlayerResult result = new RoundResult.PlayerResult(qualified,
                     playerMoves.get(playerId).fetchAllCards());
@@ -106,9 +109,11 @@ public class TournamentStrategy implements RoundStrategy {
 
     private boolean endRound(Game g) {
         boolean tie = roundResult.getResults().values().stream().filter(result -> result.success).count() != 1;
-        if(!tieBreaker && tie) {
+        if (!tieBreaker && tie) {
             tieBreaker = true;
-        } else { tie = false; }
+        } else {
+            tie = false;
+        }
 
         // discard cards
         for (int i = playerIndexes.size() - 1; i >= 0; i--) {
@@ -116,20 +121,20 @@ public class TournamentStrategy implements RoundStrategy {
             RankCardDecorator playerMove = player.getTournamentInfo().getPlayerMove();
 
             boolean qualified = roundResult.getResults().get(player.getId()).success;
-            if(!tie && qualified) winnerIds.add(player.getId());
+            if (!tie && qualified)
+                winnerIds.add(player.getId());
 
             // Add the cards' player played to discard deck
             ArrayList<Card> moveCards = playerMove.fetchAllCards();
             for (int j = moveCards.size() - 1; j >= 0; j--) {
                 Card card = moveCards.get(j);
-                if (tie && qualified && card.getType().equals("Amour")) continue;
-                
-                if (!card.getType().equals("Ally")){
-                    if (card.getType().equals("Amour")){
-                        player.removeSpecial(card);
-                    }
-                    moveCards.remove(j);
+                if (card.getType().equals("Ally") || (tie && qualified && card.getType().equals("Amour"))) {
+                    if (!player.getSpecialCards().contains(card))
+                        player.addSpecial(card);
+                } else {
+                    if(card.getType().equals("Amour")) player.removeSpecial(card);
                     g.getAdventureDeck().discard(card);
+                    moveCards.remove(j);
                 }
             }
 

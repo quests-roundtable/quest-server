@@ -60,7 +60,6 @@ public class TournamentRoundService {
                     playerMove = new PlayerWeaponDecorator(playerMove, (WeaponCard) card);
                 } else if (card instanceof AllyCard) {
                     playerMove = new AllyDecorator(playerMove, (AllyCard) card);
-                    // change
                 } else if (card instanceof AmourCard) {
                     if (hasAmour) {
                         invalid = true;
@@ -70,6 +69,7 @@ public class TournamentRoundService {
                         hasAmour = true;
                     }
                     playerMove = new AmourDecorator(playerMove, (AmourCard) card);
+                    player.addSpecial(card);
                 }
             }
         }

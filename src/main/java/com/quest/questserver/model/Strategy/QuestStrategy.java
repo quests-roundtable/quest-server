@@ -178,6 +178,8 @@ public class QuestStrategy implements RoundStrategy {
                     g.getAdventureDeck().discard(card);
                 }
             }
+
+            
         }
 
         for (int idx : playerIndexes) {

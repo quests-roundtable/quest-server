@@ -37,6 +37,7 @@ public class GameRoundService {
         return game.getGameState();
     }
 
+
     public GameStateDto sacrificeMordred(String gameId, String playerId, String cardId, String mordredId,
             String opponentId) {
         Game game = gameStore.getGame(gameId);

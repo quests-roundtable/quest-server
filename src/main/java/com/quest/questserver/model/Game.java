@@ -67,6 +67,7 @@ public class Game {
     }
 
     public void nextTurn() {
+        if (eventStrategy != null) eventStrategy = null;
         if (roundStrategy != null) {
             roundStrategy.nextTurn(this);
             if (roundStrategy.getRoundStatus() == RoundStrategy.TERMINATED) {

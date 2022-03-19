@@ -43,8 +43,7 @@ public class DeckTest {
 
     }
 
-    // Turn off until all cards are enabled
-//    @Test
+    @Test
     void sdeckTest(){
 
         //initialize deck
@@ -62,7 +61,8 @@ public class DeckTest {
         assertEquals(b.getTypeId(), sdeck.getGraveyard().get(0).getTypeId());
 
         //empty the deck
-        for(int i = 0; i < sdeck.getsize(); i++){
+        int deck_size = sdeck.getsize();
+        for(int i = 0; i < deck_size; i++){
             Card temp = sdeck.draw();
             sdeck.discard(temp);
         }

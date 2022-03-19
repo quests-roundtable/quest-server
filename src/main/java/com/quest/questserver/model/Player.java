@@ -47,6 +47,15 @@ public class Player {
         updateRank();
     }
 
+    public void removeShields(int n) {
+        if (this.shields >= n) {
+            this.shields -= n;
+        } else {
+            this.shields = 0;
+        }
+
+    }
+
     public void draw(Card card) {
         playerHand.add(card);
     }

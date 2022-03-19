@@ -70,6 +70,7 @@ public class TournamentRoundService {
                         hasAmour = true;
                     }
                     playerMove = new AmourDecorator(playerMove, (AmourCard) card);
+                    player.addSpecial(card);
                 }
             }
         }

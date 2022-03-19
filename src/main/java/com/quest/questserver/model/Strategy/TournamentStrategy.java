@@ -135,7 +135,10 @@ public class TournamentStrategy implements RoundStrategy {
                     if(card.getType().equals("Amour")) player.removeSpecial(card);
                     g.getAdventureDeck().discard(card);
                     moveCards.remove(j);
+                    g.getAdventureDeck().discard(card);
                 }
+
+               
             }
 
             if (tie && qualified) {

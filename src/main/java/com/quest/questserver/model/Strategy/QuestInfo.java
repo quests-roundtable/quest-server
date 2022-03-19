@@ -16,10 +16,14 @@ public class QuestInfo {
     private int numSponsorCards;
     private RankCardDecorator playerMove;
     private List<Card> stages;
+    private boolean bidPassed;
+    private List<Card> bidCards;
 
     public QuestInfo(int role, List<Card> stages) {
         this.role = role;
         this.stages = (role == SPONSOR) ? stages : null;
+        this.bidPassed = false;
+        this.bidCards = new ArrayList<>();
     }
 
     public int getRole() {
@@ -52,5 +56,21 @@ public class QuestInfo {
 
     public List<Card> getStages() {
         return this.stages;
+    }
+
+    public boolean isBidPassed() {
+        return bidPassed;
+    }
+
+    public void setBidPassed(boolean bidPassed) {
+        this.bidPassed = bidPassed;
+    }
+
+    public List<Card> getBidCards() {
+        return bidCards;
+    }
+
+    public void setBidCards(List<Card> bidCards) {
+        this.bidCards = bidCards;
     }
 }

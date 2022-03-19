@@ -7,4 +7,8 @@ public class TestCard extends AdventureCard {
         super("Test", typeId, name);
         this.minimumBids = minimumBids;
     }
+
+    public int getMinimumBids() {
+        return minimumBids;
+    }
 }

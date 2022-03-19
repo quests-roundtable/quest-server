@@ -20,6 +20,9 @@ public class RankCard extends Card implements RankCardDecorator {
         if (rank.equalsIgnoreCase("Champion Knight")){
             return new RankCard("Rank_03", "Champion Knight", 20);
         }
+        if (rank.equalsIgnoreCase("Knight of the Round Table")){
+            return new RankCard("Rank_03", "Knight of the Round Table", 20);
+        }
         return null;
     }
 
@@ -30,6 +33,10 @@ public class RankCard extends Card implements RankCardDecorator {
 
     public int getStrength() {
         return battlePoints;
+    }
+
+    public int getBids() {
+        return 0;
     }
 
     public ArrayList<Card> fetchAllCards() {

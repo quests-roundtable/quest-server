@@ -26,11 +26,14 @@ public class Game {
     int gameStatus;
     private List<Player> players;
     private int numPlayers;
+
     private AdventureDeck adventureDeck;
     private StoryDeck storyDeck;
     private RoundStrategy roundStrategy;
-    private String winnerId;
     private EventStrategy eventStrategy;
+
+    private String winnerId;
+    private boolean kingsRecognition;
 
     // Move to round maybe
     private int currentPlayer;
@@ -53,9 +56,10 @@ public class Game {
         }
         this.currentPlayer = 0;
     }
-    public void checkWin(){
-        for (Player player: players){
-            if (player.getRankCard().getName().equalsIgnoreCase("Knight of the Round Table")){
+
+    public void checkWin() {
+        for (Player player : players) {
+            if (player.getRankCard().getName().equalsIgnoreCase("Knight of the Round Table")) {
                 winnerId = player.getId();
                 terminate();
             }
@@ -82,10 +86,9 @@ public class Game {
         } else if (storyCard.getType() == "Tournament") {
             this.roundStrategy = new TournamentStrategy((TournamentCard) storyCard);
             this.roundStrategy.start(this);
-        } else if (storyCard.getType() == "Event"){
+        } else if (storyCard.getType() == "Event") {
             this.eventStrategy = new EventStrategy((EventCard) storyCard);
             this.eventStrategy.start(this);
-        // event
         }
         checkWin();
         return;
@@ -127,7 +130,7 @@ public class Game {
         return String.format("%04d", ++gameCount);
     }
 
-    public void drawTwoAdventureCard(Player player){
+    public void drawTwoAdventureCard(Player player) {
         Card card = this.adventureDeck.draw();
         Card card2 = this.adventureDeck.draw();
         player.draw(card);
@@ -171,6 +174,14 @@ public class Game {
         return this.winnerId;
     }
 
+    public boolean isKingsRecognition() {
+        return this.kingsRecognition;
+    }
+
+    public void setKingsRecognition(boolean recognition) {
+        this.kingsRecognition = recognition;
+    }
+
     public QuestStateDto getQuestState() {
         QuestStateDto state = new QuestStateDto();
         if (roundStrategy instanceof QuestStrategy) {
@@ -180,6 +191,8 @@ public class Game {
             state.setCurrentPlayer(quest.getCurrentPlayer());
             state.setCurrentStage(quest.getCurrentStage());
             state.setCard((QuestCard) quest.getQuest());
+            state.setHighestBid(quest.getHighestBid());
+            state.setHighestBidder(quest.getHighestBidder());
             if (quest.getRoundResult() != null)
                 state.setRoundResult(quest.getRoundResult());
             // Get the stage
@@ -216,6 +229,9 @@ public class Game {
             state.setQuest(this.getQuestState());
         } else if (this.roundStrategy instanceof TournamentStrategy) {
             state.setTournament(this.getTournamentState());
+        }
+        if (this.eventStrategy != null) {
+            state.setEvent(this.eventStrategy.getEvent());
         }
         return state;
     }

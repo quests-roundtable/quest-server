@@ -44,8 +44,8 @@ public class TournamentRoundService {
         }
 
         RankCardDecorator playerMove = tournamentInfo.getPlayerMove();
+        HashSet<String> weapons = new HashSet<>();
         if (!invalid) {
-            HashSet<String> weapons = new HashSet<>();
             boolean hasAmour = playerMove.fetchAllCards().stream().filter(card -> card instanceof AmourCard)
                     .count() >= 1;
             for (Card card : cards) {
@@ -60,8 +60,6 @@ public class TournamentRoundService {
                     playerMove = new PlayerWeaponDecorator(playerMove, (WeaponCard) card);
                 } else if (card instanceof AllyCard) {
                     playerMove = new AllyDecorator(playerMove, (AllyCard) card);
-                    // change
-                    player.addSpecial(card);
                 } else if (card instanceof AmourCard) {
                     if (hasAmour) {
                         invalid = true;

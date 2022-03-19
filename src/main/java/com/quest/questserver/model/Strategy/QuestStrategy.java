@@ -91,10 +91,10 @@ public class QuestStrategy implements RoundStrategy {
             }
         } else if (roundStatus == TEST_STAGE) {
             // Test logic
-
-            if (!g.getPlayers().get(currentPlayer).getQuestInfo().isBidPassed()) {
-                QuestInfo questInfo = g.getPlayers().get(currentPlayer).getQuestInfo();
-                highestBid = questInfo.getPlayerMove().getBids() + questInfo.getBidCards().size();
+            QuestInfo questInfo = g.getPlayers().get(currentPlayer).getQuestInfo();
+            int playerBid = questInfo.getPlayerMove().getBids() + questInfo.getBidCards().size();
+            if (playerBid > highestBid) {
+                highestBid = playerBid;
                 highestBidder = g.getPlayers().get(currentPlayer).getName();
             }
 
@@ -219,7 +219,7 @@ public class QuestStrategy implements RoundStrategy {
                 int playerBid = playerMove.getBids() + player.getQuestInfo().getBidCards().size();
                 if (highestBid == 0 && playerBid == 0)
                     qualified = false;
-                qualified = (playerIndexes.size() <= 2) ? playerBid > highestBid : playerBid == highestBid;
+                qualified = (highestBidder == null) ? false : playerBid == highestBid;
             }
 
             // set end of round results

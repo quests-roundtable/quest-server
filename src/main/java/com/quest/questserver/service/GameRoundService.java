@@ -2,13 +2,14 @@ package com.quest.questserver.service;
 
 import com.quest.questserver.dto.GameStateDto;
 import com.quest.questserver.exception.GameException;
-import com.quest.questserver.model.Card.AllyCard;
-import com.quest.questserver.model.Card.Card;
+import com.quest.questserver.model.Card.*;
 import com.quest.questserver.model.Game;
 import com.quest.questserver.model.Player;
 import com.quest.questserver.repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class GameRoundService {
@@ -48,6 +49,25 @@ public class GameRoundService {
         game.getAdventureDeck().discard(mordredCard);
 
         //Remove from quest or tournament info player move
+        RankCardDecorator playerMove = opponent.getTournamentInfo() != null ? opponent.getTournamentInfo().getPlayerMove() :
+                (opponent.getQuestInfo() != null ? opponent.getQuestInfo().getPlayerMove() : null);
+
+        if(playerMove != null) {
+            List<Card> moveCards = playerMove.fetchAllCards();
+            moveCards.remove(allyCard);
+            RankCardDecorator decorator = opponent.getRankCard();
+            for (Card card: moveCards) {
+                if(card.getType().equals("Ally")) {
+                    decorator = new AllyDecorator(decorator, (AllyCard) card);
+                } else if(card.getType().equals("Weapon")) {
+                    decorator = new PlayerWeaponDecorator(decorator, (WeaponCard) card);
+                } else if(card.getType().equals("Amour")) {
+                    decorator = new AmourDecorator(decorator, (AmourCard) card);
+                }
+            }
+            if(opponent.getQuestInfo() != null) opponent.getQuestInfo().setPlayerMove(decorator);
+            if(opponent.getTournamentInfo() != null) opponent.getTournamentInfo().setPlayerMove(decorator);
+        }
 
         return game.getGameState();
     }

@@ -95,7 +95,7 @@ public class EventStrategy {
                 if (ally instanceof AllyCard) {
                     player.removeSpecial(ally);
                     deck.discard(ally);
-                    game.addMessage(player.getName() + " discarded" + ally.getName());
+                    game.addMessage(player.getName() + " discarded " + ally.getName());
                 }
             }
         }
@@ -125,7 +125,7 @@ public class EventStrategy {
                 Collections.shuffle(weapons);
                 Card weapon = player.discard(weapons.get(0).getId());
                 deck.discard(weapon);
-                game.addMessage(player.getName() + " discarded" + weapon.getName());
+                game.addMessage(player.getName() + "  " + weapon.getName());
 
             } else if (foes.size() >= 2) {
                 Collections.shuffle(foes);
@@ -133,8 +133,8 @@ public class EventStrategy {
                 Card foe2 = player.discard(foes.get(1).getId());
                 deck.discard(foe1);
                 deck.discard(foe2);
-                game.addMessage(player.getName() + " discarded" + foe1.getName());
-                game.addMessage(player.getName() + " discarded" + foe2.getName());
+                game.addMessage(player.getName() + " discarded " + foe1.getName());
+                game.addMessage(player.getName() + " discarded " + foe2.getName());
             }
         }
 

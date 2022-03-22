@@ -80,6 +80,7 @@ public class EventStrategy {
             if (game.getPlayers().get(i).getShields() == shieldct
                     & game.getPlayers().get(i).getRankCard().getStrength() == rankct) {
                 game.getPlayers().get(i).addShields(3);
+                game.addMessage(game.getPlayers().get(i).getName() + " received 3 Shields.");
             }
         }
     }
@@ -94,6 +95,7 @@ public class EventStrategy {
                 if (ally instanceof AllyCard) {
                     player.removeSpecial(ally);
                     deck.discard(ally);
+                    game.addMessage(player.getName() + " discarded" + ally.getName());
                 }
             }
         }
@@ -123,6 +125,7 @@ public class EventStrategy {
                 Collections.shuffle(weapons);
                 Card weapon = player.discard(weapons.get(0).getId());
                 deck.discard(weapon);
+                game.addMessage(player.getName() + " discarded" + weapon.getName());
 
             } else if (foes.size() >= 2) {
                 Collections.shuffle(foes);
@@ -130,6 +133,8 @@ public class EventStrategy {
                 Card foe2 = player.discard(foes.get(1).getId());
                 deck.discard(foe1);
                 deck.discard(foe2);
+                game.addMessage(player.getName() + " discarded" + foe1.getName());
+                game.addMessage(player.getName() + " discarded" + foe2.getName());
             }
         }
 
@@ -138,7 +143,6 @@ public class EventStrategy {
     public void Event_04(Game game) {
         // King's Recognition
         // The next player(s) to complete a Quest receives 2 extra shields
-
         game.setKingsRecognition(true);
     }
 
@@ -148,6 +152,7 @@ public class EventStrategy {
 
         if (game.getPlayers().get(curplayer).getShields() >= 2) {
             game.getPlayers().get(curplayer).removeShields(2);
+            game.addMessage(game.getPlayers().get(curplayer).getName() + " loses 2 Shields.");
         }
     }
 
@@ -156,6 +161,7 @@ public class EventStrategy {
         for (int i = 0; i < game.getPlayers().size(); i++) {
             if (i != game.getCurrentPlayer()) {
                 game.getPlayers().get(i).removeShields(1);
+                game.addMessage(game.getPlayers().get(i).getName() + " loses 1 Shield.");
             }
         }
     }

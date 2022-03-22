@@ -84,7 +84,7 @@ public class TournamentRoundService {
 
         tournamentInfo.setPlayerMove(playerMove);
         tournamentInfo.setNumMoveCards(cards.size());
-
+        game.setMessage(player.getName() + " played in the Tournament. ");
         game.nextTurn();
         return game.getGameState();
     }
@@ -104,7 +104,7 @@ public class TournamentRoundService {
             // Draw card if player accepts round
             player.draw(game.getAdventureDeck().draw());
         }
-
+        game.setMessage(player.getName() + " joined the Tournament.");
         game.nextTurn();
         return game.getGameState();
     }

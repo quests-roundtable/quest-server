@@ -11,5 +11,5 @@ public class TournamentStateDto {
     private int currentPlayer;
     private TournamentCard card;
     private RoundResult roundResult;
-    private String message = "No server message here.";
+    private String message = "";
 }

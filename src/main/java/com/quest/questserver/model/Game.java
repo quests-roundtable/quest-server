@@ -38,6 +38,8 @@ public class Game {
     // Move to round maybe
     private int currentPlayer;
 
+    private String message = "";
+
     public Game() {
         this.id = generateGameId();
         this.players = new ArrayList<Player>();
@@ -55,12 +57,14 @@ public class Game {
             player.dealCards(adventureDeck.dealHand());
         }
         this.currentPlayer = 0;
+        this.message = "Game has started.";
     }
 
     public void checkWin() {
         for (Player player : players) {
             if (player.getRankCard().getName().equalsIgnoreCase("Knight of the Round Table")) {
                 winnerId = player.getId();
+                addMessage(player.getName() + " has become Knight of the Round Table and won the game!");
                 terminate();
             }
         }
@@ -78,17 +82,23 @@ public class Game {
             return;
         }
         this.currentPlayer = (currentPlayer + 1) % numPlayers;
+        addMessage("It is " +  players.get(currentPlayer).getName() + "'s turn.");
         Card storyCard = this.storyDeck.draw();
         Card card = this.adventureDeck.draw();
+        addMessage(players.get(currentPlayer).getName() + " drew " + storyCard.getName() + " from Story Deck.");
+        addMessage(players.get(currentPlayer).getName() + " drew " + card.getName() + " from Adventure Deck.");
         players.get(currentPlayer).draw(card);
         if (storyCard.getType() == "Quest") {
             this.roundStrategy = new QuestStrategy((QuestCard) storyCard);
+            addMessage("Quest: " + storyCard.getName());
             this.roundStrategy.start(this);
         } else if (storyCard.getType() == "Tournament") {
             this.roundStrategy = new TournamentStrategy((TournamentCard) storyCard);
+            addMessage("Tournament: " + storyCard.getName());
             this.roundStrategy.start(this);
         } else if (storyCard.getType() == "Event") {
             this.eventStrategy = new EventStrategy((EventCard) storyCard);
+            addMessage("Event: " + storyCard.getName());
             this.eventStrategy.start(this);
         }
         checkWin();
@@ -136,6 +146,8 @@ public class Game {
         Card card2 = this.adventureDeck.draw();
         player.draw(card);
         player.draw(card2);
+        addMessage(players.get(currentPlayer).getName() + " drew " + card.getName() + " from Adventure Deck.");
+        addMessage(players.get(currentPlayer).getName() + " drew " + card2.getName() + " from Adventure Deck.");
     }
 
     // Getters
@@ -183,6 +195,18 @@ public class Game {
         this.kingsRecognition = recognition;
     }
 
+    public void setMessage(String message){
+        this.message = message;
+    }
+
+    public void addMessage(String message){
+        this.message += "\n" + message;
+    }
+
+    public void clearMessage(){
+        this.message = "";
+    }
+
     public QuestStateDto getQuestState() {
         QuestStateDto state = new QuestStateDto();
         if (roundStrategy instanceof QuestStrategy) {
@@ -194,6 +218,7 @@ public class Game {
             state.setCard((QuestCard) quest.getQuest());
             state.setHighestBid(quest.getHighestBid());
             state.setHighestBidder(quest.getHighestBidder());
+            state.setMessage(quest.getMessage());
             if (quest.getRoundResult() != null)
                 state.setRoundResult(quest.getRoundResult());
             // Get the stage
@@ -226,6 +251,7 @@ public class Game {
         state.setPlayers(players);
         state.setGameStatus(gameStatus);
         state.setDiscardDeck(adventureDeck.getGraveyard());
+        state.setMessage(message);
         if (this.roundStrategy instanceof QuestStrategy) {
             state.setQuest(this.getQuestState());
         } else if (this.roundStrategy instanceof TournamentStrategy) {

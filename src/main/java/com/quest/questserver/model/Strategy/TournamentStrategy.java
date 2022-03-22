@@ -18,6 +18,7 @@ public class TournamentStrategy implements RoundStrategy {
     private RoundResult roundResult;
     private ArrayList<String> winnerIds;
     private boolean tieBreaker;
+    private String message = "";
 
     public TournamentStrategy(TournamentCard tournament) {
         this.tournament = tournament;
@@ -79,8 +80,11 @@ public class TournamentStrategy implements RoundStrategy {
         if (numPlayers == 0)
             return;
 
+        g.addMessage("Tournament complete.");
         for (String playerId : winnerIds) {
             g.getPlayer(playerId).addShields(numPlayers + tournament.getTournamentShields());
+            g.addMessage(g.getPlayer(playerId).getName() + " won the tournament and received "
+                    + (numPlayers + tournament.getTournamentShields()) + " shields.");
         }
     }
 
@@ -121,8 +125,9 @@ public class TournamentStrategy implements RoundStrategy {
             RankCardDecorator playerMove = player.getTournamentInfo().getPlayerMove();
 
             boolean qualified = roundResult.getResults().get(player.getId()).success;
-            if (!tie && qualified)
+            if (!tie && qualified) {
                 winnerIds.add(player.getId());
+            }
 
             // Add the cards' player played to discard deck
             ArrayList<Card> moveCards = playerMove.fetchAllCards();
@@ -132,19 +137,19 @@ public class TournamentStrategy implements RoundStrategy {
                     if (!player.getSpecialCards().contains(card))
                         player.addSpecial(card);
                 } else {
-                    if(card.getType().equals("Amour")) player.removeSpecial(card);
+                    if (card.getType().equals("Amour"))
+                        player.removeSpecial(card);
                     g.getAdventureDeck().discard(card);
                     moveCards.remove(j);
                     g.getAdventureDeck().discard(card);
                 }
-
-               
             }
 
             if (tie && qualified) {
                 playerMove = player.getDecoratedRank();
                 player.getTournamentInfo().setPlayerMove(playerMove);
                 player.getTournamentInfo().setNumMoveCards(0);
+                g.addMessage(player.getName() + " is qualified. ");
             } else {
                 player.setTournamentInfo(null);
                 playerIndexes.remove(i);
@@ -168,5 +173,9 @@ public class TournamentStrategy implements RoundStrategy {
 
     public RoundResult getRoundResult() {
         return roundResult;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }

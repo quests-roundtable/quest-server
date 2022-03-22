@@ -19,6 +19,6 @@ public class GameStateDto {
     private List<Player> players;
     private List<Card> discardDeck;
 
-    private String message = "No server message here.";
+    private String message = "";
     private int test = 0;
 }

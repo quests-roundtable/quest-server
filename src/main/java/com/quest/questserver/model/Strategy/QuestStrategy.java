@@ -181,6 +181,7 @@ public class QuestStrategy implements RoundStrategy {
                     g.getAdventureDeck().discard(card);
                 }
             }
+
         }
 
         for (int idx : playerIndexes) {
@@ -218,9 +219,39 @@ public class QuestStrategy implements RoundStrategy {
 
             boolean qualified;
             if (roundStatus == IN_PROGRESS) {
-                qualified = playerMove.getStrength() >= stageStrength;
+
+                // Ally Strength special conditions
+                int playerStrength = playerMove.getStrength();
+                List<Card> moveCards = playerMove.fetchAllCards();
+                boolean hasQueenIseult = playerMove.fetchAllCards().stream().filter(card -> card.getName() == "Queen Iseult").count() >= 1;
+                for (Card card: moveCards){
+                    if (card instanceof AllyCard){
+                        if (card.getName() == "Sir Gawain" && quest.getName() == "Test of the Green Knight"){
+                            playerStrength += 10; // 20 - 10
+                        } else if (card.getName() == "Sir Percival" && quest.getName() == "Search for the Holy Grail"){
+                            playerStrength += 15; // 20 - 5
+                        } else if (card.getName() == "Sir Lancelot" && quest.getName() == "Quest to Defend the Queen's Honor"){
+                            playerStrength += 10; // 25 - 15
+                        } else if (card.getName() == "Sir Tristan" && hasQueenIseult){
+                            playerStrength += 10; // 20 - 10
+                        }
+                    }
+                }
+                qualified = playerStrength >= stageStrength;
             } else {
                 int playerBid = playerMove.getBids() + player.getQuestInfo().getBidCards().size();
+                
+                // Ally Bid special conditions
+                List<Card> moveCards = playerMove.fetchAllCards();
+                boolean hasSirTristan = playerMove.fetchAllCards().stream().filter(card -> card.getName() == "Sir Tristan").count() >= 1;
+                for (Card card: moveCards){
+                    if (card instanceof AllyCard){
+                        if (card.getName() == "King Pellinore" && quest.getName() == "Search for the Questing Beast"){
+                            playerBid += 4;
+                        } else if (card.getName() == "Queen Iseult" && hasSirTristan){
+                            playerBid += 2; // 4 - 2
+                    }
+                }
                 if (highestBid == 0 && playerBid == 0)
                     qualified = false;
                 qualified = (highestBidder == null) ? false : playerBid == highestBid;
@@ -270,7 +301,8 @@ public class QuestStrategy implements RoundStrategy {
                     if (!player.getSpecialCards().contains(card))
                         player.addSpecial(card);
                 } else {
-                    if (card.getType().equals("Amour")) player.removeSpecial(card);
+                    if (card.getType().equals("Amour"))
+                        player.removeSpecial(card);
                     g.getAdventureDeck().discard(card);
                     moveCards.remove(j);
                 }

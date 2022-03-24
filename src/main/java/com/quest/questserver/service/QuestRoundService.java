@@ -38,8 +38,6 @@ public class QuestRoundService {
         String errorMessage = null;
         int testCount = 0;
 
-        String message = player.getName() + " sponsored quest with: ";
-
         int previousStrength = 0;
         for (List<String> stage : cardIds) {
             HashSet<String> weapons = new HashSet<>();
@@ -56,7 +54,6 @@ public class QuestRoundService {
                 } else {
                     numQuestCards += 1;
                 }
-                message += " " + card.getName() + ",";
                 cards.add(card);
                 if (card.getType().equals("Weapon")) {
                     if (weapons.contains(card.getName())) {
@@ -126,9 +123,7 @@ public class QuestRoundService {
         QuestInfo questInfo = new QuestInfo(QuestInfo.SPONSOR, questStage);
         questInfo.setNumSponsorCards(numQuestCards);
         player.setQuestInfo(questInfo);
-        message = message.substring(0, message.length() - 1); // remove extra comma
-        message += ".";
-        game.setMessage(message);
+        game.setMessage(player.getName() + " sponsored Quest.");
         game.nextTurn();
         return game.getGameState();
     }
@@ -139,8 +134,6 @@ public class QuestRoundService {
         Game game = gameStore.getGame(gameId);
         Player player = game.getPlayer(playerId);
         QuestInfo questInfo = player.getQuestInfo();
-
-        String message = "";
 
         List<Card> cards = new ArrayList<>();
 
@@ -224,7 +217,7 @@ public class QuestRoundService {
             player.draw(card);
 
             message += player.getName() + " joined quest. ";
-            message += "\n" + player.getName() + " drew " + card.getName() + " from Adventure Deck.";
+            message += "\n" + player.getName() + " drew a card from Adventure Deck.";
 
         } else {
             QuestInfo questInfo = player.getQuestInfo();

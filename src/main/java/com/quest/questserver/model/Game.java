@@ -86,7 +86,7 @@ public class Game {
         Card storyCard = this.storyDeck.draw();
         Card card = this.adventureDeck.draw();
         addMessage(players.get(currentPlayer).getName() + " drew " + storyCard.getName() + " from Story Deck.");
-        addMessage(players.get(currentPlayer).getName() + " drew " + card.getName() + " from Adventure Deck.");
+        addMessage(players.get(currentPlayer).getName() + " drew a card from Adventure Deck.");
         players.get(currentPlayer).draw(card);
         if (storyCard.getType() == "Quest") {
             this.roundStrategy = new QuestStrategy((QuestCard) storyCard);
@@ -147,8 +147,8 @@ public class Game {
         Card card2 = this.adventureDeck.draw();
         player.draw(card);
         player.draw(card2);
-        addMessage(players.get(currentPlayer).getName() + " drew " + card.getName() + " from Adventure Deck.");
-        addMessage(players.get(currentPlayer).getName() + " drew " + card2.getName() + " from Adventure Deck.");
+        addMessage(players.get(currentPlayer).getName() + " drew a card from Adventure Deck.");
+        addMessage(players.get(currentPlayer).getName() + " drew a card from Adventure Deck.");
     }
 
     // Getters

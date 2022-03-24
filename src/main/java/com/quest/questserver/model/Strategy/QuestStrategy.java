@@ -22,6 +22,7 @@ public class QuestStrategy implements RoundStrategy {
     private RoundResult roundResult;
     private int highestBid;
     private String highestBidder;
+    private String message = "";
 
     public QuestStrategy(QuestCard quest) {
         this.quest = quest;
@@ -97,6 +98,7 @@ public class QuestStrategy implements RoundStrategy {
                 highestBid = playerBid;
                 highestBidder = g.getPlayers().get(currentPlayer).getName();
             }
+            g.addMessage(highestBidder + " was the highest bidder (" + highestBid + ").");
 
             // Check if everyone has passed
             int currentIndex = this.currentPlayer;
@@ -133,7 +135,6 @@ public class QuestStrategy implements RoundStrategy {
                     ? TERMINATED
                     : WAITING_PLAYERS;
         }
-
     }
 
     public void terminate(Game g) {
@@ -147,7 +148,9 @@ public class QuestStrategy implements RoundStrategy {
         Player sponsor = players.get(sponsorIndex);
         int cardsDrawn = sponsor.getQuestInfo().getNumSponsorCards() + quest.getQuestStages();
         for (int i = 0; i < cardsDrawn; i++) {
-            sponsor.draw(g.getAdventureDeck().draw());
+            Card card = g.getAdventureDeck().draw();
+            sponsor.draw(card);
+            g.addMessage(sponsor.getName() + " drew " + card.getName() + " from Adventure Deck.");
         }
         sponsor.setQuestInfo(null);
         playerIndexes.remove(sponsorIndex);
@@ -183,6 +186,7 @@ public class QuestStrategy implements RoundStrategy {
 
         for (int idx : playerIndexes) {
             players.get(idx).addShields(quest.getQuestStages() + (g.isKingsRecognition() ? 2 : 0));
+            g.addMessage(players.get(idx) + " finished the quest and was awarded " + (quest.getQuestStages() + (g.isKingsRecognition() ? 2 : 0) + " shields. "));
         }
 
         if (g.isKingsRecognition() && playerIndexes.size() > 0)
@@ -254,6 +258,10 @@ public class QuestStrategy implements RoundStrategy {
                 qualified = (highestBidder == null) ? false : playerBid == highestBid;
             }
 
+            if (qualified){
+                g.addMessage(player.getName() + " has qualified Quest stage " + currentStage + ".");
+            }
+
             // set end of round results
             List<Card> roundCards = playerMove.fetchAllCards();
             if (roundStatus == TEST_STAGE)
@@ -320,6 +328,10 @@ public class QuestStrategy implements RoundStrategy {
         }
     }
 
+    public void setMessage(String message){
+        this.message = message;
+    }
+
     // Getters
     public int getSponsorIndex() {
         return this.sponsorIndex;
@@ -355,5 +367,9 @@ public class QuestStrategy implements RoundStrategy {
 
     public String getHighestBidder() {
         return highestBidder;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }

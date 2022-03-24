@@ -38,6 +38,8 @@ public class QuestRoundService {
         String errorMessage = null;
         int testCount = 0;
 
+        String message = player.getName() + " sponsored quest with: ";
+
         int previousStrength = 0;
         for (List<String> stage : cardIds) {
             HashSet<String> weapons = new HashSet<>();
@@ -54,7 +56,7 @@ public class QuestRoundService {
                 } else {
                     numQuestCards += 1;
                 }
-
+                message += " " + card.getName() + ",";
                 cards.add(card);
                 if (card.getType().equals("Weapon")) {
                     if (weapons.contains(card.getName())) {
@@ -124,6 +126,9 @@ public class QuestRoundService {
         QuestInfo questInfo = new QuestInfo(QuestInfo.SPONSOR, questStage);
         questInfo.setNumSponsorCards(numQuestCards);
         player.setQuestInfo(questInfo);
+        message = message.substring(0, message.length() - 1); // remove extra comma
+        message += ".";
+        game.setMessage(message);
         game.nextTurn();
         return game.getGameState();
     }
@@ -134,6 +139,8 @@ public class QuestRoundService {
         Game game = gameStore.getGame(gameId);
         Player player = game.getPlayer(playerId);
         QuestInfo questInfo = player.getQuestInfo();
+
+        String message = "";
 
         List<Card> cards = new ArrayList<>();
 
@@ -149,7 +156,6 @@ public class QuestRoundService {
                 break;
             }
         }
-
         RankCardDecorator playerMove = questInfo.getPlayerMove();
         HashSet<String> weapons = new HashSet<>();
         if (!invalid) {
@@ -181,6 +187,7 @@ public class QuestRoundService {
                     player.addSpecial(card);
                 }
             }
+
         }
 
         if (invalid) {
@@ -192,7 +199,7 @@ public class QuestRoundService {
 
         questInfo.setPlayerMove(playerMove);
         questInfo.setNumMoveCards(cards.size());
-
+        game.setMessage(player.getName() + " played in quest.");
         game.nextTurn();
         return game.getGameState();
     }
@@ -201,6 +208,7 @@ public class QuestRoundService {
     public GameStateDto joinQuest(String gameId, String playerId, boolean join) {
         Game game = gameStore.getGame(gameId);
         Player player = game.getPlayer(playerId);
+        String message = "";
 
         if (join) {
             // if questInfo not null create new otherwise do nothing
@@ -212,7 +220,12 @@ public class QuestRoundService {
                 player.setQuestInfo(questInfo);
             }
             // Draw card if player accepts round
-            player.draw(game.getAdventureDeck().draw());
+            Card card = game.getAdventureDeck().draw();
+            player.draw(card);
+
+            message += player.getName() + " joined quest. ";
+            message += "\n" + player.getName() + " drew " + card.getName() + " from Adventure Deck.";
+
         } else {
             QuestInfo questInfo = player.getQuestInfo();
             if (questInfo != null) {
@@ -228,8 +241,9 @@ public class QuestRoundService {
                 }
                 player.setQuestInfo(null);
             }
+            message += player.getName() + " declined quest. ";
         }
-
+        game.setMessage(message);
         game.nextTurn();
         return game.getGameState();
     }
@@ -245,6 +259,7 @@ public class QuestRoundService {
 
         boolean invalid = false;
         String errorMessage = null;
+
         for (String cardId : cardIds) {
             Card card = player.discard(cardId);
             if (card == null) {
@@ -255,6 +270,7 @@ public class QuestRoundService {
                 bidCards.add(card);
             }
         }
+
 
         int playerBid = questInfo.getPlayerMove().getBids() + bidCards.size()
                 + questInfo.getBidCards().size();
@@ -273,7 +289,7 @@ public class QuestRoundService {
 
         questInfo.getBidCards().addAll(bidCards);
         questInfo.setNumMoveCards(bidCards.size());
-
+        game.setMessage(player.getName() + " placed a Bid.");
         game.nextTurn();
         return game.getGameState();
     }
@@ -284,7 +300,7 @@ public class QuestRoundService {
         Player player = game.getPlayer(playerId);
 
         player.getQuestInfo().setBidPassed(true);
-
+        game.setMessage(player.getName() + " passed the Bid.");
         game.nextTurn();
         return game.getGameState();
     }

@@ -19,6 +19,6 @@ public class QuestStateDto {
     private RoundResult roundResult;
     private int highestBid;
     private String highestBidder;
-    private String message = "No server message here.";
+    private String message = "";
 
 }

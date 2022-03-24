@@ -29,11 +29,13 @@ public class GameRoundService {
         if (card == null)
             throw new GameException("Card not in player hand");
         game.getAdventureDeck().discard(card);
+        game.setMessage(game.getPlayer(playerId).getName() + " discarded " + card.getName() + ".");
         return game.getGameState();
     }
 
     public GameStateDto nextTurn(String gameId) {
         Game game = gameStore.getGame(gameId);
+        game.clearMessage();
         game.nextTurn();
         return game.getGameState();
     }
@@ -47,26 +49,32 @@ public class GameRoundService {
         Card mordredCard = player.discard(mordredId);
         game.getAdventureDeck().discard(allyCard);
         game.getAdventureDeck().discard(mordredCard);
+        game.setMessage(game.getPlayer(playerId).getName() + " sacrificed Mordred to remove "
+                + game.getPlayer(opponentId).getName()
+                + "'s " + allyCard.getName());
 
-        //Remove from quest or tournament info player move
-        RankCardDecorator playerMove = opponent.getTournamentInfo() != null ? opponent.getTournamentInfo().getPlayerMove() :
-                (opponent.getQuestInfo() != null ? opponent.getQuestInfo().getPlayerMove() : null);
+        // Remove from quest or tournament info player move
+        RankCardDecorator playerMove = opponent.getTournamentInfo() != null
+                ? opponent.getTournamentInfo().getPlayerMove()
+                : (opponent.getQuestInfo() != null ? opponent.getQuestInfo().getPlayerMove() : null);
 
-        if(playerMove != null) {
+        if (playerMove != null) {
             List<Card> moveCards = playerMove.fetchAllCards();
             moveCards.remove(allyCard);
             RankCardDecorator decorator = opponent.getRankCard();
-            for (Card card: moveCards) {
-                if(card.getType().equals("Ally")) {
+            for (Card card : moveCards) {
+                if (card.getType().equals("Ally")) {
                     decorator = new AllyDecorator(decorator, (AllyCard) card);
-                } else if(card.getType().equals("Weapon")) {
+                } else if (card.getType().equals("Weapon")) {
                     decorator = new PlayerWeaponDecorator(decorator, (WeaponCard) card);
-                } else if(card.getType().equals("Amour")) {
+                } else if (card.getType().equals("Amour")) {
                     decorator = new AmourDecorator(decorator, (AmourCard) card);
                 }
             }
-            if(opponent.getQuestInfo() != null) opponent.getQuestInfo().setPlayerMove(decorator);
-            if(opponent.getTournamentInfo() != null) opponent.getTournamentInfo().setPlayerMove(decorator);
+            if (opponent.getQuestInfo() != null)
+                opponent.getQuestInfo().setPlayerMove(decorator);
+            if (opponent.getTournamentInfo() != null)
+                opponent.getTournamentInfo().setPlayerMove(decorator);
         }
 
         return game.getGameState();

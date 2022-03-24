@@ -150,7 +150,7 @@ public class QuestStrategy implements RoundStrategy {
         for (int i = 0; i < cardsDrawn; i++) {
             Card card = g.getAdventureDeck().draw();
             sponsor.draw(card);
-            g.addMessage(sponsor.getName() + " drew " + card.getName() + " from Adventure Deck.");
+            g.addMessage(sponsor.getName() + " drew a card from Adventure Deck.");
         }
         sponsor.setQuestInfo(null);
         playerIndexes.remove(sponsorIndex);
@@ -186,7 +186,7 @@ public class QuestStrategy implements RoundStrategy {
 
         for (int idx : playerIndexes) {
             players.get(idx).addShields(quest.getQuestStages() + (g.isKingsRecognition() ? 2 : 0));
-            g.addMessage(players.get(idx) + " finished the quest and was awarded " + (quest.getQuestStages() + (g.isKingsRecognition() ? 2 : 0) + " shields. "));
+            g.addMessage(players.get(idx).getName() + " finished the quest and was awarded " + (quest.getQuestStages() + (g.isKingsRecognition() ? 2 : 0) + " shields. "));
         }
 
         if (g.isKingsRecognition() && playerIndexes.size() > 0)

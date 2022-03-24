@@ -15,13 +15,18 @@ public class User {
 
     public User() {
         String uuid = generateUserId();
-        this.name = "player#" + (++userCount).toString();
+        this.name = generateUserName();
         this.id = uuid;
         this.playerGames = new ArrayList<>();
     }
 
     private static String generateUserId() {
         return UUID.randomUUID().toString();
+    }
+
+    private static String generateUserName() {
+        if (userCount > 100) userCount = 0;
+        return String.format("player#%d", ++userCount);
     }
 
     public void addGame(Game game) {

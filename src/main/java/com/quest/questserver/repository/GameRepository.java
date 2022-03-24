@@ -3,6 +3,9 @@ package com.quest.questserver.repository;
 import com.quest.questserver.exception.GameException;
 import com.quest.questserver.exception.NotFoundException;
 import com.quest.questserver.model.Game;
+import com.quest.questserver.model.Player;
+import com.quest.questserver.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -10,10 +13,21 @@ import java.util.List;
 
 @Repository
 public class GameRepository {
-    private static List<Game> gameList = new ArrayList<Game>();
+
+    @Autowired
+    UserRepository userRepo;
+    private static final int MAX_GAMES = 10;
+    private static List<Game> gameList = new ArrayList<Game>(MAX_GAMES);
 
     public Game createGame() {
         Game game = new Game();
+        if(gameList.size() >= MAX_GAMES) {
+            Game removedGame = gameList.remove(0);
+            for(Player player: removedGame.getPlayers()) {
+                User user = userRepo.getUser(player.getId());
+                user.removeGame(removedGame);
+            }
+        }
         gameList.add(game);
         return game;
     }

@@ -128,6 +128,7 @@ public class Game {
     }
 
     private static String generateGameId() {
+        if (gameCount > 99) gameCount = 0;
         return String.format("%04d", ++gameCount);
     }
 

@@ -213,7 +213,7 @@ public class QuestStrategy implements RoundStrategy {
             Player player = g.getPlayers().get(playerIndex);
             RankCardDecorator playerMove = player.getQuestInfo().getPlayerMove();
 
-            boolean qualified;
+            boolean qualified = false;
             if (roundStatus == IN_PROGRESS) {
 
                 // Ally Strength special conditions
@@ -240,12 +240,13 @@ public class QuestStrategy implements RoundStrategy {
                 // Ally Bid special conditions
                 List<Card> moveCards = playerMove.fetchAllCards();
                 boolean hasSirTristan = playerMove.fetchAllCards().stream().filter(card -> card.getName() == "Sir Tristan").count() >= 1;
-                for (Card card: moveCards){
-                    if (card instanceof AllyCard){
-                        if (card.getName() == "King Pellinore" && quest.getName() == "Search for the Questing Beast"){
+                for (Card card: moveCards) {
+                    if (card instanceof AllyCard) {
+                        if (card.getName() == "King Pellinore" && quest.getName() == "Search for the Questing Beast") {
                             playerBid += 4;
-                        } else if (card.getName() == "Queen Iseult" && hasSirTristan){
+                        } else if (card.getName() == "Queen Iseult" && hasSirTristan) {
                             playerBid += 2; // 4 - 2
+                        }
                     }
                 }
                 if (highestBid == 0 && playerBid == 0)

@@ -9,10 +9,14 @@ import java.util.List;
 
 @Repository
 public class UserRepository {
-    private static List<User> userList = new ArrayList<User>();
+    private static final int MAX_USERS = 10;
+    private static List<User> userList = new ArrayList<User>(MAX_USERS);
 
     public User createUser() {
         User user = new User();
+        if(userList.size() >= MAX_USERS) {
+            userList.remove(0);
+        }
         userList.add(user);
         return user;
     }

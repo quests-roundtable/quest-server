@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Slf4j(topic = "GAME_ROUND_CONTROLLER")
 @AllArgsConstructor
+@CrossOrigin(origins = "*")
 @RequestMapping("/game/round")
 public class GameRoundController {
     @Autowired

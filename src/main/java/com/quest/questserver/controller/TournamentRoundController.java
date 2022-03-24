@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Slf4j(topic = "TOURNAMENT_ROUND_CONTROLLER")
 @AllArgsConstructor
+@CrossOrigin(origins = "*")
 @RequestMapping("/tournament/round")
 public class TournamentRoundController {
     @Autowired

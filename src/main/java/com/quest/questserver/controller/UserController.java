@@ -13,6 +13,7 @@ import java.util.Map;
 @RestController
 @Slf4j(topic = "USER_CONTROLLER")
 @AllArgsConstructor
+@CrossOrigin(origins = "*")
 @RequestMapping("/user")
 public class UserController {
     @Autowired
@@ -30,7 +31,7 @@ public class UserController {
         return ResponseEntity.ok(userService.setUserName(request.get("id"), request.get("name")));
     }
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<User> getUser(@PathVariable(value = "id") String userId) {
         log.info("get user request: {}", userId);
         return ResponseEntity.ok(userService.getUser(userId));

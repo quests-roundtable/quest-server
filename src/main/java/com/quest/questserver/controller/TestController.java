@@ -8,14 +8,26 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 @RestController
 @Slf4j(topic = "TEST_CONTROLLER")
 @AllArgsConstructor
+@CrossOrigin(origins = "*")
 @RequestMapping("/test")
 public class TestController {
 
     private final SimpMessagingTemplate webSocket;
+
+    @GetMapping("/health")
+    public ResponseEntity<Map<String, String>> health() {
+        log.info("Health Check");
+        Map response = new HashMap<>();
+        response.put("status", "UP");
+        return ResponseEntity.ok(response);
+    }
 
     @PostMapping("/test1")
     public ResponseEntity<String> test1(@RequestBody String lobby) {

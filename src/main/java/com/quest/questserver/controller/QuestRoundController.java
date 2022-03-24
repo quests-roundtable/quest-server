@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Slf4j(topic = "QUEST_ROUND_CONTROLLER")
 @AllArgsConstructor
+@CrossOrigin(origins = "*")
 @RequestMapping("/quest/round")
 public class QuestRoundController {
     @Autowired

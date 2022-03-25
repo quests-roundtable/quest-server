@@ -3,16 +3,12 @@ package com.quest.questserver.service;
 import com.quest.questserver.dto.ConnectResponse;
 import com.quest.questserver.dto.GameStateDto;
 import com.quest.questserver.exception.GameException;
-import com.quest.questserver.exception.NotFoundException;
 import com.quest.questserver.model.Game;
 import com.quest.questserver.model.Player;
 import com.quest.questserver.model.User;
 import com.quest.questserver.repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class GameService {
@@ -24,7 +20,16 @@ public class GameService {
 
     public ConnectResponse createGame(String userId) {
         User user = userService.getUser(userId);
-        Game game = gameRepo.createGame();
+        Game game = gameRepo.createGame(false);
+        Player player = new Player(user.getId(), user.getName());
+        game.addPlayer(player);
+        user.addGame(game);
+        return new ConnectResponse(game.getGameState(), user);
+    }
+
+    public ConnectResponse createTestGame(String userId) {
+        User user = userService.getUser(userId);
+        Game game = gameRepo.createGame(true);
         Player player = new Player(user.getId(), user.getName());
         game.addPlayer(player);
         user.addGame(game);

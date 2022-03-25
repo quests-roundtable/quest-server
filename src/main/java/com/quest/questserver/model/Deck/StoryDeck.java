@@ -14,6 +14,10 @@ public class StoryDeck extends Deck {
                 super(StoryDeck.generateCards());
         }
 
+        public StoryDeck(List<Card> cards) {
+                super(cards);
+        }
+
         private static List<Card> generateCards() {
                 List<Card> cards = new ArrayList<>();
 

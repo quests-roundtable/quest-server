@@ -19,8 +19,8 @@ public class GameRepository {
     private static final int MAX_GAMES = 10;
     private static List<Game> gameList = new ArrayList<Game>(MAX_GAMES);
 
-    public Game createGame() {
-        Game game = new Game();
+    public Game createGame(boolean test) {
+        Game game = new Game(test);
         if(gameList.size() >= MAX_GAMES) {
             Game removedGame = gameList.remove(0);
             for(Player player: removedGame.getPlayers()) {

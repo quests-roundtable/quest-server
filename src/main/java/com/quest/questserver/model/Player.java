@@ -26,7 +26,7 @@ public class Player {
     private TournamentInfo tournamentInfo;
     private List<Card> specialCards; // Amour and Ally
 
-
+    //Constructor
     public Player(String id, String name) {
         this.name = name;
         this.id = id;
@@ -35,6 +35,7 @@ public class Player {
         this.specialCards = new ArrayList<>();
     }
 
+    //deal card to player's hand use list of hand at the beginning of the game
     public void dealCards(List<Card> hand) {
         for (Card card : hand) {
             playerHand.add(card);
@@ -42,11 +43,13 @@ public class Player {
         rankCard = RankCard.getRankCard("Squire");
     }
 
+    //add n shields to the player. Check and update Rank after add shields
     public void addShields(int n) {
         this.shields += n;
         updateRank();
     }
 
+    //remove n shields from player
     public void removeShields(int n) {
         if (this.shields >= n) {
             this.shields -= n;
@@ -56,18 +59,22 @@ public class Player {
 
     }
 
+    //player can draw the card to player hand
     public void draw(Card card) {
         playerHand.add(card);
     }
 
+    //add special card to player hand
     public void addSpecial(Card card){
         specialCards.add(card);
     }
 
+    //remove special card from player hand
     public void removeSpecial(Card card){
         specialCards.remove(card);
     }
 
+    //remove special card with cardID from player hand
     public Card removeSpecial(String cardId){
         for (int i = 0; i < specialCards.size(); i++) {
             if (specialCards.get(i).getId().equals(cardId)) {
@@ -77,6 +84,7 @@ public class Player {
         return null;
     }
 
+    //getter of the Decorated Rank
     public RankCardDecorator getDecoratedRank(){
         RankCardDecorator rankDecorator = this.getRankCard();
         for (Card card : specialCards){
@@ -90,7 +98,7 @@ public class Player {
     }
 
 
-
+    //remove the card with cardID from player hand
     public Card discard(String cardId) {
         for (int i = 0; i < playerHand.size(); i++) {
             if (playerHand.get(i).getId().equals(cardId)) {
@@ -100,6 +108,7 @@ public class Player {
         return null;
     }
 
+    //check the shield that player had and upgrade the rank if the shields enough
     public void updateRank() {
         if (rankCard.getName().equalsIgnoreCase("Squire") && shields >= 5) {
             shields -= 5;
@@ -115,7 +124,7 @@ public class Player {
         }
     }
 
-    // Getter
+    //Getters
     public RankCard getRankCard() {
         return rankCard;
     }
@@ -148,7 +157,7 @@ public class Player {
         return tournamentInfo;
     }
 
-    // Setter
+    //Setters
     public void setName(String name) {
         this.name = name;
     }

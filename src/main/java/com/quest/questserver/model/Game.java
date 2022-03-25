@@ -5,7 +5,9 @@ import com.quest.questserver.dto.QuestStateDto;
 import com.quest.questserver.dto.TournamentStateDto;
 import com.quest.questserver.model.Card.*;
 import com.quest.questserver.model.Deck.AdventureDeck;
+import com.quest.questserver.model.Deck.Deck;
 import com.quest.questserver.model.Deck.StoryDeck;
+import com.quest.questserver.model.Deck.TestDeck;
 import com.quest.questserver.model.Strategy.EventStrategy;
 import com.quest.questserver.model.Strategy.QuestStrategy;
 import com.quest.questserver.model.Strategy.RoundStrategy;
@@ -40,13 +42,16 @@ public class Game {
 
     private String message = "";
 
-    public Game() {
+    public Game(boolean test) {
         this.id = generateGameId();
         this.players = new ArrayList<Player>();
         this.numPlayers = 0;
         this.gameStatus = WAITING_LOBBY;
         this.adventureDeck = new AdventureDeck();
-        this.storyDeck = new StoryDeck();
+        if (test)
+            this.storyDeck = new TestDeck();
+        else
+            this.storyDeck = new StoryDeck();
     }
 
     public void start() {

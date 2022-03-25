@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
-
 @RestController
 @Slf4j(topic = "GAME_CONTROLLER")
 @AllArgsConstructor
@@ -35,6 +34,14 @@ public class GameController {
     public ResponseEntity<ConnectResponse> create(@RequestBody String userId) {
         log.info("create game request: {}", userId);
         ConnectResponse response = gameService.createGame(userId);
+        webSocket.convertAndSend(String.format("/topic/game#%s", response.getGame().getId()), response.getGame());
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/createtest")
+    public ResponseEntity<ConnectResponse> createTest(@RequestBody String userId) {
+        log.info("create game request: {}", userId);
+        ConnectResponse response = gameService.createTestGame(userId);
         webSocket.convertAndSend(String.format("/topic/game#%s", response.getGame().getId()), response.getGame());
         return ResponseEntity.ok(response);
     }

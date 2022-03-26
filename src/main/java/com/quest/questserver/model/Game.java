@@ -42,6 +42,7 @@ public class Game {
 
     private String message = "";
 
+    //constructor
     public Game(boolean test) {
         this.id = generateGameId();
         this.players = new ArrayList<Player>();
@@ -54,6 +55,7 @@ public class Game {
             this.storyDeck = new StoryDeck();
     }
 
+    //start the game. Change the gameStatus to IN_PROGRESS. Shuffle the adventureDeck and storyDeck.
     public void start() {
         this.gameStatus = IN_PROGRESS;
         this.adventureDeck.shuffle();
@@ -65,6 +67,7 @@ public class Game {
         this.message = "Game has started.";
     }
 
+    //check the player win or not by check the rank card
     public void checkWin() {
         for (Player player : players) {
             if (player.getRankCard().getName().equalsIgnoreCase("Knight of the Round Table")) {
@@ -75,6 +78,7 @@ public class Game {
         }
     }
 
+    //switch to the next turn and draw the random card for the turn. And the card type should be Quest, Tournament or Event
     public void nextTurn() {
         if (eventStrategy != null) eventStrategy = null;
         if (roundStrategy != null) {
@@ -110,10 +114,12 @@ public class Game {
         return;
     }
 
+    //switch the game status to game over(2)
     public void terminate() {
         this.gameStatus = GAME_OVER;
     }
 
+    //add player to the players list
     public boolean addPlayer(Player player) {
         if (numPlayers == maxPlayers) {
             return false;
@@ -126,6 +132,7 @@ public class Game {
         return true;
     }
 
+    //getter of player
     public Player getPlayer(String playerId) {
         for (Player player : players) {
             if (player.getId().equals(playerId)) {
@@ -135,6 +142,7 @@ public class Game {
         return null;
     }
 
+    //remove player form the players list
     public Boolean removePlayer(Player player) {
         boolean removed = players.remove(player);
         if (removed)
@@ -142,11 +150,13 @@ public class Game {
         return removed;
     }
 
+    //create the game id of the room
     private static String generateGameId() {
         if (gameCount > 99) gameCount = 0;
         return String.format("%04d", ++gameCount);
     }
 
+    //the player draw two adventure card
     public void drawTwoAdventureCard(Player player) {
         Card card = this.adventureDeck.draw();
         Card card2 = this.adventureDeck.draw();

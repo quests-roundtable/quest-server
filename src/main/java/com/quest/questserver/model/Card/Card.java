@@ -8,6 +8,7 @@ public abstract class Card {
     protected String typeId;
     protected String name;
 
+    //constructor
     public Card(String type, String typeId, String name) {
         this.id = generateCardId();
         this.type = type;
@@ -16,6 +17,7 @@ public abstract class Card {
     }
 
 
+    //getter
     public String getType() {
         return type;
     }

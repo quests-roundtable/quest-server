@@ -13,6 +13,7 @@ public class User {
     private String name;
     private List<Game> playerGames;
 
+    //Constructor
     public User() {
         String uuid = generateUserId();
         this.name = generateUserName();
@@ -20,25 +21,30 @@ public class User {
         this.playerGames = new ArrayList<>();
     }
 
+    //create random uuid to user
     private static String generateUserId() {
         return UUID.randomUUID().toString();
     }
 
+    //create user's name
     private static String generateUserName() {
         if (userCount > 100) userCount = 0;
         return String.format("player#%d", ++userCount);
     }
 
+    //add game into playerGames list
     public void addGame(Game game) {
         if(!playerGames.contains(game)) {
             playerGames.add(game);
         }
     }
 
+    //remove game from playerGames list
     public void removeGame(Game game) {
         playerGames.remove(game);
     }
 
+    //update game name by using the name variable
     public void updateName(String name) {
         this.name = name;
         for(Game game: playerGames) {

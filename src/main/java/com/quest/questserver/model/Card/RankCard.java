@@ -10,6 +10,7 @@ public class RankCard extends Card implements RankCardDecorator {
         this.battlePoints = battlePoints;
     }
 
+    //get rank card with check variable rank and return the correct rank card
     public static RankCard getRankCard(String rank){
         if (rank.equalsIgnoreCase("Squire")){
             return new RankCard("Rank_01", "Squire", 5);

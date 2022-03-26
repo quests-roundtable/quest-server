@@ -26,7 +26,7 @@ public class AmourDecorator extends RankDecorator{
         return amour.getBids() + rankDecorator.getBids();
     }
 
-    //add all cards in rankDecorator to cardList
+    //add all cards in rank Decorator and amour into cardList and return cardList
     @Override
     public ArrayList<Card> fetchAllCards() {
         ArrayList<Card> cardList = new ArrayList<Card>();

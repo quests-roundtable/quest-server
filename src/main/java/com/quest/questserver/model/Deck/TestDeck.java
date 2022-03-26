@@ -11,6 +11,7 @@ public class TestDeck extends StoryDeck {
         super(TestDeck.generateCards());
     }
 
+    //create test cards
     private static List<Card> generateCards() {
         List<Card> cards = new ArrayList<>();
 

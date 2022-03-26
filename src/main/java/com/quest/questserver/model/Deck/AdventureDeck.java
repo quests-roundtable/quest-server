@@ -11,6 +11,7 @@ public class AdventureDeck extends Deck {
         super(AdventureDeck.generateCards());
     }
 
+    //deal cards to hand
     public List<Card> dealHand() {
         List<Card> hand = new ArrayList<>();
 
@@ -21,6 +22,7 @@ public class AdventureDeck extends Deck {
         return hand;
     }
 
+    //create cards and add it into list called cards
     private static List<Card> generateCards() {
         List<Card> cards = new ArrayList<>();
 

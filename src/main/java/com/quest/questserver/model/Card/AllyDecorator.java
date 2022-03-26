@@ -24,7 +24,7 @@ public class AllyDecorator extends RankDecorator{
         return ally.getBids() + rankDecorator.getBids();
     }
 
-    //add all rank decorator to cardList
+    //add all rank decorator cards and ally into cardList and return cardList
     @Override
     public ArrayList<Card> fetchAllCards(){
         ArrayList<Card> cardList = new ArrayList<Card>();

@@ -18,6 +18,7 @@ public class StoryDeck extends Deck {
                 super(cards);
         }
 
+        //create story cards
         private static List<Card> generateCards() {
                 List<Card> cards = new ArrayList<>();
 

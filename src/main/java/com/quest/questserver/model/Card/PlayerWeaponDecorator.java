@@ -16,6 +16,7 @@ public class PlayerWeaponDecorator extends RankDecorator {
         return totalStrength;
     }
 
+    //add all the rank Decorator cards and weapon into cardList and return cardList
     @Override
     public ArrayList<Card> fetchAllCards(){
         ArrayList<Card> cardList = new ArrayList<Card>();

@@ -15,7 +15,7 @@ public class EventStrategy {
     private EventCard event;
     private AdventureDeck adventureDeck;
 
-    //Constructor
+    // Constructor
     public EventStrategy(EventCard event) {
         this.event = event;
     }
@@ -57,7 +57,7 @@ public class EventStrategy {
         }
     }
 
-    //Getter
+    // Getter
     public EventCard getEvent() {
         return this.event;
     }
@@ -65,7 +65,6 @@ public class EventStrategy {
     // Chivalrous Deed
     public void Event_01(Game game) {
         List<Player> temp = game.getPlayers();
-        List<Player> players = null;
         int shieldct = 100;
         int rankct = 100;
         for (int i = 0; i < temp.size(); i++) {
@@ -92,12 +91,14 @@ public class EventStrategy {
     public void Event_02(Game game) {
         AdventureDeck deck = game.getAdventureDeck();
         for (Player player : game.getPlayers()) {
-            for (int i = player.getSpecialCards().size() - 1; i >= 0; i--) {
-                Card ally = player.getSpecialCards().get(i);
-                if (ally instanceof AllyCard) {
-                    player.removeSpecial(ally);
-                    deck.discard(ally);
-                    game.addMessage(player.getName() + " discarded " + ally.getName());
+            if (player.getSpecialCards().size() > 0) {
+                for (int i = player.getSpecialCards().size() - 1; i >= 0; i--) {
+                    Card ally = player.getSpecialCards().get(i);
+                    if (ally instanceof AllyCard) {
+                        player.removeSpecial(ally);
+                        deck.discard(ally);
+                        game.addMessage(player.getName() + " discarded " + ally.getName());
+                    }
                 }
             }
         }
@@ -121,8 +122,17 @@ public class EventStrategy {
             }
         }
         for (Player player : players) {
-            List<Card> weapons = player.getPlayerHand().stream().filter(card -> card.getType() == "Weapon").toList();
-            List<Card> foes = player.getPlayerHand().stream().filter(card -> card.getType() == "Foe").toList();
+
+            List<Card> weapons = new ArrayList<Card>();
+            List<Card> foes = new ArrayList<Card>();
+            for (Card card : player.getPlayerHand()) {
+                if (card.getType() == "Weapon") {
+                    weapons.add(card);
+                } else if (card.getType() == "Foe") {
+                    foes.add(card);
+                }
+            }
+
             if (weapons.size() > 0) {
                 Collections.shuffle(weapons);
                 Card weapon = player.discard(weapons.get(0).getId());

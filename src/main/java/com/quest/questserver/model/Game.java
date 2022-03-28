@@ -111,6 +111,7 @@ public class Game {
             this.eventStrategy.start(this);
         }
         checkWin();
+        storyDeck.discard(storyCard);
         return;
     }
 

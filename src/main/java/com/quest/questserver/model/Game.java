@@ -5,7 +5,6 @@ import com.quest.questserver.dto.QuestStateDto;
 import com.quest.questserver.dto.TournamentStateDto;
 import com.quest.questserver.model.Card.*;
 import com.quest.questserver.model.Deck.AdventureDeck;
-import com.quest.questserver.model.Deck.Deck;
 import com.quest.questserver.model.Deck.StoryDeck;
 import com.quest.questserver.model.Deck.TestDeck;
 import com.quest.questserver.model.Strategy.EventStrategy;
@@ -63,7 +62,7 @@ public class Game {
         for (Player player : players) {
             player.dealCards(adventureDeck.dealHand());
         }
-        this.currentPlayer = 0;
+        this.currentPlayer = players.size() - 1;
         this.message = "Game has started.";
     }
 

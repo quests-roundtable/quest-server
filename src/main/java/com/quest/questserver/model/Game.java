@@ -162,8 +162,7 @@ public class Game {
         Card card2 = this.adventureDeck.draw();
         player.draw(card);
         player.draw(card2);
-        addMessage(players.get(currentPlayer).getName() + " drew a card from Adventure Deck.");
-        addMessage(players.get(currentPlayer).getName() + " drew a card from Adventure Deck.");
+        addMessage(players.get(currentPlayer).getName() + " drew 2 cards from Adventure Deck.");
     }
 
     // Getters
@@ -255,6 +254,7 @@ public class Game {
             state.setRoundStatus(tournament.getRoundStatus());
             state.setRoundResult(tournament.getRoundResult());
             state.setCurrentPlayer(tournament.getCurrentPlayer());
+            state.setTieBreaker(tournament.getTieBreaker());
             state.setCard((TournamentCard) tournament.getTournament());
         }
         return state;

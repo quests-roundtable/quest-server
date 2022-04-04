@@ -59,6 +59,7 @@ public class QuestStrategy implements RoundStrategy {
                 // if every player rejects sponsoring Quest, strategy ends
                 currentPlayer = getNextPlayerIndex();
                 if (currentPlayer == g.getCurrentPlayer()) {
+                    g.addMessage("No sponsors for Quest.");
                     roundStatus = TERMINATED;
                 }
             }
@@ -138,6 +139,8 @@ public class QuestStrategy implements RoundStrategy {
     }
 
     public void terminate(Game g) {
+        g.addMessage("Quest: " + quest.getName() + " has ended.");
+
         // Exit if no sponsor
         if (this.sponsorIndex == -1)
             return;

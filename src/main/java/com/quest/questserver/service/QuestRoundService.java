@@ -123,7 +123,7 @@ public class QuestRoundService {
         QuestInfo questInfo = new QuestInfo(QuestInfo.SPONSOR, questStage);
         questInfo.setNumSponsorCards(numQuestCards);
         player.setQuestInfo(questInfo);
-        game.setMessage(player.getName() + " sponsored Quest.");
+        game.setMessage(player.getName() +  " is sponsoring the Quest: " + quest.getQuest().getName());
         game.nextTurn();
         return game.getGameState();
     }
@@ -166,8 +166,6 @@ public class QuestRoundService {
                     playerMove = new PlayerWeaponDecorator(playerMove, (WeaponCard) card);
                 } else if (card instanceof AllyCard) {
                     playerMove = new AllyDecorator(playerMove, (AllyCard) card);
-                    // change
-                    player.addSpecial(card);
                 } else if (card instanceof AmourCard) {
                     if (hasAmour) {
                         invalid = true;
@@ -177,7 +175,6 @@ public class QuestRoundService {
                         hasAmour = true;
                     }
                     playerMove = new AmourDecorator(playerMove, (AmourCard) card);
-                    player.addSpecial(card);
                 }
             }
 

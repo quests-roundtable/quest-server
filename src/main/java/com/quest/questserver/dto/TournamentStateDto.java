@@ -11,5 +11,6 @@ public class TournamentStateDto {
     private int currentPlayer;
     private TournamentCard card;
     private RoundResult roundResult;
+    private boolean tieBreaker;
     private String message = "";
 }

@@ -70,6 +70,7 @@ public class TournamentStrategy implements RoundStrategy {
 
         } else if (roundStatus == ROUND_END) {
             boolean tie = endRound(g);
+            this.roundResult = null;
             this.roundStatus = tie ? IN_PROGRESS : TERMINATED;
             if (tie)
                 this.currentPlayer = playerIndexes.get(0);
@@ -173,6 +174,10 @@ public class TournamentStrategy implements RoundStrategy {
 
     public RoundResult getRoundResult() {
         return roundResult;
+    }
+
+    public boolean getTieBreaker() {
+        return tieBreaker;
     }
 
     public String getMessage() {

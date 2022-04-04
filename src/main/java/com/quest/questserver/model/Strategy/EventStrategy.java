@@ -137,7 +137,7 @@ public class EventStrategy {
                 Collections.shuffle(weapons);
                 Card weapon = player.discard(weapons.get(0).getId());
                 deck.discard(weapon);
-                game.addMessage(player.getName() + "  " + weapon.getName());
+                game.addMessage(player.getName() + " discarded " + weapon.getName());
 
             } else if (foes.size() >= 2) {
                 Collections.shuffle(foes);
@@ -156,6 +156,7 @@ public class EventStrategy {
     // The next player(s) to complete a Quest receives 2 extra shields
     public void Event_04(Game game) {
         game.setKingsRecognition(true);
+        game.addMessage("King's Recognition in affect. Winner(s) of next quest will receive 2 bonus shields.");
     }
 
     // Plague

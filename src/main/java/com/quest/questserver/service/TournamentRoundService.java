@@ -60,7 +60,6 @@ public class TournamentRoundService {
                     playerMove = new PlayerWeaponDecorator(playerMove, (WeaponCard) card);
                 } else if (card instanceof AllyCard) {
                     playerMove = new AllyDecorator(playerMove, (AllyCard) card);
-                    // change
                 } else if (card instanceof AmourCard) {
                     if (hasAmour) {
                         invalid = true;
@@ -70,7 +69,6 @@ public class TournamentRoundService {
                         hasAmour = true;
                     }
                     playerMove = new AmourDecorator(playerMove, (AmourCard) card);
-                    player.addSpecial(card);
                 }
             }
         }
@@ -104,7 +102,7 @@ public class TournamentRoundService {
             // Draw card if player accepts round
             player.draw(game.getAdventureDeck().draw());
         }
-        game.setMessage(player.getName() + " joined the Tournament.");
+        game.setMessage(player.getName() + (join ? " joined the Tournament." : " declined the Tournament."));
         game.nextTurn();
         return game.getGameState();
     }

@@ -226,6 +226,10 @@ public class Game {
         this.message = "";
     }
 
+    public void setEventStrategy(EventCard event){
+        this.eventStrategy = new EventStrategy(event);
+    }
+
     public QuestStateDto getQuestState() {
         QuestStateDto state = new QuestStateDto();
         if (roundStrategy instanceof QuestStrategy) {

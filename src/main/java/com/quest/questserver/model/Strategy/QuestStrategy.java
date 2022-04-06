@@ -241,6 +241,7 @@ public class QuestStrategy implements RoundStrategy {
                     }
                 }
                 qualified = playerStrength >= stageStrength;
+                g.addMessage(player.getName() + " has Quest strength " + playerStrength + ".");
             } else {
                 int playerBid = playerMove.getBids() + player.getQuestInfo().getBidCards().size();
                 
@@ -259,6 +260,7 @@ public class QuestStrategy implements RoundStrategy {
                 if (highestBid == 0 && playerBid == 0)
                     qualified = false;
                 qualified = (highestBidder == null) ? false : playerBid == highestBid;
+                g.addMessage(player.getName() + " has " + playerBid + " bids.");
             }
 
             if (qualified){

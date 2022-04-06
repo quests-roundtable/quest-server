@@ -6,7 +6,8 @@ import com.quest.questserver.dto.TournamentStateDto;
 import com.quest.questserver.model.Card.*;
 import com.quest.questserver.model.Deck.AdventureDeck;
 import com.quest.questserver.model.Deck.StoryDeck;
-import com.quest.questserver.model.Deck.TestDeck;
+import com.quest.questserver.model.Deck.TestStoryDeck;
+import com.quest.questserver.model.Deck.TestAdventureDeck;
 import com.quest.questserver.model.Strategy.EventStrategy;
 import com.quest.questserver.model.Strategy.QuestStrategy;
 import com.quest.questserver.model.Strategy.RoundStrategy;
@@ -47,11 +48,14 @@ public class Game {
         this.players = new ArrayList<Player>();
         this.numPlayers = 0;
         this.gameStatus = WAITING_LOBBY;
-        this.adventureDeck = new AdventureDeck();
-        if (test)
-            this.storyDeck = new TestDeck();
-        else
+        if (test) {
+            this.storyDeck = new TestStoryDeck();
+            this.adventureDeck = new TestAdventureDeck();
+        }
+        else {
             this.storyDeck = new StoryDeck();
+            this.adventureDeck = new AdventureDeck();
+        }
     }
 
     //start the game. Change the gameStatus to IN_PROGRESS. Shuffle the adventureDeck and storyDeck.

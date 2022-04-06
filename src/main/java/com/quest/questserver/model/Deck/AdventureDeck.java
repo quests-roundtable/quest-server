@@ -11,6 +11,10 @@ public class AdventureDeck extends Deck {
         super(AdventureDeck.generateCards());
     }
 
+    public AdventureDeck(List<Card> cards) {
+        super(cards);
+    }
+
     //deal cards to hand
     public List<Card> dealHand() {
         List<Card> hand = new ArrayList<>();
